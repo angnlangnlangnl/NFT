@@ -153,18 +153,17 @@
         .modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:1000; justify-content:center; align-items:center; }
         .modal-overlay.open { display:flex; }
 
-        /* 弹窗盒子 - 黑金邮票珍藏卡风格 */
+        /* 弹窗外框线条 */
         .modal-box { 
             position:relative;
             width:380px; 
             max-width:90vw;
-            min-height:520px;
+            min-height:540px;
             background: radial-gradient(circle at center, #13221e 0%, #09110d 100%); 
-            background-size: cover;
-            background-position: center top;
+            border: 2px solid var(--gold-glow);
             border-radius:20px;
             box-shadow:0 20px 50px rgba(0,0,0,0.9), 0 0 60px rgba(180,145,70,0.4);
-            padding:25px 15px 20px;
+            padding:25px 15px 15px;
             display:flex;
             flex-direction:column;
             justify-content:flex-end;
@@ -172,14 +171,21 @@
         }
         @keyframes modalIn { from { transform:scale(0.8); opacity:0; } to { transform:scale(1); opacity:1; } }
 
-        /* 弹窗内的图片区域 */
+        /* 编号 #0001 居中显示在图片上方 */
+        .modal-box .modal-id-top {
+            text-align: center;
+            color: var(--gold-glow);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        /* 图片区域 */
         .modal-box .modal-img-area {
-            position:absolute;
-            top:20px;
-            left:50%;
-            transform:translateX(-50%);
             width:200px;
             height:200px;
+            margin:0 auto 8px;
             display:flex;
             align-items:center;
             justify-content:center;
@@ -195,16 +201,16 @@
             font-size:100px;
         }
 
-        /* 弹窗内的信息面板 - 黑金邮票风格 */
+        /* 信息面板 */
         .modal-box .stamp-panel {
             background: linear-gradient(135deg, #14221c, #0c1612);
             border: 2px solid #a88b44;
             border-radius: 12px;
             position: relative; 
-            padding: 30px 15px 20px; 
+            padding: 28px 15px 16px; 
             text-align: center;
             box-shadow: 0 8px 20px rgba(0,0,0,0.8), inset 0 0 20px rgba(168, 139, 68, 0.15);
-            margin-top: 10px;
+            margin-top: 0;
         }
         .modal-box .stamp-panel::before {
             content: '';
@@ -247,14 +253,13 @@
         .modal-box .stamp-title::before { left: 12px; }
         .modal-box .stamp-title::after { right: 12px; }
 
-        /* 数据网格 */
+        /* 数据网格 - 整体上移 */
         .modal-box .stamp-grid {
             display: grid;
             grid-template-columns: 1fr 1fr; 
-            grid-template-rows: auto auto;  
-            gap: 6px 10px; 
+            gap: 4px 10px; 
             padding: 0 5px;
-            margin-top: 12px; 
+            margin-top: 8px; 
         }
         .modal-box .stamp-row {
             display: flex;
@@ -274,11 +279,22 @@
             letter-spacing: 0.5px;
         }
 
-        /* 弹窗按钮 */
+        /* 价格显示区域 */
+        .modal-box .stamp-price {
+            text-align: center;
+            color: var(--gold-glow);
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(168, 139, 68, 0.3);
+        }
+
+        /* 按钮 */
         .modal-btns { 
             display:flex; 
             gap:10px; 
-            margin-top:15px;
+            margin-top:12px;
         }
         .btn-confirm { 
             flex:1; 
@@ -381,7 +397,7 @@
                     <span class="filter-btn" onclick="filterMarket('common',this)">普通</span>
                 </div>
                 <div class="grid-2" id="marketGrid">
-                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail('🐅','最贵邮票','传世孤品','#0001','年份：1840 · 估值：约850万美元 · 来源：英国邮政史','850万美元','#ffb84d','images/youpiao1.png')"><div class="frame">🐅</div><div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p style="color:#ffb84d;font-size:11px;">传世孤品 · 仅1枚</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail('🐅','最贵邮票','传世孤品','#0001','年份：1840 · 估值：约850万美元 · 来源：英国邮政史','2.5 BNB','#ffb84d','images/youpiao1.png')"><div class="frame">🐅</div><div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p style="color:#ffb84d;font-size:11px;">传世孤品 · 仅1枚</p><button class="btn-sm">查看详情</button></div></div>
                     <div class="market-card" data-rarity="legendary" onclick="showCardDetail('🐼','大熊猫','传说','#0007','国宝级珍稀动物，黑白相间','3.0 BNB','#ffb84d','images/youpiao2.png')"><div class="frame">🐼</div><div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p style="color:#ffb84d;font-size:11px;">传说 · 总量100</p><button class="btn-sm">查看详情</button></div></div>
                     <div class="market-card" data-rarity="epic" onclick="showCardDetail('🦏','白犀牛','史诗','#0892','草原上的装甲巨兽','0.45 BNB','#d98eff','images/youpiao3.png')"><div class="frame">🦏</div><div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p style="color:#d98eff;font-size:11px;">史诗 · 总量600</p><button class="btn-sm">查看详情</button></div></div>
                     <div class="market-card" data-rarity="rare" onclick="showCardDetail('🦅','金雕','稀有','#2210','翱翔天际的猛禽之王','0.08 BNB','#6db3ff','images/youpiao4.png')"><div class="frame">🦅</div><div class="info"><p style="color:white;font-weight:600;">金雕</p><p style="color:#6db3ff;font-size:11px;">稀有 · 总量1500</p><button class="btn-sm">查看详情</button></div></div>
@@ -399,7 +415,7 @@
                     <div class="stat-item"><div class="val">4.8</div><div class="lbl">估值 BNB</div></div>
                 </div>
                 <div class="grid-2">
-                    <div class="nft-card" onclick="showCardDetail('🐅','最贵邮票','传世孤品','#0001','年份：1840 · 估值：约850万美元 · 来源：英国邮政史','850万美元','#ffb84d','images/youpiao1.png')"><div class="frame">🐅</div><div class="name">最贵邮票</div><div class="rarity r-legendary">传世孤品</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🐅','最贵邮票','传世孤品','#0001','年份：1840 · 估值：约850万美元 · 来源：英国邮政史','2.5 BNB','#ffb84d','images/youpiao1.png')"><div class="frame">🐅</div><div class="name">最贵邮票</div><div class="rarity r-legendary">传世孤品</div></div>
                     <div class="nft-card" onclick="showCardDetail('🐼','大熊猫','传说','#0007','国宝级珍稀动物','3.0 BNB','#ffb84d','images/youpiao2.png')"><div class="frame">🐼</div><div class="name">大熊猫</div><div class="rarity r-legendary">传说</div></div>
                     <div class="nft-card" onclick="showCardDetail('🦏','白犀牛','史诗','#0892','草原装甲巨兽','0.45 BNB','#d98eff','images/youpiao3.png')"><div class="frame">🦏</div><div class="name">白犀牛</div><div class="rarity r-epic">史诗</div></div>
                     <div class="nft-card" onclick="showCardDetail('🦅','金雕','稀有','#2210','翱翔天际的猛禽','0.08 BNB','#6db3ff','images/youpiao4.png')"><div class="frame">🦅</div><div class="name">金雕</div><div class="rarity r-rare">稀有</div></div>
@@ -419,9 +435,11 @@
             </div>
         </div>
 
-        <!-- ========== 弹窗：黑金邮票珍藏卡风格 ========== -->
+        <!-- ========== 弹窗 ========== -->
         <div class="modal-overlay" id="cardModal">
             <div class="modal-box">
+                <!-- 编号居中显示在图片上方 -->
+                <div class="modal-id-top" id="modalIdTop">#0001</div>
                 <!-- 图片区域 -->
                 <div class="modal-img-area">
                     <img id="modalImg" src="" alt="" style="display:none;">
@@ -432,10 +450,12 @@
                     <div class="stamp-title" id="modalName">最贵邮票</div>
                     <div class="stamp-grid">
                         <div class="stamp-row"><span class="stamp-label">年份：</span><span class="stamp-value" id="modalYear">1840</span></div>
-                        <div class="stamp-row"><span class="stamp-label">估值：</span><span class="stamp-value" id="modalPrice">约850万美元</span></div>
+                        <div class="stamp-row"><span class="stamp-label">估值：</span><span class="stamp-value" id="modalEstimate">约850万美元</span></div>
                         <div class="stamp-row"><span class="stamp-label">稀有度：</span><span class="stamp-value" id="modalRarity">传世孤品</span></div>
                         <div class="stamp-row"><span class="stamp-label">来源：</span><span class="stamp-value" id="modalSource">英国邮政史</span></div>
                     </div>
+                    <!-- 价格显示 -->
+                    <div class="stamp-price" id="modalPrice">2.5 BNB</div>
                 </div>
                 <!-- 按钮 -->
                 <div class="modal-btns">
@@ -456,15 +476,15 @@
 
     <script>
         const cardData = [
-            { icon:'🐅', name:'最贵邮票', rarity:'传世孤品', id:'#0001', year:'1840', price:'约850万美元', source:'英国邮政史', color:'#ffb84d', img:'images/youpiao1.png' },
-            { icon:'🐼', name:'大熊猫', rarity:'传说', id:'#0007', year:'远古', price:'3.0 BNB', source:'中国四川', color:'#ffb84d', img:'images/youpiao2.png' },
-            { icon:'🦏', name:'白犀牛', rarity:'史诗', id:'#0892', year:'现代', price:'0.45 BNB', source:'非洲草原', color:'#d98eff', img:'images/youpiao3.png' },
-            { icon:'🦅', name:'金雕', rarity:'稀有', id:'#2210', year:'现代', price:'0.08 BNB', source:'北半球', color:'#6db3ff', img:'images/youpiao4.png' },
-            { icon:'🐘', name:'亚洲象', rarity:'稀有', id:'#1502', year:'现代', price:'0.07 BNB', source:'东南亚', color:'#6db3ff', img:'images/youpiao5.png' },
-            { icon:'🐯', name:'孟加拉虎', rarity:'稀有', id:'#1024', year:'现代', price:'0.09 BNB', source:'印度', color:'#6db3ff', img:'images/youpiao7.png' },
-            { icon:'🦊', name:'藏狐', rarity:'普通', id:'#2451', year:'现代', price:'0.01 BNB', source:'青藏高原', color:'#ccc', img:'images/youpiao6.png' },
-            { icon:'🦚', name:'绿孔雀', rarity:'史诗', id:'#0103', year:'现代', price:'0.5 BNB', source:'东南亚', color:'#d98eff', img:'images/youpiao9.png' },
-            { icon:'🐬', name:'中华白海豚', rarity:'稀有', id:'#3345', year:'现代', price:'0.1 BNB', source:'中国南海', color:'#6db3ff', img:'images/youpiao10.png' }
+            { icon:'🐅', name:'最贵邮票', rarity:'传世孤品', id:'#0001', year:'1840', estimate:'约850万美元', price:'2.5 BNB', source:'英国邮政史', color:'#ffb84d', img:'images/youpiao1.png' },
+            { icon:'🐼', name:'大熊猫', rarity:'传说', id:'#0007', year:'远古', estimate:'无价', price:'3.0 BNB', source:'中国四川', color:'#ffb84d', img:'images/youpiao2.png' },
+            { icon:'🦏', name:'白犀牛', rarity:'史诗', id:'#0892', year:'现代', estimate:'珍稀', price:'0.45 BNB', source:'非洲草原', color:'#d98eff', img:'images/youpiao3.png' },
+            { icon:'🦅', name:'金雕', rarity:'稀有', id:'#2210', year:'现代', estimate:'罕见', price:'0.08 BNB', source:'北半球', color:'#6db3ff', img:'images/youpiao4.png' },
+            { icon:'🐘', name:'亚洲象', rarity:'稀有', id:'#1502', year:'现代', estimate:'保护', price:'0.07 BNB', source:'东南亚', color:'#6db3ff', img:'images/youpiao5.png' },
+            { icon:'🐯', name:'孟加拉虎', rarity:'稀有', id:'#1024', year:'现代', estimate:'濒危', price:'0.09 BNB', source:'印度', color:'#6db3ff', img:'images/youpiao7.png' },
+            { icon:'🦊', name:'藏狐', rarity:'普通', id:'#2451', year:'现代', estimate:'常见', price:'0.01 BNB', source:'青藏高原', color:'#ccc', img:'images/youpiao6.png' },
+            { icon:'🦚', name:'绿孔雀', rarity:'史诗', id:'#0103', year:'现代', estimate:'华丽', price:'0.5 BNB', source:'东南亚', color:'#d98eff', img:'images/youpiao9.png' },
+            { icon:'🐬', name:'中华白海豚', rarity:'稀有', id:'#3345', year:'现代', estimate:'粉色', price:'0.1 BNB', source:'中国南海', color:'#6db3ff', img:'images/youpiao10.png' }
         ];
         let selectedCard = null, selectedElement = null;
 
@@ -497,12 +517,14 @@
                 modalEmoji.style.display = 'block';
                 modalEmoji.textContent = card.icon;
             }
+            document.getElementById('modalIdTop').textContent = card.id;
             document.getElementById('modalName').textContent = card.name;
             document.getElementById('modalYear').textContent = card.year || card.id;
-            document.getElementById('modalPrice').textContent = card.price;
+            document.getElementById('modalEstimate').textContent = card.estimate || '';
             document.getElementById('modalRarity').textContent = card.rarity;
             document.getElementById('modalRarity').style.color = card.color || '#ffb84d';
-            document.getElementById('modalSource').textContent = card.source || card.desc;
+            document.getElementById('modalSource').textContent = card.source || '';
+            document.getElementById('modalPrice').textContent = card.price;
             document.getElementById('cardModal').classList.add('open');
         }
         function closeModal() {
