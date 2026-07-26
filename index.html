@@ -151,11 +151,11 @@
 
         .modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:1000; justify-content:center; align-items:center; }
         .modal-overlay.open { display:flex; }
-        .modal-box { background:linear-gradient(145deg, #1a2e1f, #0d1a14); border:2px solid var(--gold-glow); border-radius:20px; padding:25px; text-align:center; max-width:320px; width:90%; box-shadow:0 0 60px rgba(180,145,70,0.6); animation:modalIn 0.3s ease; }
+        .modal-box { background:linear-gradient(145deg, #1a2e1f, #0d1a14); border:2px solid var(--gold-glow); border-radius:20px; padding:25px; text-align:center; max-width:340px; width:90%; box-shadow:0 0 60px rgba(180,145,70,0.6); animation:modalIn 0.3s ease; }
         @keyframes modalIn { from { transform:scale(0.8); opacity:0; } to { transform:scale(1); opacity:1; } }
         .modal-box .modal-icon { 
-            width:180px; 
-            height:180px; 
+            width:220px; 
+            height:220px; 
             margin:0 auto 10px; 
             display:flex; 
             align-items:center; 
@@ -241,31 +241,9 @@
 
             <div class="page" id="page-entertainment">
                 <div class="title"><h2>🎮 娱乐盲盒</h2><p>抽取你的专属珍稀动物卡牌</p></div>
-                <div class="box-card">
-                    <div class="box-icon-large">🎁</div>
-                    <h3>普通盲盒</h3>
-                    <p class="desc">随机稀有动物卡牌</p>
-                    <div class="price"><i class="fab fa-ethereum"></i> 0.001 BNB</div>
-                    <button class="btn-mint" onclick="mint('普通盲盒')">Mint 抽取</button>
-                    <p class="remain">剩余 1240/3000</p>
-                </div>
-                <div class="box-card recommended">
-                    <div class="badge-recommend">⭐ 推荐</div>
-                    <div class="box-icon-large">🎀</div>
-                    <h3>典藏盲盒</h3>
-                    <p class="desc">更高概率获得隐藏款卡牌</p>
-                    <div class="price"><i class="fab fa-ethereum"></i> 0.005 BNB</div>
-                    <button class="btn-mint" onclick="mint('典藏盲盒')">Mint 抽取</button>
-                    <p class="remain">剩余 612/1000</p>
-                </div>
-                <div class="box-card">
-                    <div class="box-icon-large">👑</div>
-                    <h3>至尊礼盒</h3>
-                    <p class="desc">必得史诗或传说动物卡牌</p>
-                    <div class="price"><i class="fab fa-ethereum"></i> 0.02 BNB</div>
-                    <button class="btn-mint" onclick="mint('至尊礼盒')">Mint 抽取</button>
-                    <p class="remain">剩余 89/200</p>
-                </div>
+                <div class="box-card"><div class="box-icon-large">🎁</div><h3>普通盲盒</h3><p class="desc">随机稀有动物卡牌</p><div class="price"><i class="fab fa-ethereum"></i> 0.001 BNB</div><button class="btn-mint" onclick="mint('普通盲盒')">Mint 抽取</button><p class="remain">剩余 1240/3000</p></div>
+                <div class="box-card recommended"><div class="badge-recommend">⭐ 推荐</div><div class="box-icon-large">🎀</div><h3>典藏盲盒</h3><p class="desc">更高概率获得隐藏款卡牌</p><div class="price"><i class="fab fa-ethereum"></i> 0.005 BNB</div><button class="btn-mint" onclick="mint('典藏盲盒')">Mint 抽取</button><p class="remain">剩余 612/1000</p></div>
+                <div class="box-card"><div class="box-icon-large">👑</div><h3>至尊礼盒</h3><p class="desc">必得史诗或传说动物卡牌</p><div class="price"><i class="fab fa-ethereum"></i> 0.02 BNB</div><button class="btn-mint" onclick="mint('至尊礼盒')">Mint 抽取</button><p class="remain">剩余 89/200</p></div>
             </div>
 
             <div class="page" id="page-market">
@@ -278,7 +256,7 @@
                     <span class="filter-btn" onclick="filterMarket('common',this)">普通</span>
                 </div>
                 <div class="grid-2" id="marketGrid">
-                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail('🐅','雪豹','传说','#0001','雪山之巅的幽灵，极其稀有','2.5 BNB','#ffb84d','images/youpiao1.png')"><div class="frame">🐅</div><div class="info"><p style="color:white;font-weight:600;">雪豹</p><p style="color:#ffb84d;font-size:11px;">传说 · 总量100</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail('🐅','最贵邮票','传世孤品','#0001','年份：1840 · 估值：约850万美元 · 来源：英国邮政史','850万美元','#ffb84d','images/youpiao1.png')"><div class="frame">🐅</div><div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p style="color:#ffb84d;font-size:11px;">传世孤品 · 仅1枚</p><button class="btn-sm">查看详情</button></div></div>
                     <div class="market-card" data-rarity="legendary" onclick="showCardDetail('🐼','大熊猫','传说','#0007','国宝级珍稀动物，黑白相间','3.0 BNB','#ffb84d','images/youpiao2.png')"><div class="frame">🐼</div><div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p style="color:#ffb84d;font-size:11px;">传说 · 总量100</p><button class="btn-sm">查看详情</button></div></div>
                     <div class="market-card" data-rarity="epic" onclick="showCardDetail('🦏','白犀牛','史诗','#0892','草原上的装甲巨兽','0.45 BNB','#d98eff','images/youpiao3.png')"><div class="frame">🦏</div><div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p style="color:#d98eff;font-size:11px;">史诗 · 总量600</p><button class="btn-sm">查看详情</button></div></div>
                     <div class="market-card" data-rarity="rare" onclick="showCardDetail('🦅','金雕','稀有','#2210','翱翔天际的猛禽之王','0.08 BNB','#6db3ff','images/youpiao4.png')"><div class="frame">🦅</div><div class="info"><p style="color:white;font-weight:600;">金雕</p><p style="color:#6db3ff;font-size:11px;">稀有 · 总量1500</p><button class="btn-sm">查看详情</button></div></div>
@@ -296,7 +274,7 @@
                     <div class="stat-item"><div class="val">4.8</div><div class="lbl">估值 BNB</div></div>
                 </div>
                 <div class="grid-2">
-                    <div class="nft-card" onclick="showCardDetail('🐅','雪豹','传说','#0001','雪山之巅的幽灵','2.5 BNB','#ffb84d','images/youpiao1.png')"><div class="frame">🐅</div><div class="name">雪豹</div><div class="rarity r-legendary">传说</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🐅','最贵邮票','传世孤品','#0001','年份：1840 · 估值：约850万美元 · 来源：英国邮政史','850万美元','#ffb84d','images/youpiao1.png')"><div class="frame">🐅</div><div class="name">最贵邮票</div><div class="rarity r-legendary">传世孤品</div></div>
                     <div class="nft-card" onclick="showCardDetail('🐼','大熊猫','传说','#0007','国宝级珍稀动物','3.0 BNB','#ffb84d','images/youpiao2.png')"><div class="frame">🐼</div><div class="name">大熊猫</div><div class="rarity r-legendary">传说</div></div>
                     <div class="nft-card" onclick="showCardDetail('🦏','白犀牛','史诗','#0892','草原装甲巨兽','0.45 BNB','#d98eff','images/youpiao3.png')"><div class="frame">🦏</div><div class="name">白犀牛</div><div class="rarity r-epic">史诗</div></div>
                     <div class="nft-card" onclick="showCardDetail('🦅','金雕','稀有','#2210','翱翔天际的猛禽','0.08 BNB','#6db3ff','images/youpiao4.png')"><div class="frame">🦅</div><div class="name">金雕</div><div class="rarity r-rare">稀有</div></div>
@@ -316,7 +294,6 @@
             </div>
         </div>
 
-        <!-- 弹窗：使用图片替代emoji -->
         <div class="modal-overlay" id="cardModal">
             <div class="modal-box">
                 <div class="modal-icon" id="modalIcon">
@@ -346,7 +323,7 @@
 
     <script>
         const cardData = [
-            { icon:'🐅', name:'雪豹', rarity:'传说', id:'#0001', desc:'雪山之巅的幽灵，极其稀有', price:'2.5 BNB', color:'#ffb84d', img:'images/youpiao1.png' },
+            { icon:'🐅', name:'最贵邮票', rarity:'传世孤品', id:'#0001', desc:'年份：1840 · 估值：约850万美元 · 来源：英国邮政史', price:'850万美元', color:'#ffb84d', img:'images/youpiao1.png' },
             { icon:'🐼', name:'大熊猫', rarity:'传说', id:'#0007', desc:'国宝级珍稀动物', price:'3.0 BNB', color:'#ffb84d', img:'images/youpiao2.png' },
             { icon:'🦏', name:'白犀牛', rarity:'史诗', id:'#0892', desc:'草原上的装甲巨兽', price:'0.45 BNB', color:'#d98eff', img:'images/youpiao3.png' },
             { icon:'🦅', name:'金雕', rarity:'稀有', id:'#2210', desc:'翱翔天际的猛禽之王', price:'0.08 BNB', color:'#6db3ff', img:'images/youpiao4.png' },
