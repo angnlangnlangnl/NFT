@@ -10,16 +10,15 @@
         * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
         :root { --bg:#0d1a14; --gold-light:#f8ecc9; --gold:#d6b878; --gold-deep:#9e7a3a; --gold-glow:#dbb45c; --text-secondary:#b8a47b; }
         body { 
-            background:var(--bg); 
-            display:flex; justify-content:center; align-items:center; 
-            height:100vh; height:100dvh; overflow:hidden; 
-            position:fixed; top:0; left:0; right:0; bottom:0; color:#fff; 
-            /* 背景图路径修改为 images/background.png */
-            background-image: url('images/background.png');
+            background-color: #0d1a14;
+            background-image: url('background.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
+            display:flex; justify-content:center; align-items:center; 
+            height:100vh; height:100dvh; overflow:hidden; 
+            position:fixed; top:0; left:0; right:0; bottom:0; color:#fff; 
         }
         .app { 
             width:100%; max-width:420px; height:100%; 
@@ -72,7 +71,7 @@
             content:'?'; position:absolute; font-size:32px; color:rgba(255,255,255,0.1); font-weight:900;
         }
         .animal-card.revealed .card-icon::after { display:none; }
-        .animal-card .card-name { font-size:12px; color:white; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .animal-card .card-name { font-size:12px; color:white; font-weight:600; }
         .animal-card .card-rarity { font-size:10px; }
         .animal-card .check-mark { position:absolute; top:6px; right:6px; width:22px; height:22px; background:var(--gold-glow); border-radius:50%; display:none; align-items:center; justify-content:center; font-size:12px; color:#000; font-weight:700; z-index:2; }
         .animal-card.selected .check-mark { display:flex; }
@@ -89,9 +88,7 @@
         .modal-box .modal-price { color:var(--gold-glow); font-size:20px; font-weight:700; margin-bottom:15px; }
         .modal-btns { display:flex; gap:10px; }
         .btn-confirm { flex:1; padding:12px; background:linear-gradient(180deg, #e7c778 0%, #b48b3a 100%); color:#0a130e; border:none; border-radius:25px; font-weight:700; font-size:15px; cursor:pointer; }
-        .btn-confirm:hover { background:linear-gradient(180deg, #f5da8a 0%, #c79d46 100%); }
         .btn-cancel { flex:1; padding:12px; background:transparent; border:1px solid var(--gold-glow); color:var(--gold-glow); border-radius:25px; font-size:15px; cursor:pointer; }
-        .btn-cancel:hover { background:rgba(180,145,70,0.1); }
 
         .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
         .nft-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; padding:12px; text-align:center; backdrop-filter:blur(8px); cursor:pointer; transition:all 0.3s; }
@@ -141,13 +138,11 @@
                 </div>
             </div>
 
-            <!-- ========== 挑选NFT页面 ========== -->
             <div class="page active" id="page-nft">
                 <div class="title">
                     <h2>✦ 极危珍稀盲盒 ✦</h2>
                     <p>每张卡牌都是链上唯一的动物守护者 · 点击盲盒揭晓你的卡牌</p>
                 </div>
-
                 <div class="section-header">
                     <h3>🎴 盲盒卡牌选择</h3>
                     <span class="selected-count" id="selectedCount">已选 0</span>
@@ -155,17 +150,12 @@
                 <div class="grid-3" id="cardGrid"></div>
             </div>
 
-            <!-- ========== 娱乐页面 ========== -->
             <div class="page" id="page-entertainment">
                 <div class="title"><h2>🎮 娱乐盲盒</h2><p>抽取你的专属珍稀动物卡牌</p></div>
-                <div class="section-header">
-                    <h3>🎴 盲盒卡牌选择</h3>
-                    <span class="selected-count" id="selectedCount2">已选 0</span>
-                </div>
+                <div class="section-header"><h3>🎴 盲盒卡牌选择</h3><span class="selected-count" id="selectedCount2">已选 0</span></div>
                 <div class="grid-3" id="cardGrid2"></div>
             </div>
 
-            <!-- ========== 市场页面 ========== -->
             <div class="page" id="page-market">
                 <div class="title"><h2>📖 动物图鉴市场</h2><p>探索珍稀动物卡牌 · 收藏链上唯一珍品</p></div>
                 <div class="filter-bar">
@@ -185,16 +175,12 @@
                 </div>
             </div>
 
-            <!-- ========== 收藏页面 ========== -->
             <div class="page" id="page-favorite">
                 <div class="title"><h2>🗂️ 我的藏品</h2><p>你的珍稀动物收藏库 · 墨绿鎏金典藏</p></div>
                 <div class="stats">
-                    <div class="stat-item"><div class="val">8</div><div class="lbl">总藏品</div></div>
-                    <div class="stat-div"></div>
-                    <div class="stat-item"><div class="val">3</div><div class="lbl">稀有以上</div></div>
-                    <div class="stat-div"></div>
-                    <div class="stat-item"><div class="val">2</div><div class="lbl">传说</div></div>
-                    <div class="stat-div"></div>
+                    <div class="stat-item"><div class="val">8</div><div class="lbl">总藏品</div></div><div class="stat-div"></div>
+                    <div class="stat-item"><div class="val">3</div><div class="lbl">稀有以上</div></div><div class="stat-div"></div>
+                    <div class="stat-item"><div class="val">2</div><div class="lbl">传说</div></div><div class="stat-div"></div>
                     <div class="stat-item"><div class="val">4.8</div><div class="lbl">估值 BNB</div></div>
                 </div>
                 <div class="grid-2">
@@ -209,17 +195,15 @@
                 </div>
             </div>
 
-            <!-- ========== 生态页面 ========== -->
             <div class="page" id="page-ecosystem">
                 <div class="title"><h2>🌐 生态讯息</h2><p>系统通知 · 交易动态 · 活动提醒</p></div>
-                <div class="msg-item unread" onclick="alert('✅ 交易成功：至尊礼盒Mint成功！获得大熊猫卡牌 #0007')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>交易成功</span><span class="msg-time">10分钟前</span></div><div class="msg-content">至尊礼盒Mint成功！恭喜获得稀有卡牌</div></div>
-                <div class="msg-item unread" onclick="alert('🎉 盲盒上新：极危珍稀系列盲盒已上线！')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>盲盒上新通知</span><span class="msg-time">1小时前</span></div><div class="msg-content">极危珍稀系列盲盒已上线！限时优惠</div></div>
-                <div class="msg-item" onclick="alert('🏆 限时活动：参与珍稀动物守护者活动！')"><div class="msg-header"><span class="msg-title">限时活动开启</span><span class="msg-time">3小时前</span></div><div class="msg-content">珍稀动物守护者活动开启</div></div>
-                <div class="msg-item" onclick="alert('📥 收到转赠：收到金雕稀有卡牌 #2210')"><div class="msg-header"><span class="msg-title">收到转赠卡牌</span><span class="msg-time">昨天</span></div><div class="msg-content">收到来自 0x1234...5678 的转赠</div></div>
+                <div class="msg-item unread" onclick="alert('✅ 交易成功')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>交易成功</span><span class="msg-time">10分钟前</span></div><div class="msg-content">至尊礼盒Mint成功！获得稀有卡牌</div></div>
+                <div class="msg-item unread" onclick="alert('🎉 盲盒上新')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>盲盒上新通知</span><span class="msg-time">1小时前</span></div><div class="msg-content">极危珍稀系列盲盒已上线！</div></div>
+                <div class="msg-item" onclick="alert('🏆 限时活动')"><div class="msg-header"><span class="msg-title">限时活动开启</span><span class="msg-time">3小时前</span></div><div class="msg-content">珍稀动物守护者活动开启</div></div>
+                <div class="msg-item" onclick="alert('📥 收到转赠')"><div class="msg-header"><span class="msg-title">收到转赠卡牌</span><span class="msg-time">昨天</span></div><div class="msg-content">收到金雕稀有卡牌 #2210</div></div>
             </div>
         </div>
 
-        <!-- 卡牌详情弹窗 -->
         <div class="modal-overlay" id="cardModal">
             <div class="modal-box">
                 <div class="modal-icon" id="modalIcon">🎁</div>
@@ -235,7 +219,6 @@
             </div>
         </div>
 
-        <!-- 底部导航 -->
         <div class="bottom-nav">
             <div class="nav-item active" data-page="nft" onclick="switchPage('nft',this)"><i class="fas fa-gem nav-icon"></i><span>挑选NFT</span></div>
             <div class="nav-item" data-page="entertainment" onclick="switchPage('entertainment',this)"><i class="fas fa-gamepad nav-icon"></i><span>娱乐</span></div>
@@ -246,130 +229,70 @@
     </div>
 
     <script>
-        // ==================== 9张卡片数据 ====================
         const cardData = [
             { icon:'🐅', name:'雪豹', rarity:'传说', id:'#0001', desc:'雪山之巅的幽灵，极其稀有', price:'2.5 BNB', color:'#ffb84d' },
-            { icon:'🐼', name:'大熊猫', rarity:'传说', id:'#0007', desc:'国宝级珍稀动物，黑白相间的可爱生灵', price:'3.0 BNB', color:'#ffb84d' },
-            { icon:'🦏', name:'白犀牛', rarity:'史诗', id:'#0892', desc:'草原上的装甲巨兽，温和而强大', price:'0.45 BNB', color:'#d98eff' },
-            { icon:'🦅', name:'金雕', rarity:'稀有', id:'#2210', desc:'翱翔天际的猛禽之王，目光如炬', price:'0.08 BNB', color:'#6db3ff' },
-            { icon:'🐘', name:'亚洲象', rarity:'稀有', id:'#1502', desc:'丛林中的智慧巨人，记忆力超群', price:'0.07 BNB', color:'#6db3ff' },
-            { icon:'🐯', name:'孟加拉虎', rarity:'稀有', id:'#1024', desc:'丛林之王，威严与力量的象征', price:'0.09 BNB', color:'#6db3ff' },
-            { icon:'🦊', name:'藏狐', rarity:'普通', id:'#2451', desc:'高原上的神秘微笑，聪明伶俐', price:'0.01 BNB', color:'#ccc' },
-            { icon:'🦚', name:'绿孔雀', rarity:'史诗', id:'#0103', desc:'华丽羽毛的展示者，美丽绝伦', price:'0.5 BNB', color:'#d98eff' },
-            { icon:'🐬', name:'中华白海豚', rarity:'稀有', id:'#3345', desc:'海洋中的粉色精灵，濒临灭绝', price:'0.1 BNB', color:'#6db3ff' }
+            { icon:'🐼', name:'大熊猫', rarity:'传说', id:'#0007', desc:'国宝级珍稀动物', price:'3.0 BNB', color:'#ffb84d' },
+            { icon:'🦏', name:'白犀牛', rarity:'史诗', id:'#0892', desc:'草原上的装甲巨兽', price:'0.45 BNB', color:'#d98eff' },
+            { icon:'🦅', name:'金雕', rarity:'稀有', id:'#2210', desc:'翱翔天际的猛禽之王', price:'0.08 BNB', color:'#6db3ff' },
+            { icon:'🐘', name:'亚洲象', rarity:'稀有', id:'#1502', desc:'丛林中的智慧巨人', price:'0.07 BNB', color:'#6db3ff' },
+            { icon:'🐯', name:'孟加拉虎', rarity:'稀有', id:'#1024', desc:'丛林之王', price:'0.09 BNB', color:'#6db3ff' },
+            { icon:'🦊', name:'藏狐', rarity:'普通', id:'#2451', desc:'高原上的神秘微笑', price:'0.01 BNB', color:'#ccc' },
+            { icon:'🦚', name:'绿孔雀', rarity:'史诗', id:'#0103', desc:'华丽羽毛的展示者', price:'0.5 BNB', color:'#d98eff' },
+            { icon:'🐬', name:'中华白海豚', rarity:'稀有', id:'#3345', desc:'海洋中的粉色精灵', price:'0.1 BNB', color:'#6db3ff' }
         ];
-
-        let selectedCard = null;
-        let selectedElement = null;
+        let selectedCard = null, selectedElement = null;
 
         function renderCards(gridId, pageKey) {
             const grid = document.getElementById(gridId);
             if (!grid) return;
             grid.innerHTML = cardData.map((card, index) => `
                 <div class="animal-card" data-index="${index}" data-page="${pageKey}" onclick="selectCard(${index}, this, '${pageKey}')">
-                    <div class="check-mark">✓</div>
-                    <div class="card-icon">🎁</div>
-                    <div class="card-name">???</div>
-                    <div class="card-rarity" style="color:var(--text-secondary)">未知</div>
-                </div>
-            `).join('');
+                    <div class="check-mark">✓</div><div class="card-icon">🎁</div>
+                    <div class="card-name">???</div><div class="card-rarity" style="color:var(--text-secondary)">未知</div>
+                </div>`).join('');
         }
-
         function selectCard(index, element, pageKey) {
-            const pageCards = document.querySelectorAll(`.animal-card[data-page="${pageKey}"]`);
-            pageCards.forEach(card => card.classList.remove('selected'));
-            selectedCard = cardData[index];
-            selectedElement = element;
-            element.classList.add('selected');
-            const countEl = pageKey === 'nft' ? document.getElementById('selectedCount') : document.getElementById('selectedCount2');
-            if (countEl) countEl.textContent = '已选 1';
-            showCardDetail(selectedCard.icon, selectedCard.name, selectedCard.rarity, selectedCard.id, selectedCard.desc, selectedCard.price, selectedCard.color);
+            document.querySelectorAll(`.animal-card[data-page="${pageKey}"]`).forEach(c => c.classList.remove('selected'));
+            selectedCard = cardData[index]; selectedElement = element; element.classList.add('selected');
+            const c = document.getElementById(pageKey==='nft'?'selectedCount':'selectedCount2'); if(c) c.textContent='已选 1';
+            showCardDetail(selectedCard.icon,selectedCard.name,selectedCard.rarity,selectedCard.id,selectedCard.desc,selectedCard.price,selectedCard.color);
         }
-
-        function showCardDetail(icon, name, rarity, id, desc, price, color) {
-            document.getElementById('modalIcon').textContent = icon;
-            document.getElementById('modalName').textContent = name;
-            document.getElementById('modalRarity').textContent = rarity;
-            document.getElementById('modalRarity').style.color = color || '#ffb84d';
-            document.getElementById('modalId').textContent = id;
-            document.getElementById('modalDesc').textContent = desc;
-            document.getElementById('modalPrice').textContent = price || '0.01 BNB';
-            document.getElementById('cardModal').classList.add('open');
+        function showCardDetail(icon,name,rarity,id,desc,price,color) {
+            document.getElementById('modalIcon').textContent=icon; document.getElementById('modalName').textContent=name;
+            document.getElementById('modalRarity').textContent=rarity; document.getElementById('modalRarity').style.color=color||'#ffb84d';
+            document.getElementById('modalId').textContent=id; document.getElementById('modalDesc').textContent=desc;
+            document.getElementById('modalPrice').textContent=price||'0.01 BNB'; document.getElementById('cardModal').classList.add('open');
         }
-
         function closeModal() {
             document.getElementById('cardModal').classList.remove('open');
-            if (selectedElement) {
-                selectedElement.classList.remove('selected');
-                const pageKey = selectedElement.getAttribute('data-page');
-                const countEl = pageKey === 'nft' ? document.getElementById('selectedCount') : document.getElementById('selectedCount2');
-                if (countEl) countEl.textContent = '已选 0';
-                selectedElement = null;
-                selectedCard = null;
-            }
+            if(selectedElement){ selectedElement.classList.remove('selected'); const c=document.getElementById(selectedElement.getAttribute('data-page')==='nft'?'selectedCount':'selectedCount2'); if(c)c.textContent='已选 0'; selectedElement=null; selectedCard=null; }
         }
-
         function confirmCard() {
-            if (selectedCard && selectedElement) {
-                selectedElement.classList.add('revealed');
-                selectedElement.querySelector('.card-icon').textContent = selectedCard.icon;
-                selectedElement.querySelector('.card-name').textContent = selectedCard.name;
-                selectedElement.querySelector('.card-rarity').textContent = selectedCard.rarity;
-                selectedElement.querySelector('.card-rarity').style.color = selectedCard.color;
-                alert(`✅ 已确认选择：${selectedCard.name} (${selectedCard.rarity})\n编号：${selectedCard.id}\n价格：${selectedCard.price}`);
-            }
+            if(selectedCard&&selectedElement){ selectedElement.classList.add('revealed'); selectedElement.querySelector('.card-icon').textContent=selectedCard.icon; selectedElement.querySelector('.card-name').textContent=selectedCard.name; selectedElement.querySelector('.card-rarity').textContent=selectedCard.rarity; selectedElement.querySelector('.card-rarity').style.color=selectedCard.color; alert(`✅ 已确认：${selectedCard.name} (${selectedCard.rarity})\n编号：${selectedCard.id}`); }
             document.getElementById('cardModal').classList.remove('open');
         }
-
-        document.getElementById('cardModal').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
-
-        function switchPage(page, el) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById('page-' + page).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
-            const icons = { nft:'🦏', entertainment:'🎮', market:'🏪', favorite:'❤️', ecosystem:'🌐' };
-            document.getElementById('logoIcon').textContent = icons[page] || '🦏';
+        document.getElementById('cardModal').addEventListener('click',function(e){ if(e.target===this)closeModal(); });
+        function switchPage(page,el){
+            document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+page).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active');
+            document.getElementById('logoIcon').textContent={nft:'🦏',entertainment:'🎮',market:'🏪',favorite:'❤️',ecosystem:'🌐'}[page]||'🦏';
         }
-
-        function filterMarket(rarity, btn) {
-            document.querySelectorAll('#page-market .filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.querySelectorAll('#marketGrid .market-card').forEach(card => {
-                card.style.display = (rarity === 'all' || card.getAttribute('data-rarity') === rarity) ? '' : 'none';
-            });
+        function filterMarket(rarity,btn){
+            document.querySelectorAll('#page-market .filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+            document.querySelectorAll('#marketGrid .market-card').forEach(c=>c.style.display=(rarity==='all'||c.getAttribute('data-rarity')===rarity)?'':'none');
         }
-
-        const langBtn = document.getElementById('langBtn');
-        const langDropdown = document.getElementById('langDropdown');
-        langBtn.addEventListener('click', e => { e.stopPropagation(); langDropdown.classList.toggle('open'); });
-        document.addEventListener('click', e => { if (!langDropdown.contains(e.target) && e.target !== langBtn) langDropdown.classList.remove('open'); });
-        document.querySelectorAll('.lang-option').forEach(opt => {
-            opt.addEventListener('click', function() {
-                localStorage.setItem('bcbsLang', this.getAttribute('data-lang'));
-                langDropdown.classList.remove('open');
-            });
+        const lb=document.getElementById('langBtn'),ld=document.getElementById('langDropdown');
+        lb.addEventListener('click',e=>{e.stopPropagation();ld.classList.toggle('open');});
+        document.addEventListener('click',e=>{if(!ld.contains(e.target)&&e.target!==lb)ld.classList.remove('open');});
+        document.querySelectorAll('.lang-option').forEach(o=>o.addEventListener('click',function(){localStorage.setItem('bcbsLang',this.getAttribute('data-lang'));ld.classList.remove('open');}));
+        const wb=document.getElementById('walletBtn'); let ac=null;
+        wb.addEventListener('click',async function(){
+            if(ac){ac=null;wb.textContent='Connect wallet';wb.classList.remove('connected');return;}
+            if(!window.ethereum){alert('请安装 MetaMask');return;} wb.innerHTML='连接中...';
+            try{const a=await window.ethereum.request({method:'eth_requestAccounts'});ac=a[0];wb.textContent=ac.substring(0,6)+'...'+ac.substring(ac.length-4);wb.classList.add('connected');}catch(e){wb.textContent='Connect wallet';}
         });
-
-        const walletBtn = document.getElementById('walletBtn');
-        let account = null;
-        walletBtn.addEventListener('click', async function() {
-            if (account) { account = null; walletBtn.textContent = 'Connect wallet'; walletBtn.classList.remove('connected'); return; }
-            if (!window.ethereum) { alert('请安装 MetaMask'); return; }
-            walletBtn.innerHTML = '连接中...';
-            try {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                account = accounts[0];
-                walletBtn.textContent = account.substring(0,6) + '...' + account.substring(account.length-4);
-                walletBtn.classList.add('connected');
-            } catch(e) { walletBtn.textContent = 'Connect wallet'; }
-        });
-        (async () => { if (window.ethereum) { try { const a = await window.ethereum.request({ method:'eth_accounts' }); if (a.length>0) { account = a[0]; walletBtn.textContent = account.substring(0,6)+'...'+account.substring(account.length-4); walletBtn.classList.add('connected'); } } catch(e) {} } })();
-
-        renderCards('cardGrid', 'nft');
-        renderCards('cardGrid2', 'entertainment');
+        (async()=>{if(window.ethereum){try{const a=await window.ethereum.request({method:'eth_accounts'});if(a.length>0){ac=a[0];wb.textContent=ac.substring(0,6)+'...'+ac.substring(ac.length-4);wb.classList.add('connected');}}catch(e){}}})();
+        renderCards('cardGrid','nft'); renderCards('cardGrid2','entertainment');
     </script>
 </body>
 </html>
