@@ -577,12 +577,8 @@
         }
 
         @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-            100% {
-                transform: rotate(360deg);
-            }
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* 底部导航 */
@@ -632,9 +628,7 @@
         }
 
         .nav-item .nav-icon {
-            width: 20px;
-            height: 20px;
-            object-fit: contain;
+            font-size: 18px;
         }
 
         .nav-item.active {
@@ -821,27 +815,27 @@
             </div>
         </div>
 
-        <!-- 底部导航（保留原始BCBS导航） -->
+        <!-- 底部导航（已修复：新导航名称 + Font Awesome 图标） -->
         <div class="bottom-nav">
             <a href="index.html" class="nav-item active">
-                <img class="nav-icon" src="https://raw.githubusercontent.com/angnlangnlangnl/BCBSEcs/main/images/index.icon.png" alt="资产">
-                <span class="nav-assets">资产</span>
+                <i class="fas fa-gem nav-icon"></i>
+                <span class="nav-nft">挑选NFT</span>
             </a>
-            <a href="stake.html" class="nav-item">
-                <img class="nav-icon" src="https://raw.githubusercontent.com/angnlangnlangnl/BCBSEcs/main/images/stake.icon.png" alt="质押">
-                <span class="nav-stake">质押</span>
+            <a href="entertainment.html" class="nav-item">
+                <i class="fas fa-gamepad nav-icon"></i>
+                <span class="nav-entertainment">娱乐</span>
             </a>
-            <a href="liquidity.html" class="nav-item">
-                <img class="nav-icon" src="https://raw.githubusercontent.com/angnlangnlangnl/BCBSEcs/main/images/liquidity.icon.png" alt="流动性">
-                <span class="nav-liquidity">流动性</span>
+            <a href="market.html" class="nav-item">
+                <i class="fas fa-store nav-icon"></i>
+                <span class="nav-market">市场</span>
             </a>
-            <a href="invite.html" class="nav-item">
-                <img class="nav-icon" src="https://raw.githubusercontent.com/angnlangnlangnl/BCBSEcs/main/images/invite.icon.png" alt="邀请">
-                <span class="nav-invite">邀请</span>
+            <a href="favorite.html" class="nav-item">
+                <i class="fas fa-heart nav-icon"></i>
+                <span class="nav-collection">收藏</span>
             </a>
-            <a href="ecosystem.html" class="nav-item">
-                <img class="nav-icon" src="https://raw.githubusercontent.com/angnlangnlangnl/BCBSEcs/main/images/ecosystem.icon.png" alt="生态">
-                <span class="nav-ecosystem">生态</span>
+            <a href="messages.html" class="nav-item">
+                <i class="fas fa-comments nav-icon"></i>
+                <span class="nav-messages">讯息</span>
             </a>
         </div>
     </div>
@@ -851,11 +845,11 @@
         const translations = {
             cn: {
                 langBtn: '🇨🇳 CN',
-                navAssets: '资产',
-                navStake: '质押',
-                navLiquidity: '流动性',
-                navInvite: '邀请',
-                navEcosystem: '生态',
+                navNFT: '挑选NFT',
+                navEntertainment: '娱乐',
+                navMarket: '市场',
+                navCollection: '收藏',
+                navMessages: '讯息',
                 tabBlindbox: '盲盒抽取',
                 tabCollection: '我的藏品',
                 tabMarket: '图鉴市场',
@@ -873,11 +867,11 @@
             },
             en: {
                 langBtn: '🇺🇸 EN',
-                navAssets: 'Assets',
-                navStake: 'Stake',
-                navLiquidity: 'Liquidity',
-                navInvite: 'Invite',
-                navEcosystem: 'Ecosystem',
+                navNFT: 'Pick NFT',
+                navEntertainment: 'Entertain',
+                navMarket: 'Market',
+                navCollection: 'Favorite',
+                navMessages: 'Messages',
                 tabBlindbox: 'Blind Box',
                 tabCollection: 'My Collection',
                 tabMarket: 'Market',
@@ -895,11 +889,11 @@
             },
             zh: {
                 langBtn: '🇭🇰 繁中',
-                navAssets: '資產',
-                navStake: '質押',
-                navLiquidity: '流動性',
-                navInvite: '邀請',
-                navEcosystem: '生態',
+                navNFT: '挑選NFT',
+                navEntertainment: '娛樂',
+                navMarket: '市場',
+                navCollection: '收藏',
+                navMessages: '訊息',
                 tabBlindbox: '盲盒抽取',
                 tabCollection: '我的藏品',
                 tabMarket: '圖鑑市場',
@@ -922,20 +916,17 @@
         const langDropdown = document.getElementById('langDropdown');
         let currentLang = localStorage.getItem('bcbsLang') || 'cn';
 
-        // 页面加载后应用保存的语言
         window.addEventListener('DOMContentLoaded', function() {
             const langData = translations[currentLang];
             if (langData) applyTranslations(langData);
         });
 
-        // 点击按钮切换弹窗显示/隐藏
         langBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             langDropdown.classList.toggle('open');
             langBtn.classList.toggle('active');
         });
 
-        // 点击页面其他任意位置关闭弹窗
         document.addEventListener('click', (e) => {
             if (!langDropdown.contains(e.target) && e.target !== langBtn) {
                 langDropdown.classList.remove('open');
@@ -943,65 +934,40 @@
             }
         });
 
-        // 点击语言选项切换界面文字
         document.querySelectorAll('.lang-option').forEach(option => {
             option.addEventListener('click', function() {
                 const langCode = this.getAttribute('data-lang');
                 const langData = translations[langCode];
-
                 if (langData) {
                     currentLang = langCode;
                     localStorage.setItem('bcbsLang', langCode);
                     applyTranslations(langData);
                 }
-
-                // 关闭弹窗
                 langDropdown.classList.remove('open');
                 langBtn.classList.remove('active');
             });
         });
 
         function applyTranslations(langData) {
-            // 更新语言按钮
             langBtn.textContent = langData.langBtn + ' ⌄';
-
-            // 更新底部导航
-            document.querySelector('.nav-assets').textContent = langData.navAssets;
-            document.querySelector('.nav-stake').textContent = langData.navStake;
-            document.querySelector('.nav-liquidity').textContent = langData.navLiquidity;
-            document.querySelector('.nav-invite').textContent = langData.navInvite;
-            document.querySelector('.nav-ecosystem').textContent = langData.navEcosystem;
-
-            // 更新标签页
+            document.querySelector('.nav-nft').textContent = langData.navNFT;
+            document.querySelector('.nav-entertainment').textContent = langData.navEntertainment;
+            document.querySelector('.nav-market').textContent = langData.navMarket;
+            document.querySelector('.nav-collection').textContent = langData.navCollection;
+            document.querySelector('.nav-messages').textContent = langData.navMessages;
             document.querySelector('.tab-blindbox').textContent = langData.tabBlindbox;
             document.querySelector('.tab-collection').textContent = langData.tabCollection;
             document.querySelector('.tab-market').textContent = langData.tabMarket;
-
-            // 更新盲盒标题
             document.querySelector('.box-normal-title').textContent = langData.boxNormal;
             document.querySelector('.box-normal-desc').textContent = langData.boxNormalDesc;
             document.querySelector('.box-premium-title').textContent = langData.boxPremium;
             document.querySelector('.box-premium-desc').textContent = langData.boxPremiumDesc;
             document.querySelector('.box-supreme-title').textContent = langData.boxSupreme;
             document.querySelector('.box-supreme-desc').textContent = langData.boxSupremeDesc;
-
-            // 更新推荐徽章
             document.querySelector('.badge-rec-text').textContent = langData.badgeRecommend;
-
-            // 更新所有Mint按钮
-            document.querySelectorAll('.btn-mint-text').forEach(btn => {
-                btn.textContent = langData.btnMint;
-            });
-
-            // 更新所有市场按钮
-            document.querySelectorAll('.btn-market-text').forEach(btn => {
-                btn.textContent = langData.btnMarket;
-            });
-
-            // 更新藏品标题
+            document.querySelectorAll('.btn-mint-text').forEach(btn => { btn.textContent = langData.btnMint; });
+            document.querySelectorAll('.btn-market-text').forEach(btn => { btn.textContent = langData.btnMarket; });
             document.querySelector('.collection-title').textContent = langData.collectionTitle;
-
-            // 更新图鉴标题
             document.querySelector('.market-title').textContent = langData.marketTitle;
         }
 
@@ -1009,10 +975,8 @@
         document.querySelectorAll('.tab-item').forEach(item => {
             item.addEventListener('click', function() {
                 const tabName = this.getAttribute('data-tab');
-                // 切换激活状态
                 document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
                 this.classList.add('active');
-                // 切换面板
                 document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
                 document.getElementById('panel-' + tabName).classList.add('active');
             });
@@ -1027,18 +991,12 @@
 
         connectBtn.addEventListener('click', async function() {
             if (isLoading) return;
-            if (currentAccount) {
-                disconnectWallet();
-                return;
-            }
+            if (currentAccount) { disconnectWallet(); return; }
             await connectWallet();
         });
 
         async function connectWallet() {
-            if (!window.ethereum) {
-                alert('请安装 MetaMask');
-                return;
-            }
+            if (!window.ethereum) { alert('请安装 MetaMask'); return; }
             isLoading = true;
             connectBtn.disabled = true;
             connectBtn.innerHTML = '连接中<span class="loading-spinner"></span>';
@@ -1047,43 +1005,32 @@
                 currentAccount = accounts[0];
                 provider = new ethers.providers.Web3Provider(window.ethereum);
                 signer = provider.getSigner();
-                connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount.substring(
-                    currentAccount.length - 4);
+                connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount.substring(currentAccount.length - 4);
                 connectBtn.classList.add('connected');
                 connectBtn.disabled = false;
             } catch (e) {
-                if (e.code === 4001) {
-                    alert('请在 MetaMask 中授权连接');
-                } else {
-                    alert('连接失败: ' + (e.message || '未知错误'));
-                }
+                if (e.code === 4001) { alert('请在 MetaMask 中授权连接'); }
+                else { alert('连接失败: ' + (e.message || '未知错误')); }
                 connectBtn.disabled = false;
                 connectBtn.innerHTML = 'Connect wallet';
-            } finally {
-                isLoading = false;
-            }
+            } finally { isLoading = false; }
         }
 
         function disconnectWallet() {
-            currentAccount = null;
-            provider = null;
-            signer = null;
+            currentAccount = null; provider = null; signer = null;
             connectBtn.textContent = 'Connect wallet';
             connectBtn.classList.remove('connected');
             connectBtn.disabled = false;
         }
 
-        // 监听账户变化
         if (window.ethereum) {
             window.ethereum.on('accountsChanged', (accounts) => {
-                if (!accounts || accounts.length === 0) {
-                    disconnectWallet();
-                } else {
+                if (!accounts || accounts.length === 0) { disconnectWallet(); }
+                else {
                     currentAccount = accounts[0];
                     provider = new ethers.providers.Web3Provider(window.ethereum);
                     signer = provider.getSigner();
-                    connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount
-                        .substring(currentAccount.length - 4);
+                    connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount.substring(currentAccount.length - 4);
                     connectBtn.classList.add('connected');
                     connectBtn.disabled = false;
                 }
@@ -1091,7 +1038,6 @@
             window.ethereum.on('disconnect', () => disconnectWallet());
         }
 
-        // 自动连接
         async function autoConnect() {
             if (!window.ethereum) return;
             try {
@@ -1100,8 +1046,7 @@
                     currentAccount = accounts[0];
                     provider = new ethers.providers.Web3Provider(window.ethereum);
                     signer = provider.getSigner();
-                    connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount.substring(
-                        currentAccount.length - 4);
+                    connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount.substring(currentAccount.length - 4);
                     connectBtn.classList.add('connected');
                     connectBtn.disabled = false;
                 }
@@ -1109,12 +1054,8 @@
         }
         setTimeout(() => autoConnect(), 500);
 
-        // ======================== 交互模拟 ========================
         function handleMint(boxType) {
-            if (!currentAccount) {
-                alert('请先连接钱包');
-                return;
-            }
+            if (!currentAccount) { alert('请先连接钱包'); return; }
             alert('⛓️ 链上Mint盲盒 · ' + boxType + ' (演示模式)');
         }
 
