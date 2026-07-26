@@ -112,11 +112,64 @@
         .animal-card .check-mark { position:absolute; top:6px; left:6px; width:22px; height:22px; background:var(--gold-glow); border-radius:50%; display:none; align-items:center; justify-content:center; font-size:12px; color:#000; font-weight:700; z-index:2; }
         .animal-card.selected .check-mark { display:flex; }
 
+        .box-card { 
+            background:rgba(19,32,22,0.8); 
+            border:1px solid rgba(180,145,70,0.3); 
+            border-radius:16px; 
+            padding:20px 15px; 
+            margin-bottom:14px; 
+            text-align:center; 
+            backdrop-filter:blur(8px); 
+            transition:all 0.3s; 
+            position:relative; 
+            box-shadow:0 4px 20px rgba(0,0,0,0.3); 
+        }
+        .box-card:hover { border-color:rgba(220,187,92,0.6); box-shadow:0 8px 30px rgba(180,145,70,0.25); transform:translateY(-2px); }
+        .box-card.recommended { border-color:rgba(220,187,92,0.6); box-shadow:0 0 25px rgba(180,145,70,0.25); }
+        .box-icon-large { 
+            width:100%; 
+            height:140px; 
+            border-radius:14px; 
+            background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); 
+            border:1px solid rgba(212,175,85,0.35); 
+            display:flex; 
+            align-items:center; 
+            justify-content:center; 
+            font-size:70px; 
+            margin-bottom:12px; 
+            box-shadow:inset 0 0 25px rgba(0,0,0,0.6), 0 0 20px rgba(180,145,70,0.2); 
+            position:relative; 
+        }
+        .badge-recommend { position:absolute; top:-10px; right:15px; background:linear-gradient(180deg, #e7c778 0%, #b48b3a 100%); color:#0a130e; padding:5px 14px; border-radius:12px; font-size:11px; font-weight:700; box-shadow:0 4px 15px rgba(180,145,70,0.5); z-index:5; animation:pulse 2s infinite; }
+        @keyframes pulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.05); } }
+        .box-card h3 { color:var(--gold-light); font-size:18px; font-weight:700; margin-bottom:4px; }
+        .box-card .desc { color:var(--text-secondary); font-size:12px; margin-bottom:8px; }
+        .box-card .price { color:var(--gold-glow); font-size:16px; font-weight:700; margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:4px; }
+        .box-card .remain { color:rgba(255,255,255,0.4); font-size:11px; margin-top:8px; }
+        .btn-mint { width:100%; padding:12px; background:linear-gradient(180deg, #e7c778 0%, #b48b3a 70%, #7a5822 100%); color:#0a130e; border:1px solid #f5e3b3; border-radius:14px; font-weight:700; font-size:16px; cursor:pointer; box-shadow:0 6px 20px rgba(180,145,70,0.35); transition:all 0.2s; letter-spacing:0.5px; }
+        .btn-mint:hover { background:linear-gradient(180deg, #f5da8a 0%, #c79d46 70%, #8f6826 100%); box-shadow:0 10px 25px rgba(220,180,70,0.55); transform:scale(1.02); }
+
         .modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:1000; justify-content:center; align-items:center; }
         .modal-overlay.open { display:flex; }
-        .modal-box { background:linear-gradient(145deg, #1a2e1f, #0d1a14); border:2px solid var(--gold-glow); border-radius:20px; padding:25px; text-align:center; max-width:300px; width:90%; box-shadow:0 0 60px rgba(180,145,70,0.6); animation:modalIn 0.3s ease; }
+        .modal-box { background:linear-gradient(145deg, #1a2e1f, #0d1a14); border:2px solid var(--gold-glow); border-radius:20px; padding:25px; text-align:center; max-width:320px; width:90%; box-shadow:0 0 60px rgba(180,145,70,0.6); animation:modalIn 0.3s ease; }
         @keyframes modalIn { from { transform:scale(0.8); opacity:0; } to { transform:scale(1); opacity:1; } }
-        .modal-box .modal-icon { font-size:90px; margin-bottom:10px; }
+        .modal-box .modal-icon { 
+            width:180px; 
+            height:180px; 
+            margin:0 auto 10px; 
+            display:flex; 
+            align-items:center; 
+            justify-content:center; 
+            overflow:hidden; 
+        }
+        .modal-box .modal-icon img { 
+            width:100%; 
+            height:100%; 
+            object-fit:contain; 
+        }
+        .modal-box .modal-icon .emoji-fallback { 
+            font-size:90px; 
+        }
         .modal-box .modal-name { color:var(--gold-light); font-size:24px; font-weight:700; margin-bottom:4px; }
         .modal-box .modal-rarity { font-size:16px; margin-bottom:6px; }
         .modal-box .modal-id { color:var(--text-secondary); font-size:13px; margin-bottom:6px; }
@@ -188,8 +241,31 @@
 
             <div class="page" id="page-entertainment">
                 <div class="title"><h2>🎮 娱乐盲盒</h2><p>抽取你的专属珍稀动物卡牌</p></div>
-                <div class="section-header"><h3>🎴 选择卡片</h3><span class="selected-count" id="selectedCount2">已选 0</span></div>
-                <div class="grid-3" id="cardGrid2"></div>
+                <div class="box-card">
+                    <div class="box-icon-large">🎁</div>
+                    <h3>普通盲盒</h3>
+                    <p class="desc">随机稀有动物卡牌</p>
+                    <div class="price"><i class="fab fa-ethereum"></i> 0.001 BNB</div>
+                    <button class="btn-mint" onclick="mint('普通盲盒')">Mint 抽取</button>
+                    <p class="remain">剩余 1240/3000</p>
+                </div>
+                <div class="box-card recommended">
+                    <div class="badge-recommend">⭐ 推荐</div>
+                    <div class="box-icon-large">🎀</div>
+                    <h3>典藏盲盒</h3>
+                    <p class="desc">更高概率获得隐藏款卡牌</p>
+                    <div class="price"><i class="fab fa-ethereum"></i> 0.005 BNB</div>
+                    <button class="btn-mint" onclick="mint('典藏盲盒')">Mint 抽取</button>
+                    <p class="remain">剩余 612/1000</p>
+                </div>
+                <div class="box-card">
+                    <div class="box-icon-large">👑</div>
+                    <h3>至尊礼盒</h3>
+                    <p class="desc">必得史诗或传说动物卡牌</p>
+                    <div class="price"><i class="fab fa-ethereum"></i> 0.02 BNB</div>
+                    <button class="btn-mint" onclick="mint('至尊礼盒')">Mint 抽取</button>
+                    <p class="remain">剩余 89/200</p>
+                </div>
             </div>
 
             <div class="page" id="page-market">
@@ -202,12 +278,12 @@
                     <span class="filter-btn" onclick="filterMarket('common',this)">普通</span>
                 </div>
                 <div class="grid-2" id="marketGrid">
-                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail('🐅','雪豹','传说','#0001','雪山之巅的幽灵，极其稀有','2.5 BNB','#ffb84d')"><div class="frame">🐅</div><div class="info"><p style="color:white;font-weight:600;">雪豹</p><p style="color:#ffb84d;font-size:11px;">传说 · 总量100</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail('🐼','大熊猫','传说','#0007','国宝级珍稀动物，黑白相间','3.0 BNB','#ffb84d')"><div class="frame">🐼</div><div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p style="color:#ffb84d;font-size:11px;">传说 · 总量100</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="epic" onclick="showCardDetail('🦏','白犀牛','史诗','#0892','草原上的装甲巨兽','0.45 BNB','#d98eff')"><div class="frame">🦏</div><div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p style="color:#d98eff;font-size:11px;">史诗 · 总量600</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="rare" onclick="showCardDetail('🦅','金雕','稀有','#2210','翱翔天际的猛禽之王','0.08 BNB','#6db3ff')"><div class="frame">🦅</div><div class="info"><p style="color:white;font-weight:600;">金雕</p><p style="color:#6db3ff;font-size:11px;">稀有 · 总量1500</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="rare" onclick="showCardDetail('🐘','亚洲象','稀有','#1502','丛林中的智慧巨人','0.07 BNB','#6db3ff')"><div class="frame">🐘</div><div class="info"><p style="color:white;font-weight:600;">亚洲象</p><p style="color:#6db3ff;font-size:11px;">稀有 · 总量1500</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="common" onclick="showCardDetail('🦊','藏狐','普通','#2451','高原上的神秘微笑','0.01 BNB','#ccc')"><div class="frame">🦊</div><div class="info"><p style="color:white;font-weight:600;">藏狐</p><p style="color:#ccc;font-size:11px;">普通 · 总量3000</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail('🐅','雪豹','传说','#0001','雪山之巅的幽灵，极其稀有','2.5 BNB','#ffb84d','images/youpiao1.png')"><div class="frame">🐅</div><div class="info"><p style="color:white;font-weight:600;">雪豹</p><p style="color:#ffb84d;font-size:11px;">传说 · 总量100</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail('🐼','大熊猫','传说','#0007','国宝级珍稀动物，黑白相间','3.0 BNB','#ffb84d','images/youpiao2.png')"><div class="frame">🐼</div><div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p style="color:#ffb84d;font-size:11px;">传说 · 总量100</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="epic" onclick="showCardDetail('🦏','白犀牛','史诗','#0892','草原上的装甲巨兽','0.45 BNB','#d98eff','images/youpiao3.png')"><div class="frame">🦏</div><div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p style="color:#d98eff;font-size:11px;">史诗 · 总量600</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="rare" onclick="showCardDetail('🦅','金雕','稀有','#2210','翱翔天际的猛禽之王','0.08 BNB','#6db3ff','images/youpiao4.png')"><div class="frame">🦅</div><div class="info"><p style="color:white;font-weight:600;">金雕</p><p style="color:#6db3ff;font-size:11px;">稀有 · 总量1500</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="rare" onclick="showCardDetail('🐘','亚洲象','稀有','#1502','丛林中的智慧巨人','0.07 BNB','#6db3ff','images/youpiao5.png')"><div class="frame">🐘</div><div class="info"><p style="color:white;font-weight:600;">亚洲象</p><p style="color:#6db3ff;font-size:11px;">稀有 · 总量1500</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="common" onclick="showCardDetail('🦊','藏狐','普通','#2451','高原上的神秘微笑','0.01 BNB','#ccc','images/youpiao6.png')"><div class="frame">🦊</div><div class="info"><p style="color:white;font-weight:600;">藏狐</p><p style="color:#ccc;font-size:11px;">普通 · 总量3000</p><button class="btn-sm">查看详情</button></div></div>
                 </div>
             </div>
 
@@ -220,14 +296,14 @@
                     <div class="stat-item"><div class="val">4.8</div><div class="lbl">估值 BNB</div></div>
                 </div>
                 <div class="grid-2">
-                    <div class="nft-card" onclick="showCardDetail('🐅','雪豹','传说','#0001','雪山之巅的幽灵','2.5 BNB','#ffb84d')"><div class="frame">🐅</div><div class="name">雪豹</div><div class="rarity r-legendary">传说</div></div>
-                    <div class="nft-card" onclick="showCardDetail('🐼','大熊猫','传说','#0007','国宝级珍稀动物','3.0 BNB','#ffb84d')"><div class="frame">🐼</div><div class="name">大熊猫</div><div class="rarity r-legendary">传说</div></div>
-                    <div class="nft-card" onclick="showCardDetail('🦏','白犀牛','史诗','#0892','草原装甲巨兽','0.45 BNB','#d98eff')"><div class="frame">🦏</div><div class="name">白犀牛</div><div class="rarity r-epic">史诗</div></div>
-                    <div class="nft-card" onclick="showCardDetail('🦅','金雕','稀有','#2210','翱翔天际的猛禽','0.08 BNB','#6db3ff')"><div class="frame">🦅</div><div class="name">金雕</div><div class="rarity r-rare">稀有</div></div>
-                    <div class="nft-card" onclick="showCardDetail('🐘','亚洲象','稀有','#1502','丛林智慧巨人','0.07 BNB','#6db3ff')"><div class="frame">🐘</div><div class="name">亚洲象</div><div class="rarity r-rare">稀有</div></div>
-                    <div class="nft-card" onclick="showCardDetail('🐯','孟加拉虎','稀有','#1024','丛林之王','0.09 BNB','#6db3ff')"><div class="frame">🐯</div><div class="name">孟加拉虎</div><div class="rarity r-rare">稀有</div></div>
-                    <div class="nft-card" onclick="showCardDetail('🦊','藏狐','普通','#2451','高原神秘微笑','0.01 BNB','#ccc')"><div class="frame">🦊</div><div class="name">藏狐</div><div class="rarity r-common">普通</div></div>
-                    <div class="nft-card" onclick="showCardDetail('🦌','麋鹿','普通','#3120','森林精灵','0.01 BNB','#ccc')"><div class="frame">🦌</div><div class="name">麋鹿</div><div class="rarity r-common">普通</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🐅','雪豹','传说','#0001','雪山之巅的幽灵','2.5 BNB','#ffb84d','images/youpiao1.png')"><div class="frame">🐅</div><div class="name">雪豹</div><div class="rarity r-legendary">传说</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🐼','大熊猫','传说','#0007','国宝级珍稀动物','3.0 BNB','#ffb84d','images/youpiao2.png')"><div class="frame">🐼</div><div class="name">大熊猫</div><div class="rarity r-legendary">传说</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🦏','白犀牛','史诗','#0892','草原装甲巨兽','0.45 BNB','#d98eff','images/youpiao3.png')"><div class="frame">🦏</div><div class="name">白犀牛</div><div class="rarity r-epic">史诗</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🦅','金雕','稀有','#2210','翱翔天际的猛禽','0.08 BNB','#6db3ff','images/youpiao4.png')"><div class="frame">🦅</div><div class="name">金雕</div><div class="rarity r-rare">稀有</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🐘','亚洲象','稀有','#1502','丛林智慧巨人','0.07 BNB','#6db3ff','images/youpiao5.png')"><div class="frame">🐘</div><div class="name">亚洲象</div><div class="rarity r-rare">稀有</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🐯','孟加拉虎','稀有','#1024','丛林之王','0.09 BNB','#6db3ff','images/youpiao7.png')"><div class="frame">🐯</div><div class="name">孟加拉虎</div><div class="rarity r-rare">稀有</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🦊','藏狐','普通','#2451','高原神秘微笑','0.01 BNB','#ccc','images/youpiao6.png')"><div class="frame">🦊</div><div class="name">藏狐</div><div class="rarity r-common">普通</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🦌','麋鹿','普通','#3120','森林精灵','0.01 BNB','#ccc','images/youpiao8.png')"><div class="frame">🦌</div><div class="name">麋鹿</div><div class="rarity r-common">普通</div></div>
                 </div>
             </div>
 
@@ -240,9 +316,13 @@
             </div>
         </div>
 
+        <!-- 弹窗：使用图片替代emoji -->
         <div class="modal-overlay" id="cardModal">
             <div class="modal-box">
-                <div class="modal-icon" id="modalIcon">🎁</div>
+                <div class="modal-icon" id="modalIcon">
+                    <img id="modalImg" src="" alt="" style="display:none;">
+                    <span class="emoji-fallback" id="modalEmoji">🎁</span>
+                </div>
                 <div class="modal-name" id="modalName">???</div>
                 <div class="modal-rarity" id="modalRarity" style="color:#ffb84d;"></div>
                 <div class="modal-id" id="modalId"></div>
@@ -266,15 +346,15 @@
 
     <script>
         const cardData = [
-            { icon:'🐅', name:'雪豹', rarity:'传说', id:'#0001', desc:'雪山之巅的幽灵，极其稀有', price:'2.5 BNB', color:'#ffb84d' },
-            { icon:'🐼', name:'大熊猫', rarity:'传说', id:'#0007', desc:'国宝级珍稀动物', price:'3.0 BNB', color:'#ffb84d' },
-            { icon:'🦏', name:'白犀牛', rarity:'史诗', id:'#0892', desc:'草原上的装甲巨兽', price:'0.45 BNB', color:'#d98eff' },
-            { icon:'🦅', name:'金雕', rarity:'稀有', id:'#2210', desc:'翱翔天际的猛禽之王', price:'0.08 BNB', color:'#6db3ff' },
-            { icon:'🐘', name:'亚洲象', rarity:'稀有', id:'#1502', desc:'丛林中的智慧巨人', price:'0.07 BNB', color:'#6db3ff' },
-            { icon:'🐯', name:'孟加拉虎', rarity:'稀有', id:'#1024', desc:'丛林之王', price:'0.09 BNB', color:'#6db3ff' },
-            { icon:'🦊', name:'藏狐', rarity:'普通', id:'#2451', desc:'高原上的神秘微笑', price:'0.01 BNB', color:'#ccc' },
-            { icon:'🦚', name:'绿孔雀', rarity:'史诗', id:'#0103', desc:'华丽羽毛的展示者', price:'0.5 BNB', color:'#d98eff' },
-            { icon:'🐬', name:'中华白海豚', rarity:'稀有', id:'#3345', desc:'海洋中的粉色精灵', price:'0.1 BNB', color:'#6db3ff' }
+            { icon:'🐅', name:'雪豹', rarity:'传说', id:'#0001', desc:'雪山之巅的幽灵，极其稀有', price:'2.5 BNB', color:'#ffb84d', img:'images/youpiao1.png' },
+            { icon:'🐼', name:'大熊猫', rarity:'传说', id:'#0007', desc:'国宝级珍稀动物', price:'3.0 BNB', color:'#ffb84d', img:'images/youpiao2.png' },
+            { icon:'🦏', name:'白犀牛', rarity:'史诗', id:'#0892', desc:'草原上的装甲巨兽', price:'0.45 BNB', color:'#d98eff', img:'images/youpiao3.png' },
+            { icon:'🦅', name:'金雕', rarity:'稀有', id:'#2210', desc:'翱翔天际的猛禽之王', price:'0.08 BNB', color:'#6db3ff', img:'images/youpiao4.png' },
+            { icon:'🐘', name:'亚洲象', rarity:'稀有', id:'#1502', desc:'丛林中的智慧巨人', price:'0.07 BNB', color:'#6db3ff', img:'images/youpiao5.png' },
+            { icon:'🐯', name:'孟加拉虎', rarity:'稀有', id:'#1024', desc:'丛林之王', price:'0.09 BNB', color:'#6db3ff', img:'images/youpiao7.png' },
+            { icon:'🦊', name:'藏狐', rarity:'普通', id:'#2451', desc:'高原上的神秘微笑', price:'0.01 BNB', color:'#ccc', img:'images/youpiao6.png' },
+            { icon:'🦚', name:'绿孔雀', rarity:'史诗', id:'#0103', desc:'华丽羽毛的展示者', price:'0.5 BNB', color:'#d98eff', img:'images/youpiao9.png' },
+            { icon:'🐬', name:'中华白海豚', rarity:'稀有', id:'#3345', desc:'海洋中的粉色精灵', price:'0.1 BNB', color:'#6db3ff', img:'images/youpiao10.png' }
         ];
         let selectedCard = null, selectedElement = null;
 
@@ -293,10 +373,21 @@
             document.querySelectorAll(`.animal-card[data-page="${pageKey}"]`).forEach(c => c.classList.remove('selected'));
             selectedCard = cardData[index]; selectedElement = element; element.classList.add('selected');
             const c = document.getElementById(pageKey==='nft'?'selectedCount':'selectedCount2'); if(c) c.textContent='已选 1';
-            showCardDetail(selectedCard.icon,selectedCard.name,selectedCard.rarity,selectedCard.id,selectedCard.desc,selectedCard.price,selectedCard.color);
+            showCardDetail(selectedCard.icon,selectedCard.name,selectedCard.rarity,selectedCard.id,selectedCard.desc,selectedCard.price,selectedCard.color,selectedCard.img);
         }
-        function showCardDetail(icon,name,rarity,id,desc,price,color) {
-            document.getElementById('modalIcon').textContent=icon; document.getElementById('modalName').textContent=name;
+        function showCardDetail(icon,name,rarity,id,desc,price,color,img) {
+            const modalImg = document.getElementById('modalImg');
+            const modalEmoji = document.getElementById('modalEmoji');
+            if (img) {
+                modalImg.src = img;
+                modalImg.style.display = 'block';
+                modalEmoji.style.display = 'none';
+            } else {
+                modalImg.style.display = 'none';
+                modalEmoji.style.display = 'block';
+                modalEmoji.textContent = icon;
+            }
+            document.getElementById('modalName').textContent=name;
             document.getElementById('modalRarity').textContent=rarity; document.getElementById('modalRarity').style.color=color||'#ffb84d';
             document.getElementById('modalId').textContent=id; document.getElementById('modalDesc').textContent=desc;
             document.getElementById('modalPrice').textContent=price||'0.01 BNB'; document.getElementById('cardModal').classList.add('open');
@@ -309,6 +400,7 @@
             if(selectedCard&&selectedElement){ selectedElement.classList.add('revealed'); selectedElement.querySelector('.card-icon').textContent=selectedCard.icon; selectedElement.querySelector('.card-name').textContent=selectedCard.name; selectedElement.querySelector('.card-rarity').textContent=selectedCard.rarity; selectedElement.querySelector('.card-rarity').style.color=selectedCard.color; alert(`✅ 已确认：${selectedCard.name} (${selectedCard.rarity})\n编号：${selectedCard.id}`); }
             document.getElementById('cardModal').classList.remove('open');
         }
+        function mint(type) { alert('⛓️ 链上Mint盲盒 · ' + type + ' (演示模式)'); }
         document.getElementById('cardModal').addEventListener('click',function(e){ if(e.target===this)closeModal(); });
         function switchPage(page,el){
             document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+page).classList.add('active');
@@ -330,7 +422,7 @@
             try{const a=await window.ethereum.request({method:'eth_requestAccounts'});ac=a[0];wb.textContent=ac.substring(0,6)+'...'+ac.substring(ac.length-4);wb.classList.add('connected');}catch(e){wb.textContent='Connect wallet';}
         });
         (async()=>{if(window.ethereum){try{const a=await window.ethereum.request({method:'eth_accounts'});if(a.length>0){ac=a[0];wb.textContent=ac.substring(0,6)+'...'+ac.substring(ac.length-4);wb.classList.add('connected');}}catch(e){}}})();
-        renderCards('cardGrid','nft'); renderCards('cardGrid2','entertainment');
+        renderCards('cardGrid','nft');
     </script>
 </body>
 </html>
