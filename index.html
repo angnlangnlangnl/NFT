@@ -3,984 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>极危珍稀盲盒 · BCBS</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <title>珍稀动物盲盒 · NFT DApp</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        :root {
-            --bg-color: #0d1a14;
-            --card-bg: rgba(19, 32, 22, 0.85);
-            --border-color: rgba(180, 145, 70, 0.25);
-            --text-primary: #FFFFFF;
-            --text-primary-soft: #f0e6d2;
-            --text-secondary: #b8a47b;
-            --text-dim: rgba(255, 255, 255, 0.45);
-            --gold-light: #f8ecc9;
-            --gold-main: #d6b878;
-            --gold-deep: #9e7a3a;
-            --gold-metallic: #c5a455;
-            --gold-glow: #dbb45c;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            height: 100dvh;
-            overflow: hidden;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            color: var(--text-primary);
-            background-image: radial-gradient(circle at 20% 10%, rgba(180, 145, 70, 0.12) 0%, transparent 35%),
-                radial-gradient(circle at 80% 80%, rgba(220, 195, 140, 0.08) 0%, transparent 40%);
-        }
-
-        .app-container {
-            width: 100%;
-            max-width: 420px;
-            height: 100%;
-            max-height: 100vh;
-            max-height: 100dvh;
-            background: radial-gradient(circle at 50% 10%, #1a2e1f 0%, #0d1a14 100%);
-            border-radius: 20px;
-            box-shadow: 0 0 40px rgba(180, 145, 70, 0.15);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .app-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: radial-gradient(rgba(180, 145, 70, 0.06) 1px, transparent 1px);
-            background-size: 40px 40px;
-            opacity: 0.5;
-            z-index: 0;
-            pointer-events: none;
-            border-radius: 20px;
-        }
-
-        .scroll-area {
-            flex: 1;
-            overflow-y: auto;
-            padding: 15px;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: contain;
-            position: relative;
-            z-index: 1;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 15px;
-            position: relative;
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--gold-main);
-            letter-spacing: 0.5px;
-            text-shadow: 0 0 15px rgba(180, 145, 70, 0.4);
-        }
-
-        .logo-area span:first-child {
-            font-size: 28px;
-            margin-right: 8px;
-        }
-
-        .header-controls {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            position: relative;
-        }
-
-        .lang-btn {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            position: relative;
-            transition: all 0.2s;
-        }
-
-        .lang-btn.active {
-            background: rgba(180, 145, 70, 0.1);
-            border-color: var(--gold-main);
-            color: var(--gold-glow);
-        }
-
-        .lang-dropdown {
-            display: none;
-            position: absolute;
-            top: 38px;
-            right: 0;
-            background: rgba(13, 26, 20, 0.97);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 12px;
-            width: 200px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
-            z-index: 999;
-            flex-direction: column;
-            gap: 6px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .lang-dropdown.open {
-            display: flex;
-        }
-
-        .lang-option {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 12px;
-            border-radius: 6px;
-            color: var(--text-primary-soft);
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .lang-option:hover {
-            background: rgba(197, 164, 85, 0.15);
-            color: var(--gold-light);
-        }
-
-        .lang-option .code {
-            color: var(--text-secondary);
-            font-size: 12px;
-            font-weight: 500;
-            margin-left: 8px;
-        }
-
-        .connect-btn {
-            background: transparent;
-            border: 1px solid rgba(214, 184, 120, 0.4);
-            color: var(--gold-glow);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(180, 145, 70, 0.08);
-            transition: all 0.3s;
-            white-space: nowrap;
-        }
-
-        .connect-btn:hover:not(:disabled) {
-            box-shadow: 0 0 25px rgba(180, 145, 70, 0.25);
-            background: rgba(180, 145, 70, 0.08);
-        }
-
-        .connect-btn.connected {
-            background: rgba(180, 145, 70, 0.12);
-            border-color: var(--gold-glow);
-            color: var(--gold-light);
-        }
-
-        .connect-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .tab-nav {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(180, 145, 70, 0.2);
-            margin-bottom: 20px;
-        }
-
-        .tab-item {
-            color: #b8a47b;
-            font-size: 13px;
-            padding-bottom: 8px;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .tab-item.active {
-            color: #f3d779;
-            border-bottom: 2px solid #dbb45c;
-            text-shadow: 0 0 12px rgba(245, 200, 70, 0.4);
-        }
-
-        .tab-panel {
-            display: none;
-        }
-
-        .tab-panel.active {
-            display: block;
-        }
-
-        .blindbox-title {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .blindbox-title h2 {
-            font-size: 28px;
-            font-weight: 700;
-            background: linear-gradient(180deg, #f5e3b3 0%, #c5a455 60%, #8a6327 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: 0 0 20px rgba(180, 145, 70, 0.5);
-            margin-bottom: 8px;
-        }
-
-        .blindbox-title p {
-            color: #b8a16a;
-            font-size: 13px;
-            max-width: 280px;
-            margin: 0 auto;
-            line-height: 1.5;
-        }
-
-        .box-card {
-            background: rgba(19, 32, 22, 0.8);
-            border: 1px solid rgba(180, 145, 70, 0.3);
-            border-radius: 16px;
-            padding: 20px 15px;
-            margin-bottom: 14px;
-            text-align: center;
-            backdrop-filter: blur(8px);
-            transition: all 0.3s;
-            position: relative;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .box-card:hover {
-            border-color: rgba(220, 187, 92, 0.6);
-            box-shadow: 0 8px 30px rgba(180, 145, 70, 0.25);
-            transform: translateY(-2px);
-        }
-
-        .box-card.recommended {
-            border-color: rgba(220, 187, 92, 0.6);
-            box-shadow: 0 0 25px rgba(180, 145, 70, 0.25);
-        }
-
-        .box-icon {
-            width: 100%;
-            height: 140px;
-            border-radius: 14px;
-            background: linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%);
-            border: 1px solid rgba(212, 175, 85, 0.35);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 70px;
-            margin-bottom: 12px;
-            box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.6), 0 0 20px rgba(180, 145, 70, 0.2);
-            position: relative;
-        }
-
-        .box-icon .number-tag {
-            position: absolute;
-            bottom: 8px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.6);
-            color: var(--gold-glow);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-        }
-
-        .badge-recommend {
-            position: absolute;
-            top: -10px;
-            right: 15px;
-            background: linear-gradient(180deg, #e7c778 0%, #b48b3a 100%);
-            color: #0a130e;
-            padding: 5px 14px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 700;
-            box-shadow: 0 4px 15px rgba(180, 145, 70, 0.5);
-            z-index: 5;
-        }
-
-        .box-card h3 {
-            color: var(--gold-light);
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .box-card .desc {
-            color: var(--text-secondary);
-            font-size: 12px;
-            margin-bottom: 8px;
-        }
-
-        .box-card .price {
-            color: var(--gold-glow);
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
-
-        .box-card .remaining {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 11px;
-            margin-top: 8px;
-        }
-
-        .btn-mint {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(180deg, #e7c778 0%, #b48b3a 70%, #7a5822 100%);
-            color: #0a130e;
-            border: 1px solid #f5e3b3;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(180, 145, 70, 0.35);
-            transition: all 0.2s;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-mint:hover {
-            background: linear-gradient(180deg, #f5da8a 0%, #c79d46 70%, #8f6826 100%);
-            box-shadow: 0 10px 25px rgba(220, 180, 70, 0.55);
-            transform: scale(1.02);
-        }
-
-        .collection-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .nft-card {
-            background: rgba(19, 32, 22, 0.8);
-            border: 1px solid rgba(180, 145, 70, 0.25);
-            border-radius: 12px;
-            padding: 10px;
-            text-align: center;
-            backdrop-filter: blur(8px);
-            transition: all 0.2s;
-        }
-
-        .nft-card:hover {
-            border-color: rgba(220, 187, 92, 0.5);
-            box-shadow: 0 4px 15px rgba(180, 145, 70, 0.15);
-        }
-
-        .nft-card .icon-frame {
-            width: 100%;
-            height: 90px;
-            border-radius: 10px;
-            background: linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%);
-            border: 1px solid rgba(212, 175, 85, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 50px;
-            margin-bottom: 8px;
-        }
-
-        .nft-card .name {
-            color: white;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .nft-card .rarity {
-            color: var(--gold-glow);
-            font-size: 11px;
-        }
-
-        .collection-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .collection-header h3 {
-            color: var(--gold-light);
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .collection-count {
-            background: rgba(19, 32, 22, 0.8);
-            border: 1px solid rgba(180, 145, 70, 0.3);
-            color: var(--gold-glow);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-        }
-
-        .market-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .market-card {
-            background: rgba(19, 32, 22, 0.8);
-            border: 1px solid rgba(180, 145, 70, 0.25);
-            border-radius: 12px;
-            overflow: hidden;
-            backdrop-filter: blur(8px);
-            transition: all 0.2s;
-        }
-
-        .market-card:hover {
-            border-color: rgba(220, 187, 92, 0.5);
-            box-shadow: 0 4px 15px rgba(180, 145, 70, 0.15);
-        }
-
-        .market-card .img-frame {
-            width: 100%;
-            height: 100px;
-            background: linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 55px;
-        }
-
-        .market-card .info {
-            padding: 10px;
-        }
-
-        .market-card .name {
-            color: white;
-            font-weight: 600;
-            font-size: 13px;
-            margin-bottom: 2px;
-        }
-
-        .market-card .supply {
-            color: var(--gold-glow);
-            font-size: 11px;
-            margin-bottom: 8px;
-        }
-
-        .market-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .market-header h3 {
-            color: var(--gold-light);
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .market-filters {
-            display: flex;
-            gap: 6px;
-        }
-
-        .filter-btn {
-            background: rgba(19, 32, 22, 0.8);
-            border: 1px solid rgba(180, 145, 70, 0.3);
-            color: var(--gold-glow);
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 11px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .filter-btn:hover {
-            background: rgba(180, 145, 70, 0.15);
-            border-color: var(--gold-glow);
-        }
-
-        .filter-btn.active-filter {
-            background: rgba(180, 145, 70, 0.2);
-            border-color: var(--gold-glow);
-        }
-
-        .btn-sm {
-            width: 100%;
-            padding: 7px;
-            border: 1px solid rgba(180, 145, 70, 0.5);
-            background: transparent;
-            color: var(--gold-glow);
-            border-radius: 8px;
-            font-size: 11px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-sm:hover {
-            background: rgba(180, 145, 70, 0.15);
-            border-color: var(--gold-glow);
-        }
-
-        .loading-spinner {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid rgba(180, 145, 70, 0.2);
-            border-top: 2px solid var(--gold-glow);
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-            margin-right: 4px;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* 底部导航 */
-        .bottom-nav {
-            flex-shrink: 0;
-            background: rgba(10, 20, 13, 0.9);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(180, 145, 70, 0.2);
-            border-radius: 20px;
-            box-shadow: 0 -4px 30px rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            margin: 0 15px 15px 15px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .bottom-nav::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: -1px;
-            right: -1px;
-            bottom: -1px;
-            border-radius: 20px;
-            padding: 1px;
-            background: linear-gradient(135deg, var(--gold-deep), transparent, var(--gold-light));
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-            opacity: 0.5;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--text-secondary);
-            font-size: 11px;
-            gap: 4px;
-            cursor: pointer;
-            padding: 5px 10px;
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-
-        .nav-item .nav-icon {
-            font-size: 18px;
-        }
-
-        .nav-item.active {
-            color: var(--gold-light);
-            position: relative;
-        }
-
-        .nav-item.active::after {
-            content: '';
-            position: absolute;
-            top: -6px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 2px;
-            background: linear-gradient(to right, var(--gold-deep), var(--gold-glow));
-            border-radius: 5px;
-            box-shadow: 0 0 15px var(--gold-glow);
-        }
-
-        .nav-item:not(.active):hover {
-            color: var(--gold-glow);
-        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
+        :root { --bg:#0d1a14; --gold-light:#f8ecc9; --gold:#d6b878; --gold-deep:#9e7a3a; --gold-glow:#dbb45c; --text-secondary:#b8a47b; }
+        body { background:var(--bg); display:flex; justify-content:center; align-items:center; height:100vh; height:100dvh; overflow:hidden; position:fixed; top:0; left:0; right:0; bottom:0; color:#fff; background-image:radial-gradient(circle at 20% 10%, rgba(180,145,70,0.12) 0%, transparent 35%), radial-gradient(circle at 80% 80%, rgba(220,195,140,0.08) 0%, transparent 40%); }
+        .app { width:100%; max-width:420px; height:100%; background:radial-gradient(circle at 50% 10%, #1a2e1f 0%, #0d1a14 100%); border-radius:20px; box-shadow:0 0 40px rgba(180,145,70,0.15); display:flex; flex-direction:column; position:relative; overflow:hidden; }
+        .app::before { content:''; position:absolute; top:0; left:0; right:0; bottom:0; background-image:radial-gradient(rgba(180,145,70,0.06) 1px, transparent 1px); background-size:40px 40px; opacity:0.5; z-index:0; pointer-events:none; border-radius:20px; }
+        .scroll { flex:1; overflow-y:auto; padding:15px; -webkit-overflow-scrolling:touch; position:relative; z-index:1; }
+        .header { display:flex; justify-content:space-between; align-items:center; padding-bottom:15px; }
+        .logo { display:flex; align-items:center; font-size:18px; font-weight:700; color:var(--gold); text-shadow:0 0 15px rgba(180,145,70,0.4); }
+        .logo .icon { font-size:28px; margin-right:8px; }
+        .header-right { display:flex; gap:8px; align-items:center; position:relative; }
+        .lang-btn { background:transparent; border:1px solid rgba(180,145,70,0.25); color:var(--text-secondary); padding:5px 10px; border-radius:6px; font-size:12px; cursor:pointer; }
+        .lang-dropdown { display:none; position:absolute; top:38px; right:0; background:rgba(13,26,20,0.97); backdrop-filter:blur(12px); border:1px solid rgba(180,145,70,0.25); border-radius:12px; padding:12px; width:180px; box-shadow:0 8px 32px rgba(0,0,0,0.8); z-index:999; flex-direction:column; gap:6px; }
+        .lang-dropdown.open { display:flex; }
+        .lang-option { display:flex; align-items:center; justify-content:space-between; padding:8px 12px; border-radius:6px; color:#f0e6d2; font-size:14px; cursor:pointer; }
+        .lang-option:hover { background:rgba(197,164,85,0.15); color:var(--gold-light); }
+        .lang-option .code { color:var(--text-secondary); font-size:12px; margin-left:8px; }
+        .wallet-btn { background:transparent; border:1px solid rgba(214,184,120,0.4); color:var(--gold-glow); padding:6px 12px; border-radius:20px; font-size:12px; cursor:pointer; white-space:nowrap; }
+        .wallet-btn.connected { background:rgba(180,145,70,0.12); border-color:var(--gold-glow); color:var(--gold-light); }
+        .page { display:none; }
+        .page.active { display:block; }
+        .title { text-align:center; margin-bottom:20px; }
+        .title h2 { font-size:26px; font-weight:700; background:linear-gradient(180deg, #f5e3b3 0%, #c5a455 60%, #8a6327 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; text-shadow:0 0 20px rgba(180,145,70,0.5); margin-bottom:6px; }
+        .title p { color:#b8a16a; font-size:13px; }
+        .box-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.3); border-radius:16px; padding:20px 15px; margin-bottom:14px; text-align:center; backdrop-filter:blur(8px); position:relative; box-shadow:0 4px 20px rgba(0,0,0,0.3); }
+        .box-card.recommended { border-color:rgba(220,187,92,0.6); box-shadow:0 0 25px rgba(180,145,70,0.25); }
+        .box-icon { width:100%; height:120px; border-radius:14px; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); border:1px solid rgba(212,175,85,0.35); display:flex; align-items:center; justify-content:center; font-size:60px; margin-bottom:12px; box-shadow:inset 0 0 25px rgba(0,0,0,0.6), 0 0 20px rgba(180,145,70,0.2); position:relative; }
+        .badge { position:absolute; top:-10px; right:15px; background:linear-gradient(180deg, #e7c778 0%, #b48b3a 100%); color:#0a130e; padding:5px 14px; border-radius:12px; font-size:11px; font-weight:700; box-shadow:0 4px 15px rgba(180,145,70,0.5); z-index:5; animation:pulse 2s infinite; }
+        @keyframes pulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.05); } }
+        .box-card h3 { color:var(--gold-light); font-size:18px; font-weight:700; margin-bottom:4px; }
+        .box-card .desc { color:var(--text-secondary); font-size:12px; margin-bottom:8px; }
+        .box-card .price { color:var(--gold-glow); font-size:16px; font-weight:700; margin-bottom:12px; }
+        .box-card .remain { color:rgba(255,255,255,0.4); font-size:11px; margin-top:8px; }
+        .btn-mint { width:100%; padding:12px; background:linear-gradient(180deg, #e7c778 0%, #b48b3a 70%, #7a5822 100%); color:#0a130e; border:1px solid #f5e3b3; border-radius:14px; font-weight:700; font-size:16px; cursor:pointer; box-shadow:0 6px 20px rgba(180,145,70,0.35); }
+        .btn-mint:hover { background:linear-gradient(180deg, #f5da8a 0%, #c79d46 70%, #8f6826 100%); box-shadow:0 10px 25px rgba(220,180,70,0.55); transform:scale(1.02); }
+        .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+        .nft-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; padding:12px; text-align:center; backdrop-filter:blur(8px); cursor:pointer; transition:all 0.3s; }
+        .nft-card:hover { border-color:rgba(220,187,92,0.6); transform:translateY(-3px); }
+        .nft-card .frame { width:100%; height:90px; border-radius:10px; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); border:1px solid rgba(212,175,85,0.3); display:flex; align-items:center; justify-content:center; font-size:45px; margin-bottom:8px; }
+        .nft-card .name { color:white; font-size:13px; font-weight:600; }
+        .nft-card .rarity { font-size:11px; }
+        .r-legendary { color:#ffb84d; } .r-epic { color:#d98eff; } .r-rare { color:#6db3ff; } .r-common { color:#ccc; }
+        .market-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; overflow:hidden; backdrop-filter:blur(8px); cursor:pointer; transition:all 0.3s; }
+        .market-card:hover { border-color:rgba(220,187,92,0.6); transform:translateY(-3px); }
+        .market-card .frame { width:100%; height:100px; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); display:flex; align-items:center; justify-content:center; font-size:50px; }
+        .market-card .info { padding:10px; }
+        .btn-sm { width:100%; padding:7px; border:1px solid rgba(180,145,70,0.5); background:transparent; color:var(--gold-glow); border-radius:10px; font-size:11px; cursor:pointer; }
+        .stats { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; padding:15px; margin-bottom:15px; display:flex; justify-content:space-around; text-align:center; backdrop-filter:blur(8px); }
+        .stat-item { flex:1; } .stat-item .val { color:var(--gold-light); font-size:22px; font-weight:700; } .stat-item .lbl { color:var(--text-secondary); font-size:11px; }
+        .stat-div { width:1px; background:rgba(180,145,70,0.2); }
+        .filter-bar { display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; }
+        .filter-btn { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.3); color:var(--gold-glow); padding:6px 14px; border-radius:20px; font-size:12px; cursor:pointer; }
+        .filter-btn.active { background:rgba(180,145,70,0.2); border-color:var(--gold-glow); }
+        .msg-item { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.2); border-radius:14px; padding:14px; backdrop-filter:blur(8px); cursor:pointer; margin-bottom:8px; }
+        .msg-item.unread { border-left:3px solid var(--gold-glow); }
+        .msg-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
+        .msg-title { color:white; font-weight:600; font-size:14px; } .msg-time { color:rgba(255,255,255,0.4); font-size:11px; } .msg-content { color:var(--text-secondary); font-size:12px; }
+        .dot { display:inline-block; width:8px; height:8px; background:#ff4757; border-radius:50%; margin-right:6px; }
+        .bottom-nav { flex-shrink:0; background:rgba(10,20,13,0.9); backdrop-filter:blur(12px); border:1px solid rgba(180,145,70,0.2); border-radius:20px; box-shadow:0 -4px 30px rgba(0,0,0,0.8); display:flex; justify-content:space-around; padding:12px 0; margin:0 15px 15px 15px; position:relative; z-index:10; }
+        .bottom-nav::before { content:''; position:absolute; top:-1px; left:-1px; right:-1px; bottom:-1px; border-radius:20px; padding:1px; background:linear-gradient(135deg, var(--gold-deep), transparent, var(--gold-light)); -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none; opacity:0.5; }
+        .nav-item { display:flex; flex-direction:column; align-items:center; color:var(--text-secondary); font-size:11px; gap:4px; cursor:pointer; padding:5px 10px; transition:all 0.3s; text-decoration:none; }
+        .nav-item .nav-icon { font-size:18px; }
+        .nav-item.active { color:var(--gold-light); position:relative; }
+        .nav-item.active::after { content:''; position:absolute; top:-6px; left:50%; transform:translateX(-50%); width:20px; height:2px; background:linear-gradient(to right, var(--gold-deep), var(--gold-glow)); border-radius:5px; box-shadow:0 0 15px var(--gold-glow); }
+        .nav-item:not(.active):hover { color:var(--gold-glow); }
     </style>
 </head>
 <body>
-    <div class="app-container">
-        <div class="scroll-area">
+    <div class="app">
+        <div class="scroll">
             <div class="header">
-                <div class="logo-area">
-                    <span>🦏</span>
-                    <span>RARE ANIMAL</span>
-                </div>
-                <div class="header-controls">
+                <div class="logo"><span class="icon" id="logoIcon">🦏</span><span>RARE ANIMAL</span></div>
+                <div class="header-right">
                     <button class="lang-btn" id="langBtn">🇨🇳 CN ⌄</button>
                     <div class="lang-dropdown" id="langDropdown">
                         <div class="lang-option" data-lang="cn"><span>🇨🇳 简体中文</span><span class="code">CN</span></div>
                         <div class="lang-option" data-lang="en"><span>🇺🇸 English</span><span class="code">EN</span></div>
                         <div class="lang-option" data-lang="zh"><span>🇭🇰 繁體中文</span><span class="code">ZH</span></div>
-                        <div class="lang-option" data-lang="es"><span>🇪🇸 Español</span><span class="code">ES</span></div>
-                        <div class="lang-option" data-lang="fr"><span>🇫🇷 Français</span><span class="code">FR</span></div>
-                        <div class="lang-option" data-lang="ko"><span>🇰🇷 한국어</span><span class="code">KO</span></div>
-                        <div class="lang-option" data-lang="ja"><span>🇯🇵 日本語</span><span class="code">JA</span></div>
-                        <div class="lang-option" data-lang="ar"><span>🇸🇦 العربية</span><span class="code">AR</span></div>
-                        <div class="lang-option" data-lang="ru"><span>🇷🇺 Русский</span><span class="code">RU</span></div>
                     </div>
-                    <button id="connectWalletBtn" class="connect-btn">Connect wallet</button>
+                    <button id="walletBtn" class="wallet-btn">Connect wallet</button>
                 </div>
             </div>
 
-            <div class="tab-nav">
-                <div class="tab-item active" data-tab="blindbox"><i class="fas fa-gift"></i> <span class="tab-blindbox">盲盒抽取</span></div>
-                <div class="tab-item" data-tab="collection"><i class="fas fa-backpack"></i> <span class="tab-collection">我的藏品</span></div>
-                <div class="tab-item" data-tab="market"><i class="fas fa-book-open"></i> <span class="tab-market">图鉴市场</span></div>
+            <!-- 挑选NFT页面 -->
+            <div class="page active" id="page-nft">
+                <div class="title"><h2>✦ 极危珍稀盲盒 ✦</h2><p>每张卡牌都是链上唯一的动物守护者 · 墨绿鎏金典藏</p></div>
+                <div class="box-card"><div class="box-icon">🎁</div><h3>普通盲盒</h3><p class="desc">随机稀有动物卡牌</p><div class="price">0.001 BNB</div><button class="btn-mint" onclick="mint('普通盲盒')">Mint 抽取</button><p class="remain">剩余 1240/3000</p></div>
+                <div class="box-card recommended"><div class="badge">⭐ 推荐</div><div class="box-icon">🎀</div><h3>典藏盲盒</h3><p class="desc">更高概率获得隐藏款卡牌</p><div class="price">0.005 BNB</div><button class="btn-mint" onclick="mint('典藏盲盒')">Mint 抽取</button><p class="remain">剩余 612/1000</p></div>
+                <div class="box-card"><div class="box-icon">👑</div><h3>至尊礼盒</h3><p class="desc">必得史诗或传说动物卡牌</p><div class="price">0.02 BNB</div><button class="btn-mint" onclick="mint('至尊礼盒')">Mint 抽取</button><p class="remain">剩余 89/200</p></div>
             </div>
 
-            <div id="panel-blindbox" class="tab-panel active">
-                <div class="blindbox-title">
-                    <h2>✦ 极危珍稀盲盒 ✦</h2>
-                    <p>每张卡牌都是链上唯一的动物守护者 · 墨绿鎏金典藏</p>
-                </div>
+            <!-- 娱乐页面 -->
+            <div class="page" id="page-entertainment">
+                <div class="title"><h2>🎮 娱乐盲盒</h2><p>抽取你的专属珍稀动物卡牌</p></div>
+                <div class="box-card"><div class="box-icon">🎁</div><h3>普通盲盒</h3><p class="desc">随机稀有动物卡牌</p><div class="price">0.001 BNB</div><button class="btn-mint" onclick="mint('普通盲盒')">Mint 抽取</button><p class="remain">剩余 1240/3000</p></div>
+                <div class="box-card recommended"><div class="badge">⭐ 推荐</div><div class="box-icon">🎀</div><h3>典藏盲盒</h3><p class="desc">更高概率获得隐藏款卡牌</p><div class="price">0.005 BNB</div><button class="btn-mint" onclick="mint('典藏盲盒')">Mint 抽取</button><p class="remain">剩余 612/1000</p></div>
+                <div class="box-card"><div class="box-icon">👑</div><h3>至尊礼盒</h3><p class="desc">必得史诗或传说动物卡牌</p><div class="price">0.02 BNB</div><button class="btn-mint" onclick="mint('至尊礼盒')">Mint 抽取</button><p class="remain">剩余 89/200</p></div>
+            </div>
 
-                <div class="box-card">
-                    <div class="box-icon">🎁<span class="number-tag">NO.01</span></div>
-                    <h3 class="box-normal-title">普通盲盒</h3>
-                    <p class="desc box-normal-desc">随机稀有动物卡牌</p>
-                    <div class="price"><i class="fab fa-ethereum"></i> 0.001 BNB</div>
-                    <button class="btn-mint btn-mint-text" onclick="handleMint('普通盲盒')">Mint 抽取</button>
-                    <p class="remaining">剩余 1240/3000</p>
+            <!-- 市场页面 -->
+            <div class="page" id="page-market">
+                <div class="title"><h2>📖 动物图鉴市场</h2><p>探索珍稀动物卡牌 · 收藏链上唯一珍品</p></div>
+                <div class="filter-bar">
+                    <span class="filter-btn active" onclick="filterMarket('all',this)">全部</span>
+                    <span class="filter-btn" onclick="filterMarket('legendary',this)">传说</span>
+                    <span class="filter-btn" onclick="filterMarket('epic',this)">史诗</span>
+                    <span class="filter-btn" onclick="filterMarket('rare',this)">稀有</span>
+                    <span class="filter-btn" onclick="filterMarket('common',this)">普通</span>
                 </div>
-
-                <div class="box-card recommended">
-                    <div class="badge-recommend badge-rec-text">⭐ 推荐</div>
-                    <div class="box-icon">🎀<span class="number-tag">NO.07</span></div>
-                    <h3 class="box-premium-title">典藏盲盒</h3>
-                    <p class="desc box-premium-desc">更高概率获得隐藏款卡牌</p>
-                    <div class="price"><i class="fab fa-ethereum"></i> 0.005 BNB</div>
-                    <button class="btn-mint btn-mint-text" onclick="handleMint('典藏盲盒')">Mint 抽取</button>
-                    <p class="remaining">剩余 612/1000</p>
-                </div>
-
-                <div class="box-card">
-                    <div class="box-icon">👑<span class="number-tag">NO.13</span></div>
-                    <h3 class="box-supreme-title">至尊礼盒</h3>
-                    <p class="desc box-supreme-desc">必得史诗或传说动物卡牌</p>
-                    <div class="price"><i class="fab fa-ethereum"></i> 0.02 BNB</div>
-                    <button class="btn-mint btn-mint-text" onclick="handleMint('至尊礼盒')">Mint 抽取</button>
-                    <p class="remaining">剩余 89/200</p>
+                <div class="grid-2" id="marketGrid">
+                    <div class="market-card" data-rarity="legendary" onclick="alert('🐅 雪豹 · 传说 · 100')"><div class="frame">🐅</div><div class="info"><p style="color:white;font-weight:600;">雪豹</p><p style="color:#ffb84d;font-size:11px;">传说 · 总量100</p><button class="btn-sm">查看市场</button></div></div>
+                    <div class="market-card" data-rarity="legendary" onclick="alert('🐼 大熊猫 · 传说 · 100')"><div class="frame">🐼</div><div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p style="color:#ffb84d;font-size:11px;">传说 · 总量100</p><button class="btn-sm">查看市场</button></div></div>
+                    <div class="market-card" data-rarity="epic" onclick="alert('🦏 白犀牛 · 史诗 · 600')"><div class="frame">🦏</div><div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p style="color:#d98eff;font-size:11px;">史诗 · 总量600</p><button class="btn-sm">查看市场</button></div></div>
+                    <div class="market-card" data-rarity="rare" onclick="alert('🦅 金雕 · 稀有 · 1500')"><div class="frame">🦅</div><div class="info"><p style="color:white;font-weight:600;">金雕</p><p style="color:#6db3ff;font-size:11px;">稀有 · 总量1500</p><button class="btn-sm">查看市场</button></div></div>
+                    <div class="market-card" data-rarity="rare" onclick="alert('🐘 亚洲象 · 稀有 · 1500')"><div class="frame">🐘</div><div class="info"><p style="color:white;font-weight:600;">亚洲象</p><p style="color:#6db3ff;font-size:11px;">稀有 · 总量1500</p><button class="btn-sm">查看市场</button></div></div>
+                    <div class="market-card" data-rarity="common" onclick="alert('🦊 藏狐 · 普通 · 3000')"><div class="frame">🦊</div><div class="info"><p style="color:white;font-weight:600;">藏狐</p><p style="color:#ccc;font-size:11px;">普通 · 总量3000</p><button class="btn-sm">查看市场</button></div></div>
                 </div>
             </div>
 
-            <div id="panel-collection" class="tab-panel">
-                <div class="collection-header">
-                    <h3 class="collection-title">🗂️ 我的藏品</h3>
-                    <span class="collection-count">共 4 张</span>
+            <!-- 收藏页面 -->
+            <div class="page" id="page-favorite">
+                <div class="title"><h2>🗂️ 我的藏品</h2><p>你的珍稀动物收藏库 · 墨绿鎏金典藏</p></div>
+                <div class="stats">
+                    <div class="stat-item"><div class="val">8</div><div class="lbl">总藏品</div></div>
+                    <div class="stat-div"></div>
+                    <div class="stat-item"><div class="val">3</div><div class="lbl">稀有以上</div></div>
+                    <div class="stat-div"></div>
+                    <div class="stat-item"><div class="val">2</div><div class="lbl">传说</div></div>
+                    <div class="stat-div"></div>
+                    <div class="stat-item"><div class="val">4.8</div><div class="lbl">估值 BNB</div></div>
                 </div>
-                <div class="collection-grid">
-                    <div class="nft-card"><div class="icon-frame">🐅</div><p class="name">孟加拉虎</p><p class="rarity">稀有 · #1024</p></div>
-                    <div class="nft-card"><div class="icon-frame">🦏</div><p class="name">白犀牛</p><p class="rarity">史诗 · #0892</p></div>
-                    <div class="nft-card"><div class="icon-frame">🦅</div><p class="name">金雕</p><p class="rarity">稀有 · #2210</p></div>
-                    <div class="nft-card"><div class="icon-frame">🐼</div><p class="name">大熊猫</p><p class="rarity">传说 · #0007</p></div>
-                    <div class="nft-card" style="border-style:dashed;opacity:0.5;"><div class="icon-frame" style="font-size:30px;color:rgba(255,255,255,0.3);">+</div><p class="name" style="color:rgba(255,255,255,0.4);">抽取盲盒获得</p></div>
+                <div class="grid-2">
+                    <div class="nft-card" onclick="alert('🐅 雪豹 · 传说 · #0001')"><div class="frame">🐅</div><div class="name">雪豹</div><div class="rarity r-legendary">传说</div></div>
+                    <div class="nft-card" onclick="alert('🐼 大熊猫 · 传说 · #0007')"><div class="frame">🐼</div><div class="name">大熊猫</div><div class="rarity r-legendary">传说</div></div>
+                    <div class="nft-card" onclick="alert('🦏 白犀牛 · 史诗 · #0892')"><div class="frame">🦏</div><div class="name">白犀牛</div><div class="rarity r-epic">史诗</div></div>
+                    <div class="nft-card" onclick="alert('🦅 金雕 · 稀有 · #2210')"><div class="frame">🦅</div><div class="name">金雕</div><div class="rarity r-rare">稀有</div></div>
+                    <div class="nft-card" onclick="alert('🐘 亚洲象 · 稀有 · #1502')"><div class="frame">🐘</div><div class="name">亚洲象</div><div class="rarity r-rare">稀有</div></div>
+                    <div class="nft-card" onclick="alert('🐯 孟加拉虎 · 稀有 · #1024')"><div class="frame">🐯</div><div class="name">孟加拉虎</div><div class="rarity r-rare">稀有</div></div>
+                    <div class="nft-card" onclick="alert('🦊 藏狐 · 普通 · #2451')"><div class="frame">🦊</div><div class="name">藏狐</div><div class="rarity r-common">普通</div></div>
+                    <div class="nft-card" onclick="alert('🦌 麋鹿 · 普通 · #3120')"><div class="frame">🦌</div><div class="name">麋鹿</div><div class="rarity r-common">普通</div></div>
                 </div>
             </div>
 
-            <div id="panel-market" class="tab-panel">
-                <div class="market-header">
-                    <h3 class="market-title">📖 动物图鉴</h3>
-                    <div class="market-filters">
-                        <span class="filter-btn active-filter">全部</span>
-                        <span class="filter-btn">隐藏款</span>
-                    </div>
-                </div>
-                <div class="market-grid">
-                    <div class="market-card"><div class="img-frame">🦊</div><div class="info"><p class="name">藏狐</p><p class="supply">普通 · 总量3000</p><button class="btn-sm btn-market-text" onclick="handleMarket('藏狐')">查看市场</button></div></div>
-                    <div class="market-card"><div class="img-frame">🐘</div><div class="info"><p class="name">亚洲象</p><p class="supply">稀有 · 总量1500</p><button class="btn-sm btn-market-text" onclick="handleMarket('亚洲象')">查看市场</button></div></div>
-                    <div class="market-card"><div class="img-frame">🦚</div><div class="info"><p class="name">绿孔雀</p><p class="supply">史诗 · 总量600</p><button class="btn-sm btn-market-text" onclick="handleMarket('绿孔雀')">查看市场</button></div></div>
-                    <div class="market-card"><div class="img-frame">🐅</div><div class="info"><p class="name">雪豹</p><p class="supply">传说 · 总量100</p><button class="btn-sm btn-market-text" onclick="handleMarket('雪豹')">查看市场</button></div></div>
-                </div>
+            <!-- 生态页面 -->
+            <div class="page" id="page-ecosystem">
+                <div class="title"><h2>📬 讯息中心</h2><p>系统通知 · 交易动态 · 活动提醒</p></div>
+                <div class="msg-item unread" onclick="alert('✅ 交易成功：至尊礼盒Mint成功！获得大熊猫卡牌 #0007')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>交易成功</span><span class="msg-time">10分钟前</span></div><div class="msg-content">至尊礼盒Mint成功！恭喜获得稀有卡牌</div></div>
+                <div class="msg-item unread" onclick="alert('🎉 盲盒上新：极危珍稀系列盲盒已上线！')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>盲盒上新通知</span><span class="msg-time">1小时前</span></div><div class="msg-content">极危珍稀系列盲盒已上线！限时优惠</div></div>
+                <div class="msg-item" onclick="alert('🏆 限时活动：参与珍稀动物守护者活动！')"><div class="msg-header"><span class="msg-title">限时活动开启</span><span class="msg-time">3小时前</span></div><div class="msg-content">珍稀动物守护者活动开启</div></div>
+                <div class="msg-item" onclick="alert('📥 收到转赠：收到金雕稀有卡牌 #2210')"><div class="msg-header"><span class="msg-title">收到转赠卡牌</span><span class="msg-time">昨天</span></div><div class="msg-content">收到来自 0x1234...5678 的转赠</div></div>
             </div>
         </div>
 
-        <!-- 底部导航：挑选NFT、娱乐、市场、收藏、生态 -->
+        <!-- 底部导航 -->
         <div class="bottom-nav">
-            <a href="index.html" class="nav-item active">
-                <i class="fas fa-gem nav-icon"></i>
-                <span class="nav-nft">挑选NFT</span>
-            </a>
-            <a href="entertainment.html" class="nav-item">
-                <i class="fas fa-gamepad nav-icon"></i>
-                <span class="nav-entertainment">娱乐</span>
-            </a>
-            <a href="market.html" class="nav-item">
-                <i class="fas fa-store nav-icon"></i>
-                <span class="nav-market">市场</span>
-            </a>
-            <a href="favorite.html" class="nav-item">
-                <i class="fas fa-heart nav-icon"></i>
-                <span class="nav-collection">收藏</span>
-            </a>
-            <a href="ecosystem.html" class="nav-item">
-                <i class="fas fa-globe nav-icon"></i>
-                <span class="nav-ecosystem">生态</span>
-            </a>
+            <div class="nav-item active" data-page="nft" onclick="switchPage('nft',this)"><i class="fas fa-gem nav-icon"></i><span>挑选NFT</span></div>
+            <div class="nav-item" data-page="entertainment" onclick="switchPage('entertainment',this)"><i class="fas fa-gamepad nav-icon"></i><span>娱乐</span></div>
+            <div class="nav-item" data-page="market" onclick="switchPage('market',this)"><i class="fas fa-store nav-icon"></i><span>市场</span></div>
+            <div class="nav-item" data-page="favorite" onclick="switchPage('favorite',this)"><i class="fas fa-heart nav-icon"></i><span>收藏</span></div>
+            <div class="nav-item" data-page="ecosystem" onclick="switchPage('ecosystem',this)"><i class="fas fa-globe nav-icon"></i><span>生态</span></div>
         </div>
     </div>
 
     <script>
-        const translations = {
-            cn: {
-                langBtn: '🇨🇳 CN',
-                navNFT: '挑选NFT',
-                navEntertainment: '娱乐',
-                navMarket: '市场',
-                navCollection: '收藏',
-                navEcosystem: '生态',
-                tabBlindbox: '盲盒抽取',
-                tabCollection: '我的藏品',
-                tabMarket: '图鉴市场',
-                boxNormal: '普通盲盒',
-                boxNormalDesc: '随机稀有动物卡牌',
-                boxPremium: '典藏盲盒',
-                boxPremiumDesc: '更高概率获得隐藏款卡牌',
-                boxSupreme: '至尊礼盒',
-                boxSupremeDesc: '必得史诗或传说动物卡牌',
-                badgeRecommend: '⭐ 推荐',
-                btnMint: 'Mint 抽取',
-                btnMarket: '查看市场',
-                collectionTitle: '🗂️ 我的藏品',
-                marketTitle: '📖 动物图鉴'
-            },
-            en: {
-                langBtn: '🇺🇸 EN',
-                navNFT: 'Pick NFT',
-                navEntertainment: 'Entertain',
-                navMarket: 'Market',
-                navCollection: 'Favorite',
-                navEcosystem: 'Ecosystem',
-                tabBlindbox: 'Blind Box',
-                tabCollection: 'My Collection',
-                tabMarket: 'Market',
-                boxNormal: 'Normal Box',
-                boxNormalDesc: 'Random rare animal card',
-                boxPremium: 'Premium Box',
-                boxPremiumDesc: 'Higher chance for hidden card',
-                boxSupreme: 'Supreme Box',
-                boxSupremeDesc: 'Guaranteed epic or legendary',
-                badgeRecommend: '⭐ Recommended',
-                btnMint: 'Mint',
-                btnMarket: 'View Market',
-                collectionTitle: '🗂️ My Collection',
-                marketTitle: '📖 Animal Guide'
-            },
-            zh: {
-                langBtn: '🇭🇰 繁中',
-                navNFT: '挑選NFT',
-                navEntertainment: '娛樂',
-                navMarket: '市場',
-                navCollection: '收藏',
-                navEcosystem: '生態',
-                tabBlindbox: '盲盒抽取',
-                tabCollection: '我的藏品',
-                tabMarket: '圖鑑市場',
-                boxNormal: '普通盲盒',
-                boxNormalDesc: '隨機稀有動物卡牌',
-                boxPremium: '典藏盲盒',
-                boxPremiumDesc: '更高概率獲得隱藏款卡牌',
-                boxSupreme: '至尊禮盒',
-                boxSupremeDesc: '必得史詩或傳說動物卡牌',
-                badgeRecommend: '⭐ 推薦',
-                btnMint: 'Mint 抽取',
-                btnMarket: '查看市場',
-                collectionTitle: '🗂️ 我的藏品',
-                marketTitle: '📖 動物圖鑑'
-            }
-        };
+        function switchPage(page, el) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + page).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
+            const icons = { nft:'🦏', entertainment:'🎮', market:'🏪', favorite:'❤️', ecosystem:'💬' };
+            document.getElementById('logoIcon').textContent = icons[page] || '🦏';
+        }
+
+        function filterMarket(rarity, btn) {
+            document.querySelectorAll('#page-market .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('#marketGrid .market-card').forEach(card => {
+                card.style.display = (rarity === 'all' || card.getAttribute('data-rarity') === rarity) ? '' : 'none';
+            });
+        }
+
+        function mint(type) { alert('⛓️ 链上Mint盲盒 · ' + type + ' (演示模式)'); }
 
         const langBtn = document.getElementById('langBtn');
         const langDropdown = document.getElementById('langDropdown');
-        let currentLang = localStorage.getItem('bcbsLang') || 'cn';
-
-        window.addEventListener('DOMContentLoaded', () => {
-            const langData = translations[currentLang];
-            if (langData) applyTranslations(langData);
-        });
-
-        langBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            langDropdown.classList.toggle('open');
-            langBtn.classList.toggle('active');
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!langDropdown.contains(e.target) && e.target !== langBtn) {
+        langBtn.addEventListener('click', e => { e.stopPropagation(); langDropdown.classList.toggle('open'); });
+        document.addEventListener('click', e => { if (!langDropdown.contains(e.target) && e.target !== langBtn) langDropdown.classList.remove('open'); });
+        document.querySelectorAll('.lang-option').forEach(opt => {
+            opt.addEventListener('click', function() {
+                localStorage.setItem('bcbsLang', this.getAttribute('data-lang'));
                 langDropdown.classList.remove('open');
-                langBtn.classList.remove('active');
-            }
-        });
-
-        document.querySelectorAll('.lang-option').forEach(option => {
-            option.addEventListener('click', function() {
-                const langCode = this.getAttribute('data-lang');
-                const langData = translations[langCode];
-                if (langData) {
-                    currentLang = langCode;
-                    localStorage.setItem('bcbsLang', langCode);
-                    applyTranslations(langData);
-                }
-                langDropdown.classList.remove('open');
-                langBtn.classList.remove('active');
             });
         });
 
-        function applyTranslations(langData) {
-            langBtn.textContent = langData.langBtn + ' ⌄';
-            document.querySelector('.nav-nft').textContent = langData.navNFT;
-            document.querySelector('.nav-entertainment').textContent = langData.navEntertainment;
-            document.querySelector('.nav-market').textContent = langData.navMarket;
-            document.querySelector('.nav-collection').textContent = langData.navCollection;
-            document.querySelector('.nav-ecosystem').textContent = langData.navEcosystem;
-            document.querySelector('.tab-blindbox').textContent = langData.tabBlindbox;
-            document.querySelector('.tab-collection').textContent = langData.tabCollection;
-            document.querySelector('.tab-market').textContent = langData.tabMarket;
-            document.querySelector('.box-normal-title').textContent = langData.boxNormal;
-            document.querySelector('.box-normal-desc').textContent = langData.boxNormalDesc;
-            document.querySelector('.box-premium-title').textContent = langData.boxPremium;
-            document.querySelector('.box-premium-desc').textContent = langData.boxPremiumDesc;
-            document.querySelector('.box-supreme-title').textContent = langData.boxSupreme;
-            document.querySelector('.box-supreme-desc').textContent = langData.boxSupremeDesc;
-            document.querySelector('.badge-rec-text').textContent = langData.badgeRecommend;
-            document.querySelectorAll('.btn-mint-text').forEach(btn => { btn.textContent = langData.btnMint; });
-            document.querySelectorAll('.btn-market-text').forEach(btn => { btn.textContent = langData.btnMarket; });
-            document.querySelector('.collection-title').textContent = langData.collectionTitle;
-            document.querySelector('.market-title').textContent = langData.marketTitle;
-        }
-
-        document.querySelectorAll('.tab-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const tabName = this.getAttribute('data-tab');
-                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-                document.getElementById('panel-' + tabName).classList.add('active');
-            });
-        });
-
-        const connectBtn = document.getElementById('connectWalletBtn');
-        let currentAccount = null;
-        let isLoading = false;
-
-        connectBtn.addEventListener('click', async function() {
-            if (isLoading) return;
-            if (currentAccount) { disconnectWallet(); return; }
-            await connectWallet();
-        });
-
-        async function connectWallet() {
+        const walletBtn = document.getElementById('walletBtn');
+        let account = null;
+        walletBtn.addEventListener('click', async function() {
+            if (account) { account = null; walletBtn.textContent = 'Connect wallet'; walletBtn.classList.remove('connected'); return; }
             if (!window.ethereum) { alert('请安装 MetaMask'); return; }
-            isLoading = true;
-            connectBtn.disabled = true;
-            connectBtn.innerHTML = '连接中<span class="loading-spinner"></span>';
+            walletBtn.innerHTML = '连接中...';
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                currentAccount = accounts[0];
-                new ethers.providers.Web3Provider(window.ethereum);
-                connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount.substring(currentAccount.length - 4);
-                connectBtn.classList.add('connected');
-                connectBtn.disabled = false;
-            } catch (e) {
-                connectBtn.disabled = false;
-                connectBtn.innerHTML = 'Connect wallet';
-            } finally { isLoading = false; }
-        }
-
-        function disconnectWallet() {
-            currentAccount = null;
-            connectBtn.textContent = 'Connect wallet';
-            connectBtn.classList.remove('connected');
-            connectBtn.disabled = false;
-        }
-
-        if (window.ethereum) {
-            window.ethereum.on('accountsChanged', (accounts) => {
-                if (!accounts || accounts.length === 0) disconnectWallet();
-                else {
-                    currentAccount = accounts[0];
-                    new ethers.providers.Web3Provider(window.ethereum);
-                    connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount.substring(currentAccount.length - 4);
-                    connectBtn.classList.add('connected');
-                    connectBtn.disabled = false;
-                }
-            });
-            window.ethereum.on('disconnect', () => disconnectWallet());
-        }
-
-        async function autoConnect() {
-            if (!window.ethereum) return;
-            try {
-                const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-                if (accounts && accounts.length > 0) {
-                    currentAccount = accounts[0];
-                    new ethers.providers.Web3Provider(window.ethereum);
-                    connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount.substring(currentAccount.length - 4);
-                    connectBtn.classList.add('connected');
-                    connectBtn.disabled = false;
-                }
-            } catch (e) {}
-        }
-        setTimeout(() => autoConnect(), 500);
-
-        function handleMint(boxType) {
-            if (!currentAccount) { alert('请先连接钱包'); return; }
-            alert('⛓️ 链上Mint盲盒 · ' + boxType + ' (演示模式)');
-        }
-
-        function handleMarket(animal) {
-            alert('📊 跳转至' + animal + '市场 (演示界面)');
-        }
+                account = accounts[0];
+                walletBtn.textContent = account.substring(0,6) + '...' + account.substring(account.length-4);
+                walletBtn.classList.add('connected');
+            } catch(e) { walletBtn.textContent = 'Connect wallet'; }
+        });
+        (async () => { if (window.ethereum) { try { const a = await window.ethereum.request({ method:'eth_accounts' }); if (a.length>0) { account = a[0]; walletBtn.textContent = account.substring(0,6)+'...'+account.substring(account.length-4); walletBtn.classList.add('connected'); } } catch(e) {} } })();
     </script>
 </body>
 </html>
