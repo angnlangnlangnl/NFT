@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>极危珍稀盲盒 · BCBS</title>
+    <title>娱乐 · 极危珍稀盲盒</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -22,11 +22,9 @@
             --text-primary: #FFFFFF;
             --text-primary-soft: #f0e6d2;
             --text-secondary: #b8a47b;
-            --text-dim: rgba(255, 255, 255, 0.45);
             --gold-light: #f8ecc9;
             --gold-main: #d6b878;
             --gold-deep: #9e7a3a;
-            --gold-metallic: #c5a455;
             --gold-glow: #dbb45c;
         }
 
@@ -44,7 +42,8 @@
             right: 0;
             bottom: 0;
             color: var(--text-primary);
-            background-image: radial-gradient(circle at 20% 10%, rgba(180, 145, 70, 0.12) 0%, transparent 35%),
+            background-image: 
+                radial-gradient(circle at 20% 10%, rgba(180, 145, 70, 0.12) 0%, transparent 35%),
                 radial-gradient(circle at 80% 80%, rgba(220, 195, 140, 0.08) 0%, transparent 40%);
         }
 
@@ -107,7 +106,7 @@
             text-shadow: 0 0 15px rgba(180, 145, 70, 0.4);
         }
 
-        .logo-area span:first-child {
+        .logo-area .logo-icon {
             font-size: 28px;
             margin-right: 8px;
         }
@@ -127,7 +126,6 @@
             border-radius: 6px;
             font-size: 12px;
             cursor: pointer;
-            position: relative;
             transition: all 0.2s;
         }
 
@@ -214,64 +212,26 @@
             cursor: not-allowed;
         }
 
-        /* 盲盒标签页 */
-        .tab-nav {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(180, 145, 70, 0.2);
-            margin-bottom: 20px;
-        }
-
-        .tab-item {
-            color: #b8a47b;
-            font-size: 13px;
-            padding-bottom: 8px;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .tab-item.active {
-            color: #f3d779;
-            border-bottom: 2px solid #dbb45c;
-            text-shadow: 0 0 12px rgba(245, 200, 70, 0.4);
-        }
-
-        .tab-panel {
-            display: none;
-        }
-
-        .tab-panel.active {
-            display: block;
-        }
-
-        /* 盲盒标题 */
-        .blindbox-title {
+        /* 页面标题 */
+        .page-title {
             text-align: center;
             margin-bottom: 20px;
         }
 
-        .blindbox-title h2 {
-            font-size: 28px;
+        .page-title h2 {
+            font-size: 26px;
             font-weight: 700;
             background: linear-gradient(180deg, #f5e3b3 0%, #c5a455 60%, #8a6327 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-shadow: 0 0 20px rgba(180, 145, 70, 0.5);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
-        .blindbox-title p {
+        .page-title p {
             color: #b8a16a;
             font-size: 13px;
-            max-width: 280px;
-            margin: 0 auto;
             line-height: 1.5;
         }
 
@@ -287,32 +247,49 @@
             transition: all 0.3s;
             position: relative;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
         }
 
         .box-card:hover {
             border-color: rgba(220, 187, 92, 0.6);
-            box-shadow: 0 8px 30px rgba(180, 145, 70, 0.25);
-            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(180, 145, 70, 0.3);
+            transform: translateY(-3px);
         }
 
         .box-card.recommended {
             border-color: rgba(220, 187, 92, 0.6);
-            box-shadow: 0 0 25px rgba(180, 145, 70, 0.25);
+            box-shadow: 0 0 30px rgba(180, 145, 70, 0.3);
         }
 
         .box-icon {
             width: 100%;
-            height: 140px;
+            height: 130px;
             border-radius: 14px;
             background: linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%);
             border: 1px solid rgba(212, 175, 85, 0.35);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 70px;
+            font-size: 65px;
             margin-bottom: 12px;
             box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.6), 0 0 20px rgba(180, 145, 70, 0.2);
             position: relative;
+            overflow: hidden;
+        }
+
+        .box-icon .shimmer {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
         .box-icon .number-tag {
@@ -324,6 +301,7 @@
             padding: 2px 8px;
             border-radius: 4px;
             font-size: 11px;
+            z-index: 1;
         }
 
         .badge-recommend {
@@ -338,6 +316,12 @@
             font-weight: 700;
             box-shadow: 0 4px 15px rgba(180, 145, 70, 0.5);
             z-index: 5;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .box-card h3 {
@@ -391,177 +375,123 @@
             transform: scale(1.02);
         }
 
-        /* 藏品卡片 */
-        .collection-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        .nft-card {
-            background: rgba(19, 32, 22, 0.8);
-            border: 1px solid rgba(180, 145, 70, 0.25);
-            border-radius: 12px;
-            padding: 10px;
-            text-align: center;
-            backdrop-filter: blur(8px);
-            transition: all 0.2s;
-        }
-
-        .nft-card:hover {
-            border-color: rgba(220, 187, 92, 0.5);
-            box-shadow: 0 4px 15px rgba(180, 145, 70, 0.15);
-        }
-
-        .nft-card .icon-frame {
-            width: 100%;
-            height: 90px;
-            border-radius: 10px;
-            background: linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%);
-            border: 1px solid rgba(212, 175, 85, 0.3);
-            display: flex;
-            align-items: center;
+        /* 开盒动画弹窗 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 100;
             justify-content: center;
-            font-size: 50px;
-            margin-bottom: 8px;
-        }
-
-        .nft-card .name {
-            color: white;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .nft-card .rarity {
-            color: var(--gold-glow);
-            font-size: 11px;
-        }
-
-        .collection-header {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal-box {
+            background: linear-gradient(145deg, #1a2e1f, #0d1a14);
+            border: 2px solid var(--gold-glow);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            max-width: 300px;
+            width: 90%;
+            box-shadow: 0 0 60px rgba(180, 145, 70, 0.5);
+        }
+
+        .modal-box .result-icon {
+            font-size: 80px;
+            animation: bounceIn 0.6s ease;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-box .result-name {
+            color: var(--gold-light);
+            font-size: 22px;
+            font-weight: 700;
+            margin: 15px 0 5px;
+        }
+
+        .modal-box .result-rarity {
+            color: var(--gold-glow);
+            font-size: 14px;
             margin-bottom: 15px;
         }
 
-        .collection-header h3 {
-            color: var(--gold-light);
-            font-size: 20px;
+        .modal-box .btn-close {
+            padding: 10px 30px;
+            background: linear-gradient(180deg, #e7c778 0%, #b48b3a 100%);
+            color: #0a130e;
+            border: none;
+            border-radius: 25px;
             font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
         }
 
-        .collection-count {
-            background: rgba(19, 32, 22, 0.8);
-            border: 1px solid rgba(180, 145, 70, 0.3);
-            color: var(--gold-glow);
-            padding: 6px 14px;
-            border-radius: 20px;
+        /* 历史记录 */
+        .history-section {
+            margin-top: 20px;
+        }
+
+        .history-title {
+            color: var(--gold-light);
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .history-item {
+            background: rgba(19, 32, 22, 0.6);
+            border: 1px solid rgba(180, 145, 70, 0.2);
+            border-radius: 10px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
             font-size: 12px;
         }
 
-        /* 图鉴卡片 */
-        .market-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+        .history-item .h-icon {
+            font-size: 30px;
         }
 
-        .market-card {
-            background: rgba(19, 32, 22, 0.8);
-            border: 1px solid rgba(180, 145, 70, 0.25);
-            border-radius: 12px;
-            overflow: hidden;
-            backdrop-filter: blur(8px);
-            transition: all 0.2s;
+        .history-item .h-info {
+            flex: 1;
         }
 
-        .market-card:hover {
-            border-color: rgba(220, 187, 92, 0.5);
-            box-shadow: 0 4px 15px rgba(180, 145, 70, 0.15);
-        }
-
-        .market-card .img-frame {
-            width: 100%;
-            height: 100px;
-            background: linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 55px;
-        }
-
-        .market-card .info {
-            padding: 10px;
-        }
-
-        .market-card .name {
+        .history-item .h-name {
             color: white;
             font-weight: 600;
-            font-size: 13px;
-            margin-bottom: 2px;
         }
 
-        .market-card .supply {
+        .history-item .h-rarity {
             color: var(--gold-glow);
             font-size: 11px;
-            margin-bottom: 8px;
         }
 
-        .market-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .market-header h3 {
-            color: var(--gold-light);
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .market-filters {
-            display: flex;
-            gap: 6px;
-        }
-
-        .filter-btn {
-            background: rgba(19, 32, 22, 0.8);
-            border: 1px solid rgba(180, 145, 70, 0.3);
-            color: var(--gold-glow);
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 11px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .filter-btn:hover {
-            background: rgba(180, 145, 70, 0.15);
-            border-color: var(--gold-glow);
-        }
-
-        .filter-btn.active-filter {
-            background: rgba(180, 145, 70, 0.2);
-            border-color: var(--gold-glow);
-        }
-
-        .btn-sm {
-            width: 100%;
-            padding: 7px;
-            border: 1px solid rgba(180, 145, 70, 0.5);
-            background: transparent;
-            color: var(--gold-glow);
-            border-radius: 8px;
-            font-size: 11px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-sm:hover {
-            background: rgba(180, 145, 70, 0.15);
-            border-color: var(--gold-glow);
+        .history-item .h-time {
+            color: rgba(255,255,255,0.4);
+            font-size: 10px;
         }
 
         .loading-spinner {
@@ -628,9 +558,6 @@
         }
 
         .nav-item .nav-icon {
-            width: 20px;
-            height: 20px;
-            object-fit: contain;
             font-size: 18px;
         }
 
@@ -663,7 +590,7 @@
             <!-- 头部 -->
             <div class="header">
                 <div class="logo-area">
-                    <span>🦏</span>
+                    <span class="logo-icon">🎮</span>
                     <span>RARE ANIMAL</span>
                 </div>
                 <div class="header-controls">
@@ -683,148 +610,107 @@
                 </div>
             </div>
 
-            <!-- 盲盒标签切换 -->
-            <div class="tab-nav">
-                <div class="tab-item active" data-tab="blindbox"><i class="fas fa-gift"></i> <span class="tab-blindbox">盲盒抽取</span></div>
-                <div class="tab-item" data-tab="collection"><i class="fas fa-backpack"></i> <span class="tab-collection">我的藏品</span></div>
-                <div class="tab-item" data-tab="market"><i class="fas fa-book-open"></i> <span class="tab-market">图鉴市场</span></div>
+            <!-- 页面标题 -->
+            <div class="page-title">
+                <h2>✦ 极危珍稀盲盒 ✦</h2>
+                <p>每张卡牌都是链上唯一的动物守护者 · 墨绿鎏金典藏</p>
             </div>
 
-            <!-- 盲盒抽取面板 -->
-            <div id="panel-blindbox" class="tab-panel active">
-                <div class="blindbox-title">
-                    <h2>✦ 极危珍稀盲盒 ✦</h2>
-                    <p>每张卡牌都是链上唯一的动物守护者 · 墨绿鎏金典藏</p>
+            <!-- 普通盲盒 -->
+            <div class="box-card" onclick="openBox('普通盲盒', '🐅', '孟加拉虎', '稀有', '#1024')">
+                <div class="box-icon">
+                    🎁
+                    <div class="shimmer"></div>
+                    <span class="number-tag">NO.01</span>
                 </div>
-
-                <!-- 普通盲盒 -->
-                <div class="box-card">
-                    <div class="box-icon">
-                        🎁
-                        <span class="number-tag">NO.01</span>
-                    </div>
-                    <h3 class="box-normal-title">普通盲盒</h3>
-                    <p class="desc box-normal-desc">随机稀有动物卡牌</p>
-                    <div class="price"><i class="fab fa-ethereum"></i> 0.001 BNB</div>
-                    <button class="btn-mint btn-mint-text" onclick="handleMint('普通盲盒')">Mint 抽取</button>
-                    <p class="remaining">剩余 1240/3000</p>
-                </div>
-
-                <!-- 典藏盲盒 -->
-                <div class="box-card recommended">
-                    <div class="badge-recommend badge-rec-text">⭐ 推荐</div>
-                    <div class="box-icon">
-                        🎀
-                        <span class="number-tag">NO.07</span>
-                    </div>
-                    <h3 class="box-premium-title">典藏盲盒</h3>
-                    <p class="desc box-premium-desc">更高概率获得隐藏款卡牌</p>
-                    <div class="price"><i class="fab fa-ethereum"></i> 0.005 BNB</div>
-                    <button class="btn-mint btn-mint-text" onclick="handleMint('典藏盲盒')">Mint 抽取</button>
-                    <p class="remaining">剩余 612/1000</p>
-                </div>
-
-                <!-- 至尊礼盒 -->
-                <div class="box-card">
-                    <div class="box-icon">
-                        👑
-                        <span class="number-tag">NO.13</span>
-                    </div>
-                    <h3 class="box-supreme-title">至尊礼盒</h3>
-                    <p class="desc box-supreme-desc">必得史诗或传说动物卡牌</p>
-                    <div class="price"><i class="fab fa-ethereum"></i> 0.02 BNB</div>
-                    <button class="btn-mint btn-mint-text" onclick="handleMint('至尊礼盒')">Mint 抽取</button>
-                    <p class="remaining">剩余 89/200</p>
-                </div>
+                <h3 class="box-normal-title">普通盲盒</h3>
+                <p class="desc box-normal-desc">随机稀有动物卡牌</p>
+                <div class="price"><i class="fab fa-ethereum"></i> 0.001 BNB</div>
+                <button class="btn-mint btn-mint-text" onclick="event.stopPropagation(); handleMint('普通盲盒')">Mint 抽取</button>
+                <p class="remaining">剩余 1240/3000</p>
             </div>
 
-            <!-- 藏品背包面板 -->
-            <div id="panel-collection" class="tab-panel">
-                <div class="collection-header">
-                    <h3 class="collection-title">🗂️ 我的藏品</h3>
-                    <span class="collection-count">共 4 张</span>
+            <!-- 典藏盲盒 -->
+            <div class="box-card recommended" onclick="openBox('典藏盲盒', '🦏', '白犀牛', '史诗', '#0892')">
+                <div class="badge-recommend badge-rec-text">⭐ 推荐</div>
+                <div class="box-icon">
+                    🎀
+                    <div class="shimmer"></div>
+                    <span class="number-tag">NO.07</span>
                 </div>
-                <div class="collection-grid" id="collectionGrid">
-                    <div class="nft-card">
-                        <div class="icon-frame">🐅</div>
-                        <p class="name">孟加拉虎</p>
-                        <p class="rarity">稀有 · #1024</p>
-                    </div>
-                    <div class="nft-card">
-                        <div class="icon-frame">🦏</div>
-                        <p class="name">白犀牛</p>
-                        <p class="rarity">史诗 · #0892</p>
-                    </div>
-                    <div class="nft-card">
-                        <div class="icon-frame">🦅</div>
-                        <p class="name">金雕</p>
-                        <p class="rarity">稀有 · #2210</p>
-                    </div>
-                    <div class="nft-card">
-                        <div class="icon-frame">🐼</div>
-                        <p class="name">大熊猫</p>
-                        <p class="rarity">传说 · #0007</p>
-                    </div>
-                    <div class="nft-card" style="border-style: dashed; opacity: 0.5;">
-                        <div class="icon-frame" style="font-size: 30px; color: rgba(255,255,255,0.3);">+</div>
-                        <p class="name" style="color: rgba(255,255,255,0.4);">抽取盲盒获得</p>
-                    </div>
-                </div>
+                <h3 class="box-premium-title">典藏盲盒</h3>
+                <p class="desc box-premium-desc">更高概率获得隐藏款卡牌</p>
+                <div class="price"><i class="fab fa-ethereum"></i> 0.005 BNB</div>
+                <button class="btn-mint btn-mint-text" onclick="event.stopPropagation(); handleMint('典藏盲盒')">Mint 抽取</button>
+                <p class="remaining">剩余 612/1000</p>
             </div>
 
-            <!-- 图鉴市场面板 -->
-            <div id="panel-market" class="tab-panel">
-                <div class="market-header">
-                    <h3 class="market-title">📖 动物图鉴</h3>
-                    <div class="market-filters">
-                        <span class="filter-btn active-filter">全部</span>
-                        <span class="filter-btn">隐藏款</span>
-                    </div>
+            <!-- 至尊礼盒 -->
+            <div class="box-card" onclick="openBox('至尊礼盒', '🐼', '大熊猫', '传说', '#0007')">
+                <div class="box-icon">
+                    👑
+                    <div class="shimmer"></div>
+                    <span class="number-tag">NO.13</span>
                 </div>
-                <div class="market-grid" id="marketGrid">
-                    <div class="market-card">
-                        <div class="img-frame">🦊</div>
-                        <div class="info">
-                            <p class="name">藏狐</p>
-                            <p class="supply">普通 · 总量3000</p>
-                            <button class="btn-sm btn-market-text" onclick="handleMarket('藏狐')">查看市场</button>
+                <h3 class="box-supreme-title">至尊礼盒</h3>
+                <p class="desc box-supreme-desc">必得史诗或传说动物卡牌</p>
+                <div class="price"><i class="fab fa-ethereum"></i> 0.02 BNB</div>
+                <button class="btn-mint btn-mint-text" onclick="event.stopPropagation(); handleMint('至尊礼盒')">Mint 抽取</button>
+                <p class="remaining">剩余 89/200</p>
+            </div>
+
+            <!-- 抽取历史 -->
+            <div class="history-section">
+                <div class="history-title">
+                    <i class="fas fa-history"></i>
+                    <span class="history-label">抽取记录</span>
+                </div>
+                <div class="history-list" id="historyList">
+                    <div class="history-item">
+                        <span class="h-icon">🦊</span>
+                        <div class="h-info">
+                            <div class="h-name">藏狐</div>
+                            <div class="h-rarity">普通 · #2451</div>
                         </div>
+                        <div class="h-time">2分钟前</div>
                     </div>
-                    <div class="market-card">
-                        <div class="img-frame">🐘</div>
-                        <div class="info">
-                            <p class="name">亚洲象</p>
-                            <p class="supply">稀有 · 总量1500</p>
-                            <button class="btn-sm btn-market-text" onclick="handleMarket('亚洲象')">查看市场</button>
+                    <div class="history-item">
+                        <span class="h-icon">🦅</span>
+                        <div class="h-info">
+                            <div class="h-name">金雕</div>
+                            <div class="h-rarity">稀有 · #2210</div>
                         </div>
+                        <div class="h-time">15分钟前</div>
                     </div>
-                    <div class="market-card">
-                        <div class="img-frame">🦚</div>
-                        <div class="info">
-                            <p class="name">绿孔雀</p>
-                            <p class="supply">史诗 · 总量600</p>
-                            <button class="btn-sm btn-market-text" onclick="handleMarket('绿孔雀')">查看市场</button>
+                    <div class="history-item">
+                        <span class="h-icon">🐘</span>
+                        <div class="h-info">
+                            <div class="h-name">亚洲象</div>
+                            <div class="h-rarity">稀有 · #1502</div>
                         </div>
-                    </div>
-                    <div class="market-card">
-                        <div class="img-frame">🐅</div>
-                        <div class="info">
-                            <p class="name">雪豹</p>
-                            <p class="supply">传说 · 总量100</p>
-                            <button class="btn-sm btn-market-text" onclick="handleMarket('雪豹')">查看市场</button>
-                        </div>
+                        <div class="h-time">1小时前</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 底部导航（已修改为：挑选NFT、娱乐、市场、收藏、生态） -->
+        <!-- 开盒弹窗 -->
+        <div class="modal-overlay" id="modalOverlay">
+            <div class="modal-box">
+                <div class="result-icon" id="resultIcon">🎁</div>
+                <div class="result-name" id="resultName"></div>
+                <div class="result-rarity" id="resultRarity"></div>
+                <button class="btn-close" onclick="closeModal()">确 定</button>
+            </div>
+        </div>
+
+        <!-- 底部导航 -->
         <div class="bottom-nav">
-            <a href="index.html" class="nav-item active">
+            <a href="index.html" class="nav-item">
                 <i class="fas fa-gem nav-icon"></i>
                 <span class="nav-nft">挑选NFT</span>
             </a>
-            <a href="stake.html" class="nav-item">
+            <a href="entertainment.html" class="nav-item active">
                 <i class="fas fa-gamepad nav-icon"></i>
                 <span class="nav-entertainment">娱乐</span>
             </a>
@@ -853,9 +739,6 @@
                 navMarket: '市场',
                 navCollection: '收藏',
                 navEcosystem: '生态',
-                tabBlindbox: '盲盒抽取',
-                tabCollection: '我的藏品',
-                tabMarket: '图鉴市场',
                 boxNormal: '普通盲盒',
                 boxNormalDesc: '随机稀有动物卡牌',
                 boxPremium: '典藏盲盒',
@@ -864,9 +747,7 @@
                 boxSupremeDesc: '必得史诗或传说动物卡牌',
                 badgeRecommend: '⭐ 推荐',
                 btnMint: 'Mint 抽取',
-                btnMarket: '查看市场',
-                collectionTitle: '🗂️ 我的藏品',
-                marketTitle: '📖 动物图鉴'
+                historyLabel: '抽取记录'
             },
             en: {
                 langBtn: '🇺🇸 EN',
@@ -875,9 +756,6 @@
                 navMarket: 'Market',
                 navCollection: 'Favorite',
                 navEcosystem: 'Ecosystem',
-                tabBlindbox: 'Blind Box',
-                tabCollection: 'My Collection',
-                tabMarket: 'Market',
                 boxNormal: 'Normal Box',
                 boxNormalDesc: 'Random rare animal card',
                 boxPremium: 'Premium Box',
@@ -886,9 +764,7 @@
                 boxSupremeDesc: 'Guaranteed epic or legendary',
                 badgeRecommend: '⭐ Recommended',
                 btnMint: 'Mint',
-                btnMarket: 'View Market',
-                collectionTitle: '🗂️ My Collection',
-                marketTitle: '📖 Animal Guide'
+                historyLabel: 'History'
             },
             zh: {
                 langBtn: '🇭🇰 繁中',
@@ -897,9 +773,6 @@
                 navMarket: '市場',
                 navCollection: '收藏',
                 navEcosystem: '生態',
-                tabBlindbox: '盲盒抽取',
-                tabCollection: '我的藏品',
-                tabMarket: '圖鑑市場',
                 boxNormal: '普通盲盒',
                 boxNormalDesc: '隨機稀有動物卡牌',
                 boxPremium: '典藏盲盒',
@@ -908,9 +781,7 @@
                 boxSupremeDesc: '必得史詩或傳說動物卡牌',
                 badgeRecommend: '⭐ 推薦',
                 btnMint: 'Mint 抽取',
-                btnMarket: '查看市場',
-                collectionTitle: '🗂️ 我的藏品',
-                marketTitle: '📖 動物圖鑑'
+                historyLabel: '抽取記錄'
             }
         };
 
@@ -919,20 +790,17 @@
         const langDropdown = document.getElementById('langDropdown');
         let currentLang = localStorage.getItem('bcbsLang') || 'cn';
 
-        // 页面加载后应用保存的语言
         window.addEventListener('DOMContentLoaded', function() {
             const langData = translations[currentLang];
             if (langData) applyTranslations(langData);
         });
 
-        // 点击按钮切换弹窗显示/隐藏
         langBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             langDropdown.classList.toggle('open');
             langBtn.classList.toggle('active');
         });
 
-        // 点击页面其他任意位置关闭弹窗
         document.addEventListener('click', (e) => {
             if (!langDropdown.contains(e.target) && e.target !== langBtn) {
                 langDropdown.classList.remove('open');
@@ -940,86 +808,43 @@
             }
         });
 
-        // 点击语言选项切换界面文字
         document.querySelectorAll('.lang-option').forEach(option => {
             option.addEventListener('click', function() {
                 const langCode = this.getAttribute('data-lang');
                 const langData = translations[langCode];
-
                 if (langData) {
                     currentLang = langCode;
                     localStorage.setItem('bcbsLang', langCode);
                     applyTranslations(langData);
                 }
-
-                // 关闭弹窗
                 langDropdown.classList.remove('open');
                 langBtn.classList.remove('active');
             });
         });
 
         function applyTranslations(langData) {
-            // 更新语言按钮
             langBtn.textContent = langData.langBtn + ' ⌄';
-
-            // 更新底部导航
             document.querySelector('.nav-nft').textContent = langData.navNFT;
             document.querySelector('.nav-entertainment').textContent = langData.navEntertainment;
             document.querySelector('.nav-market').textContent = langData.navMarket;
             document.querySelector('.nav-collection').textContent = langData.navCollection;
             document.querySelector('.nav-ecosystem').textContent = langData.navEcosystem;
-
-            // 更新标签页
-            document.querySelector('.tab-blindbox').textContent = langData.tabBlindbox;
-            document.querySelector('.tab-collection').textContent = langData.tabCollection;
-            document.querySelector('.tab-market').textContent = langData.tabMarket;
-
-            // 更新盲盒标题
             document.querySelector('.box-normal-title').textContent = langData.boxNormal;
             document.querySelector('.box-normal-desc').textContent = langData.boxNormalDesc;
             document.querySelector('.box-premium-title').textContent = langData.boxPremium;
             document.querySelector('.box-premium-desc').textContent = langData.boxPremiumDesc;
             document.querySelector('.box-supreme-title').textContent = langData.boxSupreme;
             document.querySelector('.box-supreme-desc').textContent = langData.boxSupremeDesc;
-
-            // 更新推荐徽章
             document.querySelector('.badge-rec-text').textContent = langData.badgeRecommend;
-
-            // 更新所有Mint按钮
             document.querySelectorAll('.btn-mint-text').forEach(btn => {
                 btn.textContent = langData.btnMint;
             });
-
-            // 更新所有市场按钮
-            document.querySelectorAll('.btn-market-text').forEach(btn => {
-                btn.textContent = langData.btnMarket;
-            });
-
-            // 更新藏品标题
-            document.querySelector('.collection-title').textContent = langData.collectionTitle;
-
-            // 更新图鉴标题
-            document.querySelector('.market-title').textContent = langData.marketTitle;
+            document.querySelector('.history-label').textContent = langData.historyLabel;
         }
-
-        // ======================== 标签页切换 ========================
-        document.querySelectorAll('.tab-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const tabName = this.getAttribute('data-tab');
-                // 切换激活状态
-                document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                // 切换面板
-                document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-                document.getElementById('panel-' + tabName).classList.add('active');
-            });
-        });
 
         // ======================== 钱包连接 ========================
         const connectBtn = document.getElementById('connectWalletBtn');
         let currentAccount = null;
-        let provider = null;
-        let signer = null;
         let isLoading = false;
 
         connectBtn.addEventListener('click', async function() {
@@ -1042,10 +867,7 @@
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 currentAccount = accounts[0];
-                provider = new ethers.providers.Web3Provider(window.ethereum);
-                signer = provider.getSigner();
-                connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount.substring(
-                    currentAccount.length - 4);
+                connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount.substring(currentAccount.length - 4);
                 connectBtn.classList.add('connected');
                 connectBtn.disabled = false;
             } catch (e) {
@@ -1063,29 +885,9 @@
 
         function disconnectWallet() {
             currentAccount = null;
-            provider = null;
-            signer = null;
             connectBtn.textContent = 'Connect wallet';
             connectBtn.classList.remove('connected');
             connectBtn.disabled = false;
-        }
-
-        // 监听账户变化
-        if (window.ethereum) {
-            window.ethereum.on('accountsChanged', (accounts) => {
-                if (!accounts || accounts.length === 0) {
-                    disconnectWallet();
-                } else {
-                    currentAccount = accounts[0];
-                    provider = new ethers.providers.Web3Provider(window.ethereum);
-                    signer = provider.getSigner();
-                    connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount
-                        .substring(currentAccount.length - 4);
-                    connectBtn.classList.add('connected');
-                    connectBtn.disabled = false;
-                }
-            });
-            window.ethereum.on('disconnect', () => disconnectWallet());
         }
 
         // 自动连接
@@ -1095,10 +897,7 @@
                 const accounts = await window.ethereum.request({ method: 'eth_accounts' });
                 if (accounts && accounts.length > 0) {
                     currentAccount = accounts[0];
-                    provider = new ethers.providers.Web3Provider(window.ethereum);
-                    signer = provider.getSigner();
-                    connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount.substring(
-                        currentAccount.length - 4);
+                    connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount.substring(currentAccount.length - 4);
                     connectBtn.classList.add('connected');
                     connectBtn.disabled = false;
                 }
@@ -1106,7 +905,7 @@
         }
         setTimeout(() => autoConnect(), 500);
 
-        // ======================== 交互模拟 ========================
+        // ======================== 盲盒交互 ========================
         function handleMint(boxType) {
             if (!currentAccount) {
                 alert('请先连接钱包');
@@ -1115,9 +914,24 @@
             alert('⛓️ 链上Mint盲盒 · ' + boxType + ' (演示模式)');
         }
 
-        function handleMarket(animal) {
-            alert('📊 跳转至' + animal + '市场 (演示界面)');
+        // 开盒动画
+        function openBox(boxType, icon, name, rarity, number) {
+            document.getElementById('resultIcon').textContent = icon;
+            document.getElementById('resultName').textContent = name;
+            document.getElementById('resultRarity').textContent = rarity + ' · ' + number;
+            document.getElementById('modalOverlay').classList.add('open');
         }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('open');
+        }
+
+        // 点击弹窗外部关闭
+        document.getElementById('modalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
     </script>
 </body>
 </html>
