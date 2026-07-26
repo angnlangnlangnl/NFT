@@ -10,12 +10,17 @@
         * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
         :root { --bg:#0d1a14; --gold-light:#f8ecc9; --gold:#d6b878; --gold-deep:#9e7a3a; --gold-glow:#dbb45c; --text-secondary:#b8a47b; }
         body { 
-            background-color: #0d1a14;
-            background-image: url('background.png');
-            background-size: cover;
+            margin: 0;
+            width: 100vw;
+            min-height: 100vh;
+            /* 主底色：深墨绿皮革底色 + 中心径向鎏金柔光 */
+            background: radial-gradient(ellipse at center, #494232 0%, #27312f 55%, #1c2422 100%);
+            background-image:
+                /* 细腻皮革杂色纹理 */
+                radial-gradient(rgba(212,180,110,0.035) 1px, transparent 1px),
+                radial-gradient(ellipse at 50% 48%, rgba(194,160,90,0.18) 0%, transparent 62%);
+            background-size: 180px 180px, 100% 100%;
             background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
             display:flex; justify-content:center; align-items:center; 
             height:100vh; height:100dvh; overflow:hidden; 
             position:fixed; top:0; left:0; right:0; bottom:0; color:#fff; 
@@ -55,25 +60,69 @@
         .section-header h3 { color:var(--gold-light); font-size:18px; font-weight:600; }
         .selected-count { background:var(--gold-glow); color:#000; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700; }
         .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
-        .animal-card { background:rgba(19,32,22,0.8); border:2px solid rgba(180,145,70,0.25); border-radius:14px; padding:10px; text-align:center; cursor:pointer; transition:all 0.3s; position:relative; backdrop-filter:blur(4px); }
+        .animal-card { 
+            background:rgba(19,32,22,0.8); 
+            border:2px solid rgba(180,145,70,0.25); 
+            border-radius:14px; 
+            text-align:center; 
+            cursor:pointer; 
+            transition:all 0.3s; 
+            position:relative; 
+            backdrop-filter:blur(4px); 
+            overflow:hidden;
+            aspect-ratio: 3/4;
+        }
         .animal-card:hover { border-color:var(--gold-glow); box-shadow:0 0 20px rgba(180,145,70,0.3); transform:translateY(-3px); }
         .animal-card.selected { border-color:var(--gold-glow); box-shadow:0 0 25px rgba(180,145,70,0.5); background:rgba(180,145,70,0.15); }
         .animal-card .card-icon { 
-            width:100%; height:80px; border-radius:12px; 
+            width:100%; 
+            height:100%; 
             background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); 
-            border:1px solid rgba(212,175,85,0.35); 
-            display:flex; align-items:center; justify-content:center; 
-            font-size:44px; margin-bottom:8px; 
-            box-shadow:inset 0 0 20px rgba(0,0,0,0.6), 0 0 15px rgba(180,145,70,0.2); 
-            position:relative; overflow:hidden; 
+            border:none;
+            display:flex; 
+            align-items:center; 
+            justify-content:center; 
+            font-size:50px; 
+            position:relative; 
+            overflow:hidden;
+            box-shadow:inset 0 0 25px rgba(0,0,0,0.5);
         }
         .animal-card .card-icon::after {
-            content:'?'; position:absolute; font-size:32px; color:rgba(255,255,255,0.1); font-weight:900;
+            content:'?'; 
+            position:absolute; 
+            font-size:48px; 
+            color:rgba(255,255,255,0.12); 
+            font-weight:900;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
         }
         .animal-card.revealed .card-icon::after { display:none; }
-        .animal-card .card-name { font-size:12px; color:white; font-weight:600; }
-        .animal-card .card-rarity { font-size:10px; }
-        .animal-card .check-mark { position:absolute; top:6px; right:6px; width:22px; height:22px; background:var(--gold-glow); border-radius:50%; display:none; align-items:center; justify-content:center; font-size:12px; color:#000; font-weight:700; z-index:2; }
+        .animal-card .card-name { 
+            position:absolute;
+            bottom:8px;
+            left:50%;
+            transform:translateX(-50%);
+            font-size:11px; 
+            color:white; 
+            font-weight:600; 
+            white-space:nowrap; 
+            z-index:1;
+            background:rgba(0,0,0,0.6);
+            padding:2px 8px;
+            border-radius:8px;
+        }
+        .animal-card .card-rarity { 
+            position:absolute;
+            top:8px;
+            right:8px;
+            font-size:9px; 
+            z-index:1;
+            background:rgba(0,0,0,0.6);
+            padding:2px 6px;
+            border-radius:6px;
+        }
+        .animal-card .check-mark { position:absolute; top:6px; left:6px; width:22px; height:22px; background:var(--gold-glow); border-radius:50%; display:none; align-items:center; justify-content:center; font-size:12px; color:#000; font-weight:700; z-index:2; }
         .animal-card.selected .check-mark { display:flex; }
 
         .modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:1000; justify-content:center; align-items:center; }
@@ -144,7 +193,7 @@
                     <p>每张卡牌都是链上唯一的动物守护者 · 点击盲盒揭晓你的卡牌</p>
                 </div>
                 <div class="section-header">
-                    <h3>🎴 盲盒卡牌选择</h3>
+                    <h3>🎴 选择卡片</h3>
                     <span class="selected-count" id="selectedCount">已选 0</span>
                 </div>
                 <div class="grid-3" id="cardGrid"></div>
@@ -152,7 +201,7 @@
 
             <div class="page" id="page-entertainment">
                 <div class="title"><h2>🎮 娱乐盲盒</h2><p>抽取你的专属珍稀动物卡牌</p></div>
-                <div class="section-header"><h3>🎴 盲盒卡牌选择</h3><span class="selected-count" id="selectedCount2">已选 0</span></div>
+                <div class="section-header"><h3>🎴 选择卡片</h3><span class="selected-count" id="selectedCount2">已选 0</span></div>
                 <div class="grid-3" id="cardGrid2"></div>
             </div>
 
@@ -247,8 +296,10 @@
             if (!grid) return;
             grid.innerHTML = cardData.map((card, index) => `
                 <div class="animal-card" data-index="${index}" data-page="${pageKey}" onclick="selectCard(${index}, this, '${pageKey}')">
-                    <div class="check-mark">✓</div><div class="card-icon">🎁</div>
-                    <div class="card-name">???</div><div class="card-rarity" style="color:var(--text-secondary)">未知</div>
+                    <div class="check-mark">✓</div>
+                    <div class="card-icon"></div>
+                    <div class="card-name">选择卡片</div>
+                    <div class="card-rarity" style="color:var(--text-secondary)">未知</div>
                 </div>`).join('');
         }
         function selectCard(index, element, pageKey) {
