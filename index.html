@@ -11,7 +11,7 @@
         :root { --bg:#0d1a14; --gold-light:#f8ecc9; --gold:#d6b878; --gold-deep:#9e7a3a; --gold-glow:#dbb45c; --text-secondary:#b8a47b; }
         body { 
             background-color: #0d1a14;
-            background-image: url('images/background.png');
+            background-image: url('background.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -22,19 +22,12 @@
         }
         .app { 
             width:100%; max-width:420px; height:100%; 
-            background: transparent;
-            border-radius:20px; 
-            box-shadow:0 0 40px rgba(180,145,70,0.15); 
+            background: radial-gradient(circle at 50% 10%, rgba(26,46,31,0.92) 0%, rgba(13,26,20,0.95) 100%); 
+            border-radius:20px; box-shadow:0 0 40px rgba(180,145,70,0.15); 
             display:flex; flex-direction:column; position:relative; overflow:hidden; 
+            backdrop-filter: blur(2px);
         }
-        .app-inner {
-            width:100%; height:100%;
-            background: radial-gradient(circle at 50% 10%, rgba(26,46,31,0.85) 0%, rgba(13,26,20,0.9) 100%);
-            border-radius:20px;
-            display:flex; flex-direction:column; position:relative; overflow:hidden;
-            backdrop-filter: blur(3px);
-        }
-        .app-inner::before { 
+        .app::before { 
             content:''; position:absolute; top:0; left:0; right:0; bottom:0; 
             background-image:radial-gradient(rgba(180,145,70,0.04) 1px, transparent 1px); 
             background-size:40px 40px; opacity:0.3; z-index:0; pointer-events:none; border-radius:20px; 
@@ -131,109 +124,107 @@
 </head>
 <body>
     <div class="app">
-        <div class="app-inner">
-            <div class="scroll">
-                <div class="header">
-                    <div class="logo"><span class="icon" id="logoIcon">🦏</span><span>RARE ANIMAL</span></div>
-                    <div class="header-right">
-                        <button class="lang-btn" id="langBtn">🇨🇳 CN ⌄</button>
-                        <div class="lang-dropdown" id="langDropdown">
-                            <div class="lang-option" data-lang="cn"><span>🇨🇳 简体中文</span><span class="code">CN</span></div>
-                            <div class="lang-option" data-lang="en"><span>🇺🇸 English</span><span class="code">EN</span></div>
-                            <div class="lang-option" data-lang="zh"><span>🇭🇰 繁體中文</span><span class="code">ZH</span></div>
-                        </div>
-                        <button id="walletBtn" class="wallet-btn">Connect wallet</button>
+        <div class="scroll">
+            <div class="header">
+                <div class="logo"><span class="icon" id="logoIcon">🦏</span><span>RARE ANIMAL</span></div>
+                <div class="header-right">
+                    <button class="lang-btn" id="langBtn">🇨🇳 CN ⌄</button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <div class="lang-option" data-lang="cn"><span>🇨🇳 简体中文</span><span class="code">CN</span></div>
+                        <div class="lang-option" data-lang="en"><span>🇺🇸 English</span><span class="code">EN</span></div>
+                        <div class="lang-option" data-lang="zh"><span>🇭🇰 繁體中文</span><span class="code">ZH</span></div>
                     </div>
-                </div>
-
-                <div class="page active" id="page-nft">
-                    <div class="title">
-                        <h2>✦ 极危珍稀盲盒 ✦</h2>
-                        <p>每张卡牌都是链上唯一的动物守护者 · 点击盲盒揭晓你的卡牌</p>
-                    </div>
-                    <div class="section-header">
-                        <h3>🎴 盲盒卡牌选择</h3>
-                        <span class="selected-count" id="selectedCount">已选 0</span>
-                    </div>
-                    <div class="grid-3" id="cardGrid"></div>
-                </div>
-
-                <div class="page" id="page-entertainment">
-                    <div class="title"><h2>🎮 娱乐盲盒</h2><p>抽取你的专属珍稀动物卡牌</p></div>
-                    <div class="section-header"><h3>🎴 盲盒卡牌选择</h3><span class="selected-count" id="selectedCount2">已选 0</span></div>
-                    <div class="grid-3" id="cardGrid2"></div>
-                </div>
-
-                <div class="page" id="page-market">
-                    <div class="title"><h2>📖 动物图鉴市场</h2><p>探索珍稀动物卡牌 · 收藏链上唯一珍品</p></div>
-                    <div class="filter-bar">
-                        <span class="filter-btn active" onclick="filterMarket('all',this)">全部</span>
-                        <span class="filter-btn" onclick="filterMarket('legendary',this)">传说</span>
-                        <span class="filter-btn" onclick="filterMarket('epic',this)">史诗</span>
-                        <span class="filter-btn" onclick="filterMarket('rare',this)">稀有</span>
-                        <span class="filter-btn" onclick="filterMarket('common',this)">普通</span>
-                    </div>
-                    <div class="grid-2" id="marketGrid">
-                        <div class="market-card" data-rarity="legendary" onclick="showCardDetail('🐅','雪豹','传说','#0001','雪山之巅的幽灵，极其稀有','2.5 BNB','#ffb84d')"><div class="frame">🐅</div><div class="info"><p style="color:white;font-weight:600;">雪豹</p><p style="color:#ffb84d;font-size:11px;">传说 · 总量100</p><button class="btn-sm">查看详情</button></div></div>
-                        <div class="market-card" data-rarity="legendary" onclick="showCardDetail('🐼','大熊猫','传说','#0007','国宝级珍稀动物，黑白相间','3.0 BNB','#ffb84d')"><div class="frame">🐼</div><div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p style="color:#ffb84d;font-size:11px;">传说 · 总量100</p><button class="btn-sm">查看详情</button></div></div>
-                        <div class="market-card" data-rarity="epic" onclick="showCardDetail('🦏','白犀牛','史诗','#0892','草原上的装甲巨兽','0.45 BNB','#d98eff')"><div class="frame">🦏</div><div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p style="color:#d98eff;font-size:11px;">史诗 · 总量600</p><button class="btn-sm">查看详情</button></div></div>
-                        <div class="market-card" data-rarity="rare" onclick="showCardDetail('🦅','金雕','稀有','#2210','翱翔天际的猛禽之王','0.08 BNB','#6db3ff')"><div class="frame">🦅</div><div class="info"><p style="color:white;font-weight:600;">金雕</p><p style="color:#6db3ff;font-size:11px;">稀有 · 总量1500</p><button class="btn-sm">查看详情</button></div></div>
-                        <div class="market-card" data-rarity="rare" onclick="showCardDetail('🐘','亚洲象','稀有','#1502','丛林中的智慧巨人','0.07 BNB','#6db3ff')"><div class="frame">🐘</div><div class="info"><p style="color:white;font-weight:600;">亚洲象</p><p style="color:#6db3ff;font-size:11px;">稀有 · 总量1500</p><button class="btn-sm">查看详情</button></div></div>
-                        <div class="market-card" data-rarity="common" onclick="showCardDetail('🦊','藏狐','普通','#2451','高原上的神秘微笑','0.01 BNB','#ccc')"><div class="frame">🦊</div><div class="info"><p style="color:white;font-weight:600;">藏狐</p><p style="color:#ccc;font-size:11px;">普通 · 总量3000</p><button class="btn-sm">查看详情</button></div></div>
-                    </div>
-                </div>
-
-                <div class="page" id="page-favorite">
-                    <div class="title"><h2>🗂️ 我的藏品</h2><p>你的珍稀动物收藏库 · 墨绿鎏金典藏</p></div>
-                    <div class="stats">
-                        <div class="stat-item"><div class="val">8</div><div class="lbl">总藏品</div></div><div class="stat-div"></div>
-                        <div class="stat-item"><div class="val">3</div><div class="lbl">稀有以上</div></div><div class="stat-div"></div>
-                        <div class="stat-item"><div class="val">2</div><div class="lbl">传说</div></div><div class="stat-div"></div>
-                        <div class="stat-item"><div class="val">4.8</div><div class="lbl">估值 BNB</div></div>
-                    </div>
-                    <div class="grid-2">
-                        <div class="nft-card" onclick="showCardDetail('🐅','雪豹','传说','#0001','雪山之巅的幽灵','2.5 BNB','#ffb84d')"><div class="frame">🐅</div><div class="name">雪豹</div><div class="rarity r-legendary">传说</div></div>
-                        <div class="nft-card" onclick="showCardDetail('🐼','大熊猫','传说','#0007','国宝级珍稀动物','3.0 BNB','#ffb84d')"><div class="frame">🐼</div><div class="name">大熊猫</div><div class="rarity r-legendary">传说</div></div>
-                        <div class="nft-card" onclick="showCardDetail('🦏','白犀牛','史诗','#0892','草原装甲巨兽','0.45 BNB','#d98eff')"><div class="frame">🦏</div><div class="name">白犀牛</div><div class="rarity r-epic">史诗</div></div>
-                        <div class="nft-card" onclick="showCardDetail('🦅','金雕','稀有','#2210','翱翔天际的猛禽','0.08 BNB','#6db3ff')"><div class="frame">🦅</div><div class="name">金雕</div><div class="rarity r-rare">稀有</div></div>
-                        <div class="nft-card" onclick="showCardDetail('🐘','亚洲象','稀有','#1502','丛林智慧巨人','0.07 BNB','#6db3ff')"><div class="frame">🐘</div><div class="name">亚洲象</div><div class="rarity r-rare">稀有</div></div>
-                        <div class="nft-card" onclick="showCardDetail('🐯','孟加拉虎','稀有','#1024','丛林之王','0.09 BNB','#6db3ff')"><div class="frame">🐯</div><div class="name">孟加拉虎</div><div class="rarity r-rare">稀有</div></div>
-                        <div class="nft-card" onclick="showCardDetail('🦊','藏狐','普通','#2451','高原神秘微笑','0.01 BNB','#ccc')"><div class="frame">🦊</div><div class="name">藏狐</div><div class="rarity r-common">普通</div></div>
-                        <div class="nft-card" onclick="showCardDetail('🦌','麋鹿','普通','#3120','森林精灵','0.01 BNB','#ccc')"><div class="frame">🦌</div><div class="name">麋鹿</div><div class="rarity r-common">普通</div></div>
-                    </div>
-                </div>
-
-                <div class="page" id="page-ecosystem">
-                    <div class="title"><h2>🌐 生态讯息</h2><p>系统通知 · 交易动态 · 活动提醒</p></div>
-                    <div class="msg-item unread" onclick="alert('✅ 交易成功')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>交易成功</span><span class="msg-time">10分钟前</span></div><div class="msg-content">至尊礼盒Mint成功！获得稀有卡牌</div></div>
-                    <div class="msg-item unread" onclick="alert('🎉 盲盒上新')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>盲盒上新通知</span><span class="msg-time">1小时前</span></div><div class="msg-content">极危珍稀系列盲盒已上线！</div></div>
-                    <div class="msg-item" onclick="alert('🏆 限时活动')"><div class="msg-header"><span class="msg-title">限时活动开启</span><span class="msg-time">3小时前</span></div><div class="msg-content">珍稀动物守护者活动开启</div></div>
-                    <div class="msg-item" onclick="alert('📥 收到转赠')"><div class="msg-header"><span class="msg-title">收到转赠卡牌</span><span class="msg-time">昨天</span></div><div class="msg-content">收到金雕稀有卡牌 #2210</div></div>
+                    <button id="walletBtn" class="wallet-btn">Connect wallet</button>
                 </div>
             </div>
 
-            <div class="modal-overlay" id="cardModal">
-                <div class="modal-box">
-                    <div class="modal-icon" id="modalIcon">🎁</div>
-                    <div class="modal-name" id="modalName">???</div>
-                    <div class="modal-rarity" id="modalRarity" style="color:#ffb84d;"></div>
-                    <div class="modal-id" id="modalId"></div>
-                    <div class="modal-desc" id="modalDesc"></div>
-                    <div class="modal-price" id="modalPrice"></div>
-                    <div class="modal-btns">
-                        <button class="btn-cancel" onclick="closeModal()">取 消</button>
-                        <button class="btn-confirm" onclick="confirmCard()">确 认</button>
-                    </div>
+            <div class="page active" id="page-nft">
+                <div class="title">
+                    <h2>✦ 极危珍稀盲盒 ✦</h2>
+                    <p>每张卡牌都是链上唯一的动物守护者 · 点击盲盒揭晓你的卡牌</p>
+                </div>
+                <div class="section-header">
+                    <h3>🎴 盲盒卡牌选择</h3>
+                    <span class="selected-count" id="selectedCount">已选 0</span>
+                </div>
+                <div class="grid-3" id="cardGrid"></div>
+            </div>
+
+            <div class="page" id="page-entertainment">
+                <div class="title"><h2>🎮 娱乐盲盒</h2><p>抽取你的专属珍稀动物卡牌</p></div>
+                <div class="section-header"><h3>🎴 盲盒卡牌选择</h3><span class="selected-count" id="selectedCount2">已选 0</span></div>
+                <div class="grid-3" id="cardGrid2"></div>
+            </div>
+
+            <div class="page" id="page-market">
+                <div class="title"><h2>📖 动物图鉴市场</h2><p>探索珍稀动物卡牌 · 收藏链上唯一珍品</p></div>
+                <div class="filter-bar">
+                    <span class="filter-btn active" onclick="filterMarket('all',this)">全部</span>
+                    <span class="filter-btn" onclick="filterMarket('legendary',this)">传说</span>
+                    <span class="filter-btn" onclick="filterMarket('epic',this)">史诗</span>
+                    <span class="filter-btn" onclick="filterMarket('rare',this)">稀有</span>
+                    <span class="filter-btn" onclick="filterMarket('common',this)">普通</span>
+                </div>
+                <div class="grid-2" id="marketGrid">
+                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail('🐅','雪豹','传说','#0001','雪山之巅的幽灵，极其稀有','2.5 BNB','#ffb84d')"><div class="frame">🐅</div><div class="info"><p style="color:white;font-weight:600;">雪豹</p><p style="color:#ffb84d;font-size:11px;">传说 · 总量100</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail('🐼','大熊猫','传说','#0007','国宝级珍稀动物，黑白相间','3.0 BNB','#ffb84d')"><div class="frame">🐼</div><div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p style="color:#ffb84d;font-size:11px;">传说 · 总量100</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="epic" onclick="showCardDetail('🦏','白犀牛','史诗','#0892','草原上的装甲巨兽','0.45 BNB','#d98eff')"><div class="frame">🦏</div><div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p style="color:#d98eff;font-size:11px;">史诗 · 总量600</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="rare" onclick="showCardDetail('🦅','金雕','稀有','#2210','翱翔天际的猛禽之王','0.08 BNB','#6db3ff')"><div class="frame">🦅</div><div class="info"><p style="color:white;font-weight:600;">金雕</p><p style="color:#6db3ff;font-size:11px;">稀有 · 总量1500</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="rare" onclick="showCardDetail('🐘','亚洲象','稀有','#1502','丛林中的智慧巨人','0.07 BNB','#6db3ff')"><div class="frame">🐘</div><div class="info"><p style="color:white;font-weight:600;">亚洲象</p><p style="color:#6db3ff;font-size:11px;">稀有 · 总量1500</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="common" onclick="showCardDetail('🦊','藏狐','普通','#2451','高原上的神秘微笑','0.01 BNB','#ccc')"><div class="frame">🦊</div><div class="info"><p style="color:white;font-weight:600;">藏狐</p><p style="color:#ccc;font-size:11px;">普通 · 总量3000</p><button class="btn-sm">查看详情</button></div></div>
                 </div>
             </div>
 
-            <div class="bottom-nav">
-                <div class="nav-item active" data-page="nft" onclick="switchPage('nft',this)"><i class="fas fa-gem nav-icon"></i><span>挑选NFT</span></div>
-                <div class="nav-item" data-page="entertainment" onclick="switchPage('entertainment',this)"><i class="fas fa-gamepad nav-icon"></i><span>娱乐</span></div>
-                <div class="nav-item" data-page="market" onclick="switchPage('market',this)"><i class="fas fa-store nav-icon"></i><span>市场</span></div>
-                <div class="nav-item" data-page="favorite" onclick="switchPage('favorite',this)"><i class="fas fa-heart nav-icon"></i><span>收藏</span></div>
-                <div class="nav-item" data-page="ecosystem" onclick="switchPage('ecosystem',this)"><i class="fas fa-globe nav-icon"></i><span>生态</span></div>
+            <div class="page" id="page-favorite">
+                <div class="title"><h2>🗂️ 我的藏品</h2><p>你的珍稀动物收藏库 · 墨绿鎏金典藏</p></div>
+                <div class="stats">
+                    <div class="stat-item"><div class="val">8</div><div class="lbl">总藏品</div></div><div class="stat-div"></div>
+                    <div class="stat-item"><div class="val">3</div><div class="lbl">稀有以上</div></div><div class="stat-div"></div>
+                    <div class="stat-item"><div class="val">2</div><div class="lbl">传说</div></div><div class="stat-div"></div>
+                    <div class="stat-item"><div class="val">4.8</div><div class="lbl">估值 BNB</div></div>
+                </div>
+                <div class="grid-2">
+                    <div class="nft-card" onclick="showCardDetail('🐅','雪豹','传说','#0001','雪山之巅的幽灵','2.5 BNB','#ffb84d')"><div class="frame">🐅</div><div class="name">雪豹</div><div class="rarity r-legendary">传说</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🐼','大熊猫','传说','#0007','国宝级珍稀动物','3.0 BNB','#ffb84d')"><div class="frame">🐼</div><div class="name">大熊猫</div><div class="rarity r-legendary">传说</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🦏','白犀牛','史诗','#0892','草原装甲巨兽','0.45 BNB','#d98eff')"><div class="frame">🦏</div><div class="name">白犀牛</div><div class="rarity r-epic">史诗</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🦅','金雕','稀有','#2210','翱翔天际的猛禽','0.08 BNB','#6db3ff')"><div class="frame">🦅</div><div class="name">金雕</div><div class="rarity r-rare">稀有</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🐘','亚洲象','稀有','#1502','丛林智慧巨人','0.07 BNB','#6db3ff')"><div class="frame">🐘</div><div class="name">亚洲象</div><div class="rarity r-rare">稀有</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🐯','孟加拉虎','稀有','#1024','丛林之王','0.09 BNB','#6db3ff')"><div class="frame">🐯</div><div class="name">孟加拉虎</div><div class="rarity r-rare">稀有</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🦊','藏狐','普通','#2451','高原神秘微笑','0.01 BNB','#ccc')"><div class="frame">🦊</div><div class="name">藏狐</div><div class="rarity r-common">普通</div></div>
+                    <div class="nft-card" onclick="showCardDetail('🦌','麋鹿','普通','#3120','森林精灵','0.01 BNB','#ccc')"><div class="frame">🦌</div><div class="name">麋鹿</div><div class="rarity r-common">普通</div></div>
+                </div>
             </div>
+
+            <div class="page" id="page-ecosystem">
+                <div class="title"><h2>🌐 生态讯息</h2><p>系统通知 · 交易动态 · 活动提醒</p></div>
+                <div class="msg-item unread" onclick="alert('✅ 交易成功')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>交易成功</span><span class="msg-time">10分钟前</span></div><div class="msg-content">至尊礼盒Mint成功！获得稀有卡牌</div></div>
+                <div class="msg-item unread" onclick="alert('🎉 盲盒上新')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>盲盒上新通知</span><span class="msg-time">1小时前</span></div><div class="msg-content">极危珍稀系列盲盒已上线！</div></div>
+                <div class="msg-item" onclick="alert('🏆 限时活动')"><div class="msg-header"><span class="msg-title">限时活动开启</span><span class="msg-time">3小时前</span></div><div class="msg-content">珍稀动物守护者活动开启</div></div>
+                <div class="msg-item" onclick="alert('📥 收到转赠')"><div class="msg-header"><span class="msg-title">收到转赠卡牌</span><span class="msg-time">昨天</span></div><div class="msg-content">收到金雕稀有卡牌 #2210</div></div>
+            </div>
+        </div>
+
+        <div class="modal-overlay" id="cardModal">
+            <div class="modal-box">
+                <div class="modal-icon" id="modalIcon">🎁</div>
+                <div class="modal-name" id="modalName">???</div>
+                <div class="modal-rarity" id="modalRarity" style="color:#ffb84d;"></div>
+                <div class="modal-id" id="modalId"></div>
+                <div class="modal-desc" id="modalDesc"></div>
+                <div class="modal-price" id="modalPrice"></div>
+                <div class="modal-btns">
+                    <button class="btn-cancel" onclick="closeModal()">取 消</button>
+                    <button class="btn-confirm" onclick="confirmCard()">确 认</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <div class="nav-item active" data-page="nft" onclick="switchPage('nft',this)"><i class="fas fa-gem nav-icon"></i><span>挑选NFT</span></div>
+            <div class="nav-item" data-page="entertainment" onclick="switchPage('entertainment',this)"><i class="fas fa-gamepad nav-icon"></i><span>娱乐</span></div>
+            <div class="nav-item" data-page="market" onclick="switchPage('market',this)"><i class="fas fa-store nav-icon"></i><span>市场</span></div>
+            <div class="nav-item" data-page="favorite" onclick="switchPage('favorite',this)"><i class="fas fa-heart nav-icon"></i><span>收藏</span></div>
+            <div class="nav-item" data-page="ecosystem" onclick="switchPage('ecosystem',this)"><i class="fas fa-globe nav-icon"></i><span>生态</span></div>
         </div>
     </div>
 
