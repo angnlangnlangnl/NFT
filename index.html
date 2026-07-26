@@ -14,7 +14,6 @@
             display:flex; justify-content:center; align-items:center; 
             height:100vh; height:100dvh; overflow:hidden; 
             position:fixed; top:0; left:0; right:0; bottom:0; color:#fff; 
-            /* ========== 背景图设置 ========== */
             background-image: url('background.png');
             background-size: cover;
             background-position: center;
@@ -55,26 +54,26 @@
         .section-header { display:flex; justify-content:space-between; align-items:center; margin:10px 0 12px; }
         .section-header h3 { color:var(--gold-light); font-size:18px; font-weight:600; }
         .selected-count { background:var(--gold-glow); color:#000; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700; }
-        .grid-4 { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:8px; }
-        .animal-card { background:rgba(19,32,22,0.8); border:2px solid rgba(180,145,70,0.25); border-radius:12px; padding:8px; text-align:center; cursor:pointer; transition:all 0.3s; position:relative; backdrop-filter:blur(4px); }
+        .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+        .animal-card { background:rgba(19,32,22,0.8); border:2px solid rgba(180,145,70,0.25); border-radius:14px; padding:10px; text-align:center; cursor:pointer; transition:all 0.3s; position:relative; backdrop-filter:blur(4px); }
         .animal-card:hover { border-color:var(--gold-glow); box-shadow:0 0 20px rgba(180,145,70,0.3); transform:translateY(-3px); }
         .animal-card.selected { border-color:var(--gold-glow); box-shadow:0 0 25px rgba(180,145,70,0.5); background:rgba(180,145,70,0.15); }
         .animal-card .card-icon { 
-            width:100%; height:60px; border-radius:10px; 
+            width:100%; height:80px; border-radius:12px; 
             background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); 
             border:1px solid rgba(212,175,85,0.35); 
             display:flex; align-items:center; justify-content:center; 
-            font-size:36px; margin-bottom:6px; 
+            font-size:44px; margin-bottom:8px; 
             box-shadow:inset 0 0 20px rgba(0,0,0,0.6), 0 0 15px rgba(180,145,70,0.2); 
             position:relative; overflow:hidden; 
         }
         .animal-card .card-icon::after {
-            content:'?'; position:absolute; font-size:28px; color:rgba(255,255,255,0.1); font-weight:900;
+            content:'?'; position:absolute; font-size:32px; color:rgba(255,255,255,0.1); font-weight:900;
         }
         .animal-card.revealed .card-icon::after { display:none; }
-        .animal-card .card-name { font-size:10px; color:white; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-        .animal-card .card-rarity { font-size:9px; }
-        .animal-card .check-mark { position:absolute; top:4px; right:4px; width:20px; height:20px; background:var(--gold-glow); border-radius:50%; display:none; align-items:center; justify-content:center; font-size:11px; color:#000; font-weight:700; z-index:2; }
+        .animal-card .card-name { font-size:12px; color:white; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .animal-card .card-rarity { font-size:10px; }
+        .animal-card .check-mark { position:absolute; top:6px; right:6px; width:22px; height:22px; background:var(--gold-glow); border-radius:50%; display:none; align-items:center; justify-content:center; font-size:12px; color:#000; font-weight:700; z-index:2; }
         .animal-card.selected .check-mark { display:flex; }
 
         .modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:1000; justify-content:center; align-items:center; }
@@ -152,7 +151,7 @@
                     <h3>🎴 盲盒卡牌选择</h3>
                     <span class="selected-count" id="selectedCount">已选 0</span>
                 </div>
-                <div class="grid-4" id="cardGrid"></div>
+                <div class="grid-3" id="cardGrid"></div>
             </div>
 
             <!-- ========== 娱乐页面 ========== -->
@@ -162,7 +161,7 @@
                     <h3>🎴 盲盒卡牌选择</h3>
                     <span class="selected-count" id="selectedCount2">已选 0</span>
                 </div>
-                <div class="grid-4" id="cardGrid2"></div>
+                <div class="grid-3" id="cardGrid2"></div>
             </div>
 
             <!-- ========== 市场页面 ========== -->
@@ -246,6 +245,7 @@
     </div>
 
     <script>
+        // ==================== 9张卡片数据 ====================
         const cardData = [
             { icon:'🐅', name:'雪豹', rarity:'传说', id:'#0001', desc:'雪山之巅的幽灵，极其稀有', price:'2.5 BNB', color:'#ffb84d' },
             { icon:'🐼', name:'大熊猫', rarity:'传说', id:'#0007', desc:'国宝级珍稀动物，黑白相间的可爱生灵', price:'3.0 BNB', color:'#ffb84d' },
@@ -254,19 +254,8 @@
             { icon:'🐘', name:'亚洲象', rarity:'稀有', id:'#1502', desc:'丛林中的智慧巨人，记忆力超群', price:'0.07 BNB', color:'#6db3ff' },
             { icon:'🐯', name:'孟加拉虎', rarity:'稀有', id:'#1024', desc:'丛林之王，威严与力量的象征', price:'0.09 BNB', color:'#6db3ff' },
             { icon:'🦊', name:'藏狐', rarity:'普通', id:'#2451', desc:'高原上的神秘微笑，聪明伶俐', price:'0.01 BNB', color:'#ccc' },
-            { icon:'🦌', name:'麋鹿', rarity:'普通', id:'#3120', desc:'森林中的优雅精灵，温顺美丽', price:'0.01 BNB', color:'#ccc' },
             { icon:'🦚', name:'绿孔雀', rarity:'史诗', id:'#0103', desc:'华丽羽毛的展示者，美丽绝伦', price:'0.5 BNB', color:'#d98eff' },
-            { icon:'🦍', name:'山地大猩猩', rarity:'史诗', id:'#0456', desc:'温柔的巨人，力量与智慧并存', price:'0.55 BNB', color:'#d98eff' },
-            { icon:'🐺', name:'北极狼', rarity:'稀有', id:'#1890', desc:'极地中的白色幽灵，团队猎手', price:'0.06 BNB', color:'#6db3ff' },
-            { icon:'🦩', name:'火烈鸟', rarity:'普通', id:'#5678', desc:'粉红湖泊的舞者，优雅迷人', price:'0.01 BNB', color:'#ccc' },
-            { icon:'🐬', name:'中华白海豚', rarity:'稀有', id:'#3345', desc:'海洋中的粉色精灵，濒临灭绝', price:'0.1 BNB', color:'#6db3ff' },
-            { icon:'🦜', name:'金刚鹦鹉', rarity:'稀有', id:'#7788', desc:'色彩斑斓的雨林使者，寿命极长', price:'0.08 BNB', color:'#6db3ff' },
-            { icon:'🐆', name:'猎豹', rarity:'稀有', id:'#9900', desc:'陆地上最快的动物，速度之王', price:'0.09 BNB', color:'#6db3ff' },
-            { icon:'🦧', name:'红毛猩猩', rarity:'史诗', id:'#1122', desc:'雨林中的智者，与人类基因相似', price:'0.4 BNB', color:'#d98eff' },
-            { icon:'🐪', name:'双峰骆驼', rarity:'普通', id:'#3344', desc:'沙漠之舟，耐旱能力超强', price:'0.01 BNB', color:'#ccc' },
-            { icon:'🦥', name:'树懒', rarity:'普通', id:'#5566', desc:'世界上最慢的哺乳动物，悠然自得', price:'0.01 BNB', color:'#ccc' },
-            { icon:'🐧', name:'帝企鹅', rarity:'稀有', id:'#7789', desc:'南极大陆的守护者，父爱如山', price:'0.07 BNB', color:'#6db3ff' },
-            { icon:'🦎', name:'科莫多龙', rarity:'史诗', id:'#9901', desc:'现存最大的蜥蜴，古老而神秘', price:'0.6 BNB', color:'#d98eff' }
+            { icon:'🐬', name:'中华白海豚', rarity:'稀有', id:'#3345', desc:'海洋中的粉色精灵，濒临灭绝', price:'0.1 BNB', color:'#6db3ff' }
         ];
 
         let selectedCard = null;
