@@ -88,7 +88,6 @@
             z-index: 1;
         }
 
-        /* 头部样式 */
         .header {
             display: flex;
             justify-content: space-between;
@@ -214,7 +213,6 @@
             cursor: not-allowed;
         }
 
-        /* 盲盒标签页 */
         .tab-nav {
             display: flex;
             justify-content: center;
@@ -250,7 +248,6 @@
             display: block;
         }
 
-        /* 盲盒标题 */
         .blindbox-title {
             text-align: center;
             margin-bottom: 20px;
@@ -275,7 +272,6 @@
             line-height: 1.5;
         }
 
-        /* 盲盒卡片 */
         .box-card {
             background: rgba(19, 32, 22, 0.8);
             border: 1px solid rgba(180, 145, 70, 0.3);
@@ -391,7 +387,6 @@
             transform: scale(1.02);
         }
 
-        /* 藏品卡片 */
         .collection-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -460,7 +455,6 @@
             font-size: 12px;
         }
 
-        /* 图鉴卡片 */
         .market-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -657,7 +651,6 @@
 <body>
     <div class="app-container">
         <div class="scroll-area">
-            <!-- 头部 -->
             <div class="header">
                 <div class="logo-area">
                     <span>🦏</span>
@@ -680,26 +673,20 @@
                 </div>
             </div>
 
-            <!-- 盲盒标签切换 -->
             <div class="tab-nav">
                 <div class="tab-item active" data-tab="blindbox"><i class="fas fa-gift"></i> <span class="tab-blindbox">盲盒抽取</span></div>
                 <div class="tab-item" data-tab="collection"><i class="fas fa-backpack"></i> <span class="tab-collection">我的藏品</span></div>
                 <div class="tab-item" data-tab="market"><i class="fas fa-book-open"></i> <span class="tab-market">图鉴市场</span></div>
             </div>
 
-            <!-- 盲盒抽取面板 -->
             <div id="panel-blindbox" class="tab-panel active">
                 <div class="blindbox-title">
                     <h2>✦ 极危珍稀盲盒 ✦</h2>
                     <p>每张卡牌都是链上唯一的动物守护者 · 墨绿鎏金典藏</p>
                 </div>
 
-                <!-- 普通盲盒 -->
                 <div class="box-card">
-                    <div class="box-icon">
-                        🎁
-                        <span class="number-tag">NO.01</span>
-                    </div>
+                    <div class="box-icon">🎁<span class="number-tag">NO.01</span></div>
                     <h3 class="box-normal-title">普通盲盒</h3>
                     <p class="desc box-normal-desc">随机稀有动物卡牌</p>
                     <div class="price"><i class="fab fa-ethereum"></i> 0.001 BNB</div>
@@ -707,13 +694,9 @@
                     <p class="remaining">剩余 1240/3000</p>
                 </div>
 
-                <!-- 典藏盲盒 -->
                 <div class="box-card recommended">
                     <div class="badge-recommend badge-rec-text">⭐ 推荐</div>
-                    <div class="box-icon">
-                        🎀
-                        <span class="number-tag">NO.07</span>
-                    </div>
+                    <div class="box-icon">🎀<span class="number-tag">NO.07</span></div>
                     <h3 class="box-premium-title">典藏盲盒</h3>
                     <p class="desc box-premium-desc">更高概率获得隐藏款卡牌</p>
                     <div class="price"><i class="fab fa-ethereum"></i> 0.005 BNB</div>
@@ -721,12 +704,8 @@
                     <p class="remaining">剩余 612/1000</p>
                 </div>
 
-                <!-- 至尊礼盒 -->
                 <div class="box-card">
-                    <div class="box-icon">
-                        👑
-                        <span class="number-tag">NO.13</span>
-                    </div>
+                    <div class="box-icon">👑<span class="number-tag">NO.13</span></div>
                     <h3 class="box-supreme-title">至尊礼盒</h3>
                     <p class="desc box-supreme-desc">必得史诗或传说动物卡牌</p>
                     <div class="price"><i class="fab fa-ethereum"></i> 0.02 BNB</div>
@@ -735,41 +714,20 @@
                 </div>
             </div>
 
-            <!-- 藏品背包面板 -->
             <div id="panel-collection" class="tab-panel">
                 <div class="collection-header">
                     <h3 class="collection-title">🗂️ 我的藏品</h3>
                     <span class="collection-count">共 4 张</span>
                 </div>
-                <div class="collection-grid" id="collectionGrid">
-                    <div class="nft-card">
-                        <div class="icon-frame">🐅</div>
-                        <p class="name">孟加拉虎</p>
-                        <p class="rarity">稀有 · #1024</p>
-                    </div>
-                    <div class="nft-card">
-                        <div class="icon-frame">🦏</div>
-                        <p class="name">白犀牛</p>
-                        <p class="rarity">史诗 · #0892</p>
-                    </div>
-                    <div class="nft-card">
-                        <div class="icon-frame">🦅</div>
-                        <p class="name">金雕</p>
-                        <p class="rarity">稀有 · #2210</p>
-                    </div>
-                    <div class="nft-card">
-                        <div class="icon-frame">🐼</div>
-                        <p class="name">大熊猫</p>
-                        <p class="rarity">传说 · #0007</p>
-                    </div>
-                    <div class="nft-card" style="border-style: dashed; opacity: 0.5;">
-                        <div class="icon-frame" style="font-size: 30px; color: rgba(255,255,255,0.3);">+</div>
-                        <p class="name" style="color: rgba(255,255,255,0.4);">抽取盲盒获得</p>
-                    </div>
+                <div class="collection-grid">
+                    <div class="nft-card"><div class="icon-frame">🐅</div><p class="name">孟加拉虎</p><p class="rarity">稀有 · #1024</p></div>
+                    <div class="nft-card"><div class="icon-frame">🦏</div><p class="name">白犀牛</p><p class="rarity">史诗 · #0892</p></div>
+                    <div class="nft-card"><div class="icon-frame">🦅</div><p class="name">金雕</p><p class="rarity">稀有 · #2210</p></div>
+                    <div class="nft-card"><div class="icon-frame">🐼</div><p class="name">大熊猫</p><p class="rarity">传说 · #0007</p></div>
+                    <div class="nft-card" style="border-style:dashed;opacity:0.5;"><div class="icon-frame" style="font-size:30px;color:rgba(255,255,255,0.3);">+</div><p class="name" style="color:rgba(255,255,255,0.4);">抽取盲盒获得</p></div>
                 </div>
             </div>
 
-            <!-- 图鉴市场面板 -->
             <div id="panel-market" class="tab-panel">
                 <div class="market-header">
                     <h3 class="market-title">📖 动物图鉴</h3>
@@ -778,44 +736,16 @@
                         <span class="filter-btn">隐藏款</span>
                     </div>
                 </div>
-                <div class="market-grid" id="marketGrid">
-                    <div class="market-card">
-                        <div class="img-frame">🦊</div>
-                        <div class="info">
-                            <p class="name">藏狐</p>
-                            <p class="supply">普通 · 总量3000</p>
-                            <button class="btn-sm btn-market-text" onclick="handleMarket('藏狐')">查看市场</button>
-                        </div>
-                    </div>
-                    <div class="market-card">
-                        <div class="img-frame">🐘</div>
-                        <div class="info">
-                            <p class="name">亚洲象</p>
-                            <p class="supply">稀有 · 总量1500</p>
-                            <button class="btn-sm btn-market-text" onclick="handleMarket('亚洲象')">查看市场</button>
-                        </div>
-                    </div>
-                    <div class="market-card">
-                        <div class="img-frame">🦚</div>
-                        <div class="info">
-                            <p class="name">绿孔雀</p>
-                            <p class="supply">史诗 · 总量600</p>
-                            <button class="btn-sm btn-market-text" onclick="handleMarket('绿孔雀')">查看市场</button>
-                        </div>
-                    </div>
-                    <div class="market-card">
-                        <div class="img-frame">🐅</div>
-                        <div class="info">
-                            <p class="name">雪豹</p>
-                            <p class="supply">传说 · 总量100</p>
-                            <button class="btn-sm btn-market-text" onclick="handleMarket('雪豹')">查看市场</button>
-                        </div>
-                    </div>
+                <div class="market-grid">
+                    <div class="market-card"><div class="img-frame">🦊</div><div class="info"><p class="name">藏狐</p><p class="supply">普通 · 总量3000</p><button class="btn-sm btn-market-text" onclick="handleMarket('藏狐')">查看市场</button></div></div>
+                    <div class="market-card"><div class="img-frame">🐘</div><div class="info"><p class="name">亚洲象</p><p class="supply">稀有 · 总量1500</p><button class="btn-sm btn-market-text" onclick="handleMarket('亚洲象')">查看市场</button></div></div>
+                    <div class="market-card"><div class="img-frame">🦚</div><div class="info"><p class="name">绿孔雀</p><p class="supply">史诗 · 总量600</p><button class="btn-sm btn-market-text" onclick="handleMarket('绿孔雀')">查看市场</button></div></div>
+                    <div class="market-card"><div class="img-frame">🐅</div><div class="info"><p class="name">雪豹</p><p class="supply">传说 · 总量100</p><button class="btn-sm btn-market-text" onclick="handleMarket('雪豹')">查看市场</button></div></div>
                 </div>
             </div>
         </div>
 
-        <!-- 底部导航（已修复：新导航名称 + Font Awesome 图标） -->
+        <!-- 底部导航：挑选NFT、娱乐、市场、收藏、生态 -->
         <div class="bottom-nav">
             <a href="index.html" class="nav-item active">
                 <i class="fas fa-gem nav-icon"></i>
@@ -833,15 +763,14 @@
                 <i class="fas fa-heart nav-icon"></i>
                 <span class="nav-collection">收藏</span>
             </a>
-            <a href="messages.html" class="nav-item">
-                <i class="fas fa-comments nav-icon"></i>
-                <span class="nav-messages">讯息</span>
+            <a href="ecosystem.html" class="nav-item">
+                <i class="fas fa-globe nav-icon"></i>
+                <span class="nav-ecosystem">生态</span>
             </a>
         </div>
     </div>
 
     <script>
-        // ======================== 多语言翻译数据 ========================
         const translations = {
             cn: {
                 langBtn: '🇨🇳 CN',
@@ -849,7 +778,7 @@
                 navEntertainment: '娱乐',
                 navMarket: '市场',
                 navCollection: '收藏',
-                navMessages: '讯息',
+                navEcosystem: '生态',
                 tabBlindbox: '盲盒抽取',
                 tabCollection: '我的藏品',
                 tabMarket: '图鉴市场',
@@ -871,7 +800,7 @@
                 navEntertainment: 'Entertain',
                 navMarket: 'Market',
                 navCollection: 'Favorite',
-                navMessages: 'Messages',
+                navEcosystem: 'Ecosystem',
                 tabBlindbox: 'Blind Box',
                 tabCollection: 'My Collection',
                 tabMarket: 'Market',
@@ -893,7 +822,7 @@
                 navEntertainment: '娛樂',
                 navMarket: '市場',
                 navCollection: '收藏',
-                navMessages: '訊息',
+                navEcosystem: '生態',
                 tabBlindbox: '盲盒抽取',
                 tabCollection: '我的藏品',
                 tabMarket: '圖鑑市場',
@@ -911,12 +840,11 @@
             }
         };
 
-        // ======================== 语言切换逻辑 ========================
         const langBtn = document.getElementById('langBtn');
         const langDropdown = document.getElementById('langDropdown');
         let currentLang = localStorage.getItem('bcbsLang') || 'cn';
 
-        window.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('DOMContentLoaded', () => {
             const langData = translations[currentLang];
             if (langData) applyTranslations(langData);
         });
@@ -954,7 +882,7 @@
             document.querySelector('.nav-entertainment').textContent = langData.navEntertainment;
             document.querySelector('.nav-market').textContent = langData.navMarket;
             document.querySelector('.nav-collection').textContent = langData.navCollection;
-            document.querySelector('.nav-messages').textContent = langData.navMessages;
+            document.querySelector('.nav-ecosystem').textContent = langData.navEcosystem;
             document.querySelector('.tab-blindbox').textContent = langData.tabBlindbox;
             document.querySelector('.tab-collection').textContent = langData.tabCollection;
             document.querySelector('.tab-market').textContent = langData.tabMarket;
@@ -971,7 +899,6 @@
             document.querySelector('.market-title').textContent = langData.marketTitle;
         }
 
-        // ======================== 标签页切换 ========================
         document.querySelectorAll('.tab-item').forEach(item => {
             item.addEventListener('click', function() {
                 const tabName = this.getAttribute('data-tab');
@@ -982,11 +909,8 @@
             });
         });
 
-        // ======================== 钱包连接 ========================
         const connectBtn = document.getElementById('connectWalletBtn');
         let currentAccount = null;
-        let provider = null;
-        let signer = null;
         let isLoading = false;
 
         connectBtn.addEventListener('click', async function() {
@@ -1003,21 +927,18 @@
             try {
                 const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
                 currentAccount = accounts[0];
-                provider = new ethers.providers.Web3Provider(window.ethereum);
-                signer = provider.getSigner();
+                new ethers.providers.Web3Provider(window.ethereum);
                 connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount.substring(currentAccount.length - 4);
                 connectBtn.classList.add('connected');
                 connectBtn.disabled = false;
             } catch (e) {
-                if (e.code === 4001) { alert('请在 MetaMask 中授权连接'); }
-                else { alert('连接失败: ' + (e.message || '未知错误')); }
                 connectBtn.disabled = false;
                 connectBtn.innerHTML = 'Connect wallet';
             } finally { isLoading = false; }
         }
 
         function disconnectWallet() {
-            currentAccount = null; provider = null; signer = null;
+            currentAccount = null;
             connectBtn.textContent = 'Connect wallet';
             connectBtn.classList.remove('connected');
             connectBtn.disabled = false;
@@ -1025,11 +946,10 @@
 
         if (window.ethereum) {
             window.ethereum.on('accountsChanged', (accounts) => {
-                if (!accounts || accounts.length === 0) { disconnectWallet(); }
+                if (!accounts || accounts.length === 0) disconnectWallet();
                 else {
                     currentAccount = accounts[0];
-                    provider = new ethers.providers.Web3Provider(window.ethereum);
-                    signer = provider.getSigner();
+                    new ethers.providers.Web3Provider(window.ethereum);
                     connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount.substring(currentAccount.length - 4);
                     connectBtn.classList.add('connected');
                     connectBtn.disabled = false;
@@ -1044,8 +964,7 @@
                 const accounts = await window.ethereum.request({ method: 'eth_accounts' });
                 if (accounts && accounts.length > 0) {
                     currentAccount = accounts[0];
-                    provider = new ethers.providers.Web3Provider(window.ethereum);
-                    signer = provider.getSigner();
+                    new ethers.providers.Web3Provider(window.ethereum);
                     connectBtn.textContent = currentAccount.substring(0, 6) + '...' + currentAccount.substring(currentAccount.length - 4);
                     connectBtn.classList.add('connected');
                     connectBtn.disabled = false;
