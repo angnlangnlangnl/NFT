@@ -88,11 +88,11 @@
         .nft-card .name { color:white; font-size:13px; font-weight:600; }
         .nft-card .rarity { font-size:11px; }
         .r-legendary { color:#ffb84d; } .r-epic { color:#d98eff; } .r-rare { color:#6db3ff; } .r-common { color:#ccc; }
-        .market-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; overflow:hidden; backdrop-filter:blur(8px); cursor:pointer; transition:all 0.3s; }
+        .market-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; overflow:hidden; backdrop-filter:blur(8px); cursor:pointer; transition:all 0.3s; position:relative; display:flex; flex-direction:column; }
         .market-card:hover { border-color:rgba(220,187,92,0.6); transform:translateY(-3px); }
-        .market-card .frame { width:100%; height:100px; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); display:flex; align-items:center; justify-content:center; font-size:50px; overflow:hidden; padding:0; position:relative; }
-        .market-card .frame img { width:100%; height:100%; object-fit:contain; display:block; position:absolute; top:0; left:0; }
-        .market-card .info { padding:10px; position:relative; z-index:1; }
+        .market-card .frame { width:100%; height:100%; position:absolute; top:0; left:0; z-index:0; display:flex; align-items:center; justify-content:center; font-size:50px; overflow:hidden; padding:0; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); }
+        .market-card .frame img { width:100%; height:100%; object-fit:cover; display:block; }
+        .market-card .info { padding:10px; position:relative; z-index:1; background:linear-gradient(to top, rgba(19,32,22,0.95) 0%, rgba(19,32,22,0.7) 60%, transparent 100%); margin-top:auto; }
         .btn-sm { width:100%; padding:7px; border:1px solid rgba(180,145,70,0.5); background:transparent; color:var(--gold-glow); border-radius:10px; font-size:11px; cursor:pointer; }
         .stats { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; padding:15px; margin-bottom:15px; display:flex; justify-content:space-around; text-align:center; backdrop-filter:blur(8px); }
         .stat-item { flex:1; } .stat-item .val { color:var(--gold-light); font-size:22px; font-weight:700; } .stat-item .lbl { color:var(--text-secondary); font-size:11px; }
@@ -151,7 +151,10 @@
                     <span class="filter-btn" onclick="filterMarket('common',this)">普通</span>
                 </div>
                 <div class="grid-2" id="marketGrid">
-                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail(cardData[0])"><div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div><div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p style="color:#ffb84d;font-size:11px;">传世孤品 · 仅1枚</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail(cardData[0])" style="aspect-ratio:1/1;">
+                        <div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div>
+                        <div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p style="color:#ffb84d;font-size:11px;">传世孤品 · 仅1枚</p><button class="btn-sm">查看详情</button></div>
+                    </div>
                     <div class="market-card" data-rarity="legendary" onclick="showCardDetail(cardData[1])"><div class="frame">🐼</div><div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p style="color:#ffb84d;font-size:11px;">传说 · 总量100</p><button class="btn-sm">查看详情</button></div></div>
                     <div class="market-card" data-rarity="epic" onclick="showCardDetail(cardData[2])"><div class="frame">🦏</div><div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p style="color:#d98eff;font-size:11px;">史诗 · 总量600</p><button class="btn-sm">查看详情</button></div></div>
                     <div class="market-card" data-rarity="rare" onclick="showCardDetail(cardData[3])"><div class="frame">🦅</div><div class="info"><p style="color:white;font-weight:600;">金雕</p><p style="color:#6db3ff;font-size:11px;">稀有 · 总量1500</p><button class="btn-sm">查看详情</button></div></div>
@@ -283,73 +286,32 @@
             if(selectedElement){ selectedElement.classList.remove('selected'); selectedElement=null; selectedCard=null; }
         }
         function confirmCard() {
-            if(currentPage === 'favorite') {
-                alert('✅ 出售成功！');
-            } else if(selectedCard&&selectedElement){ 
-                selectedElement.classList.add('revealed'); 
-                selectedElement.querySelector('.card-icon').textContent=selectedCard.icon; 
-                selectedElement.querySelector('.card-name').textContent=selectedCard.name; 
-                selectedElement.querySelector('.card-rarity').textContent=selectedCard.rarity; 
-                selectedElement.querySelector('.card-rarity').style.color=selectedCard.color; 
-                alert(`✅ 已确认：${selectedCard.name} (${selectedCard.rarity})\n编号：${selectedCard.id}`); 
-            }
+            if(currentPage === 'favorite') { alert('✅ 出售成功！'); }
+            else if(selectedCard&&selectedElement){ selectedElement.classList.add('revealed'); selectedElement.querySelector('.card-icon').textContent=selectedCard.icon; selectedElement.querySelector('.card-name').textContent=selectedCard.name; selectedElement.querySelector('.card-rarity').textContent=selectedCard.rarity; selectedElement.querySelector('.card-rarity').style.color=selectedCard.color; alert(`✅ 已确认：${selectedCard.name} (${selectedCard.rarity})\n编号：${selectedCard.id}`); }
             document.getElementById('cardModal').classList.remove('open');
         }
         function startLottery() {
             if (isLotteryRunning) return;
-            isLotteryRunning = true;
-            const btn = document.getElementById('btnLottery');
-            btn.disabled = true; btn.textContent = '📮 铸邮中...';
-            const cards = document.querySelectorAll('#cardGrid .animal-card');
-            const totalCards = cards.length;
-            let currentIndex = 0, speed = 80, rounds = 0;
-            const maxRounds = 3;
+            isLotteryRunning = true; const btn = document.getElementById('btnLottery'); btn.disabled = true; btn.textContent = '📮 铸邮中...';
+            const cards = document.querySelectorAll('#cardGrid .animal-card'); const totalCards = cards.length;
+            let currentIndex = 0, speed = 80, rounds = 0; const maxRounds = 3;
             cards.forEach(c => { c.classList.remove('highlight', 'selected'); });
             if (selectedElement) { selectedElement = null; selectedCard = null; }
-            lotteryInterval = setInterval(() => {
-                cards.forEach(c => c.classList.remove('highlight'));
-                cards[currentIndex].classList.add('highlight');
-                currentIndex++;
+            lotteryInterval = setInterval(() => { cards.forEach(c => c.classList.remove('highlight')); cards[currentIndex].classList.add('highlight'); currentIndex++;
                 if (currentIndex >= totalCards) { currentIndex = 0; rounds++; if (rounds >= maxRounds - 1) speed += 30; }
-                if (rounds >= maxRounds && currentIndex === Math.floor(Math.random() * totalCards)) {
-                    clearInterval(lotteryInterval); lotteryInterval = null;
-                    const finalIndex = Math.floor(Math.random() * totalCards);
-                    cards.forEach(c => c.classList.remove('highlight'));
-                    const finalCard = cards[finalIndex];
-                    finalCard.classList.add('selected', 'highlight');
-                    selectedCard = cardData[finalIndex]; selectedElement = finalCard;
-                    currentPage = 'default';
-                    setTimeout(() => {
-                        showCardDetail(selectedCard);
-                        isLotteryRunning = false; btn.disabled = false; btn.textContent = '📮 随机铸邮';
-                    }, 500);
-                }
+                if (rounds >= maxRounds && currentIndex === Math.floor(Math.random() * totalCards)) { clearInterval(lotteryInterval); lotteryInterval = null;
+                    const finalIndex = Math.floor(Math.random() * totalCards); cards.forEach(c => c.classList.remove('highlight'));
+                    const finalCard = cards[finalIndex]; finalCard.classList.add('selected', 'highlight');
+                    selectedCard = cardData[finalIndex]; selectedElement = finalCard; currentPage = 'default';
+                    setTimeout(() => { showCardDetail(selectedCard); isLotteryRunning = false; btn.disabled = false; btn.textContent = '📮 随机铸邮'; }, 500); }
             }, speed);
         }
         function mint(type) { alert('⛓️ 链上Mint盲盒 · ' + type + ' (演示模式)'); }
         document.getElementById('cardModal').addEventListener('click',function(e){ if(e.target===this)closeModal(); });
-        function switchPage(page,el){
-            document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); 
-            document.getElementById('page-'+page).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); 
-            el.classList.add('active');
-            document.getElementById('logoIcon').textContent={nft:'🦏',entertainment:'🎮',market:'🏪',favorite:'❤️',ecosystem:'🌐'}[page]||'🦏';
-        }
-        function filterMarket(rarity,btn){
-            document.querySelectorAll('#page-market .filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
-            document.querySelectorAll('#marketGrid .market-card').forEach(c=>c.style.display=(rarity==='all'||c.getAttribute('data-rarity')===rarity)?'':'none');
-        }
-        const lb=document.getElementById('langBtn'),ld=document.getElementById('langDropdown');
-        lb.addEventListener('click',e=>{e.stopPropagation();ld.classList.toggle('open');});
-        document.addEventListener('click',e=>{if(!ld.contains(e.target)&&e.target!==lb)ld.classList.remove('open');});
-        document.querySelectorAll('.lang-option').forEach(o=>o.addEventListener('click',function(){localStorage.setItem('bcbsLang',this.getAttribute('data-lang'));ld.classList.remove('open');}));
-        const wb=document.getElementById('walletBtn'); let ac=null;
-        wb.addEventListener('click',async function(){
-            if(ac){ac=null;wb.textContent='Connect';wb.classList.remove('connected');return;}
-            if(!window.ethereum){alert('请安装 MetaMask');return;} wb.innerHTML='...';
-            try{const a=await window.ethereum.request({method:'eth_requestAccounts'});ac=a[0];wb.textContent=ac.substring(0,6)+'...'+ac.substring(ac.length-4);wb.classList.add('connected');}catch(e){wb.textContent='Connect';}
-        });
-        (async()=>{if(window.ethereum){try{const a=await window.ethereum.request({method:'eth_accounts'});if(a.length>0){ac=a[0];wb.textContent=ac.substring(0,6)+'...'+ac.substring(ac.length-4);wb.classList.add('connected');}}catch(e){}}})();
+        function switchPage(page,el){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+page).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); document.getElementById('logoIcon').textContent={nft:'🦏',entertainment:'🎮',market:'🏪',favorite:'❤️',ecosystem:'🌐'}[page]||'🦏'; }
+        function filterMarket(rarity,btn){ document.querySelectorAll('#page-market .filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('#marketGrid .market-card').forEach(c=>c.style.display=(rarity==='all'||c.getAttribute('data-rarity')===rarity)?'':'none'); }
+        const lb=document.getElementById('langBtn'),ld=document.getElementById('langDropdown'); lb.addEventListener('click',e=>{e.stopPropagation();ld.classList.toggle('open');}); document.addEventListener('click',e=>{if(!ld.contains(e.target)&&e.target!==lb)ld.classList.remove('open');}); document.querySelectorAll('.lang-option').forEach(o=>o.addEventListener('click',function(){localStorage.setItem('bcbsLang',this.getAttribute('data-lang'));ld.classList.remove('open');}));
+        const wb=document.getElementById('walletBtn'); let ac=null; wb.addEventListener('click',async function(){ if(ac){ac=null;wb.textContent='Connect';wb.classList.remove('connected');return;} if(!window.ethereum){alert('请安装 MetaMask');return;} wb.innerHTML='...'; try{const a=await window.ethereum.request({method:'eth_requestAccounts'});ac=a[0];wb.textContent=ac.substring(0,6)+'...'+ac.substring(ac.length-4);wb.classList.add('connected');}catch(e){wb.textContent='Connect';} }); (async()=>{if(window.ethereum){try{const a=await window.ethereum.request({method:'eth_accounts'});if(a.length>0){ac=a[0];wb.textContent=ac.substring(0,6)+'...'+ac.substring(ac.length-4);wb.classList.add('connected');}}catch(e){}}})();
         renderCards('cardGrid','nft');
     </script>
 </body>
