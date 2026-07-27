@@ -537,45 +537,88 @@
         let lotteryInterval = null;
         let soundEnabled = true;
         let tickCount = 0;
+        let audioCtx = null;
 
-        // ==================== 音效系统 ====================
-        function createBeep(frequency, duration, type = 'sine', volume = 0.15) {
+        // ==================== 音效系统（修复版） ====================
+        function getAudioContext() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            // 关键修复：每次播放前恢复 AudioContext
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function createBeep(frequency, duration, type = 'sine', volume = 0.3) {
             if (!soundEnabled) return;
             try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
+                const ctx = getAudioContext();
+                const oscillator = ctx.createOscillator();
+                const gainNode = ctx.createGain();
                 
                 oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
+                gainNode.connect(ctx.destination);
                 
                 oscillator.type = type;
-                oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
-                gainNode.gain.setValueAtTime(volume, audioCtx.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                oscillator.frequency.setValueAtTime(frequency, ctx.currentTime);
+                gainNode.gain.setValueAtTime(volume, ctx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
                 
-                oscillator.start(audioCtx.currentTime);
-                oscillator.stop(audioCtx.currentTime + duration);
+                oscillator.start(ctx.currentTime);
+                oscillator.stop(ctx.currentTime + duration);
             } catch(e) {
-                // 静默处理音效错误
+                // 静默处理
             }
         }
 
         function playTickSound() {
-            createBeep(880, 0.06, 'square', 0.08);
+            createBeep(1000, 0.08, 'square', 0.12);
         }
 
+        // 中奖音效 - 修复版：更长的播放时间和更高的音量
         function playWinSound() {
-            const notes = [523, 659, 784, 1047];
-            notes.forEach((freq, i) => {
-                setTimeout(() => createBeep(freq, 0.3, 'sine', 0.2), i * 150);
-            });
+            if (!soundEnabled) return;
+            try {
+                const ctx = getAudioContext();
+                const now = ctx.currentTime;
+                
+                // 第一段：快速上升音阶
+                const notes1 = [523, 659, 784]; // C5, E5, G5
+                notes1.forEach((freq, i) => {
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + i * 0.15);
+                    gain.gain.setValueAtTime(0.3, now + i * 0.15);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.15 + 0.3);
+                    osc.start(now + i * 0.15);
+                    osc.stop(now + i * 0.15 + 0.3);
+                });
+                
+                // 第二段：长高音
+                const osc2 = ctx.createOscillator();
+                const gain2 = ctx.createGain();
+                osc2.connect(gain2);
+                gain2.connect(ctx.destination);
+                osc2.type = 'sine';
+                osc2.frequency.setValueAtTime(1047, now + 0.5); // C6
+                gain2.gain.setValueAtTime(0.35, now + 0.5);
+                gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.5 + 0.6);
+                osc2.start(now + 0.5);
+                osc2.stop(now + 0.5 + 0.6);
+            } catch(e) {
+                // 静默处理
+            }
         }
 
         function playStartSound() {
-            createBeep(440, 0.2, 'sine', 0.12);
-            setTimeout(() => createBeep(660, 0.15, 'sine', 0.12), 120);
-            setTimeout(() => createBeep(880, 0.1, 'sine', 0.12), 240);
+            createBeep(440, 0.15, 'sine', 0.15);
+            setTimeout(() => createBeep(660, 0.12, 'sine', 0.15), 120);
+            setTimeout(() => createBeep(880, 0.1, 'sine', 0.15), 240);
         }
 
         function toggleSound() {
@@ -585,12 +628,20 @@
                 btn.textContent = '🔊';
                 btn.classList.remove('muted');
                 btn.title = '音效开关';
+                // 测试音效
+                getAudioContext();
+                createBeep(800, 0.1, 'sine', 0.15);
             } else {
                 btn.textContent = '🔇';
                 btn.classList.add('muted');
                 btn.title = '音效已关闭';
             }
         }
+
+        // 在用户首次交互时初始化 AudioContext（关键修复）
+        document.addEventListener('click', function initAudio() {
+            getAudioContext();
+        }, { once: true });
 
         // ==================== 渲染卡片 ====================
         function renderCards(gridId, pageKey) {
@@ -652,6 +703,9 @@
             isLotteryRunning = true;
             tickCount = 0;
             
+            // 关键修复：每次抽奖前确保 AudioContext 活跃
+            getAudioContext();
+            
             // 播放开始音效
             playStartSound();
             
@@ -672,7 +726,6 @@
                 cards.forEach(c => c.classList.remove('highlight'));
                 cards[currentIndex].classList.add('highlight');
                 
-                // 每隔2次播放滴答声
                 tickCount++;
                 if (tickCount % 2 === 0) {
                     playTickSound();
@@ -689,9 +742,6 @@
                     clearInterval(lotteryInterval);
                     lotteryInterval = null;
                     
-                    // 播放中奖音效
-                    playWinSound();
-                    
                     const finalIndex = Math.floor(Math.random() * totalCards);
                     cards.forEach(c => c.classList.remove('highlight'));
                     const finalCard = cards[finalIndex];
@@ -699,12 +749,16 @@
                     selectedCard = cardData[finalIndex];
                     selectedElement = finalCard;
                     
+                    // 关键修复：立即播放中奖音效
+                    playWinSound();
+                    
+                    // 延迟弹窗，确保音效有足够时间播放
                     setTimeout(() => {
                         showCardDetail(selectedCard);
                         isLotteryRunning = false;
                         btn.disabled = false;
                         btn.textContent = '📮 随机铸邮';
-                    }, 500);
+                    }, 800);
                 }
             }, speed);
         }
