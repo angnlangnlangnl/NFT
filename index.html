@@ -84,15 +84,15 @@
         .nft-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; padding:12px; text-align:center; backdrop-filter:blur(8px); cursor:pointer; transition:all 0.3s; }
         .nft-card:hover { border-color:rgba(220,187,92,0.6); transform:translateY(-3px); }
         .nft-card .frame { width:100%; height:90px; border-radius:10px; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); border:1px solid rgba(212,175,85,0.3); display:flex; align-items:center; justify-content:center; font-size:45px; margin-bottom:8px; overflow:hidden; padding:0; }
-        .nft-card .frame img { width:100%; height:100%; object-fit:cover; display:block; }
+        .nft-card .frame img { width:100%; height:100%; object-fit:contain; display:block; }
         .nft-card .name { color:white; font-size:13px; font-weight:600; }
         .nft-card .rarity { font-size:11px; }
         .r-legendary { color:#ffb84d; } .r-epic { color:#d98eff; } .r-rare { color:#6db3ff; } .r-common { color:#ccc; }
         .market-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; overflow:hidden; backdrop-filter:blur(8px); cursor:pointer; transition:all 0.3s; }
         .market-card:hover { border-color:rgba(220,187,92,0.6); transform:translateY(-3px); }
-        .market-card .frame { width:100%; height:100px; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); display:flex; align-items:center; justify-content:center; font-size:50px; overflow:hidden; padding:0; }
-        .market-card .frame img { width:100%; height:100%; object-fit:cover; display:block; }
-        .market-card .info { padding:10px; }
+        .market-card .frame { width:100%; height:100px; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); display:flex; align-items:center; justify-content:center; font-size:50px; overflow:hidden; padding:0; position:relative; }
+        .market-card .frame img { width:100%; height:100%; object-fit:contain; display:block; position:absolute; top:0; left:0; }
+        .market-card .info { padding:10px; position:relative; z-index:1; }
         .btn-sm { width:100%; padding:7px; border:1px solid rgba(180,145,70,0.5); background:transparent; color:var(--gold-glow); border-radius:10px; font-size:11px; cursor:pointer; }
         .stats { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; padding:15px; margin-bottom:15px; display:flex; justify-content:space-around; text-align:center; backdrop-filter:blur(8px); }
         .stat-item { flex:1; } .stat-item .val { color:var(--gold-light); font-size:22px; font-weight:700; } .stat-item .lbl { color:var(--text-secondary); font-size:11px; }
