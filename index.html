@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>珍稀动物盲盒 · NFT DApp</title>
+    <title>NFT集邮 · DApp</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -47,30 +47,15 @@
 
         .lottery-btn-area { text-align:center; margin-top:12px; }
         .btn-lottery { 
-            display:inline-block; 
-            padding:12px 36px; 
+            display:inline-block; padding:12px 36px; 
             background:linear-gradient(180deg, #e7c778 0%, #b48b3a 70%, #7a5822 100%); 
-            color:#0a130e; 
-            border:1px solid #f5e3b3; 
-            border-radius:30px; 
-            font-weight:700; 
-            font-size:15px; 
-            cursor:pointer; 
-            box-shadow:0 6px 20px rgba(180,145,70,0.35); 
-            transition:all 0.2s; 
-            letter-spacing:1px;
-            animation:glowPulse 2s infinite;
+            color:#0a130e; border:1px solid #f5e3b3; border-radius:30px; 
+            font-weight:700; font-size:15px; cursor:pointer; 
+            box-shadow:0 6px 20px rgba(180,145,70,0.35); transition:all 0.2s; 
+            letter-spacing:1px; animation:glowPulse 2s infinite;
         }
-        .btn-lottery:hover { 
-            background:linear-gradient(180deg, #f5da8a 0%, #c79d46 70%, #8f6826 100%); 
-            box-shadow:0 10px 25px rgba(220,180,70,0.55); 
-            transform:scale(1.03); 
-        }
-        .btn-lottery:disabled {
-            opacity:0.6;
-            cursor:not-allowed;
-            animation:none;
-        }
+        .btn-lottery:hover { background:linear-gradient(180deg, #f5da8a 0%, #c79d46 70%, #8f6826 100%); box-shadow:0 10px 25px rgba(220,180,70,0.55); transform:scale(1.03); }
+        .btn-lottery:disabled { opacity:0.6; cursor:not-allowed; animation:none; }
         @keyframes glowPulse { 
             0%,100% { box-shadow:0 6px 20px rgba(180,145,70,0.35); } 
             50% { box-shadow:0 6px 35px rgba(220,180,70,0.7); } 
@@ -78,109 +63,47 @@
 
         .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
         .animal-card { 
-            background:rgba(19,32,22,0.8); 
-            border:2px solid rgba(180,145,70,0.25); 
-            border-radius:14px; 
-            text-align:center; 
-            cursor:pointer; 
-            transition:all 0.3s; 
-            position:relative; 
-            backdrop-filter:blur(4px); 
-            overflow:hidden;
-            aspect-ratio: 3/4;
+            background:rgba(19,32,22,0.8); border:2px solid rgba(180,145,70,0.25); 
+            border-radius:14px; text-align:center; cursor:pointer; 
+            transition:all 0.3s; position:relative; backdrop-filter:blur(4px); 
+            overflow:hidden; aspect-ratio: 3/4;
         }
         .animal-card:hover { border-color:var(--gold-glow); box-shadow:0 0 20px rgba(180,145,70,0.3); transform:translateY(-3px); }
         .animal-card.selected { border-color:var(--gold-glow); box-shadow:0 0 25px rgba(180,145,70,0.5); background:rgba(180,145,70,0.15); }
         .animal-card.highlight { 
             border-color:var(--gold-glow); 
             box-shadow:0 0 35px rgba(220,180,70,0.9), 0 0 60px rgba(180,145,70,0.5); 
-            background:rgba(180,145,70,0.2); 
-            animation:highlightPulse 0.3s ease;
+            background:rgba(180,145,70,0.2); animation:highlightPulse 0.3s ease;
         }
-        @keyframes highlightPulse { 
-            0%,100% { transform:scale(1); } 
-            50% { transform:scale(1.05); } 
-        }
+        @keyframes highlightPulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.05); } }
         .animal-card .card-icon { 
-            width:100%; 
-            height:100%; 
+            width:100%; height:100%; 
             background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); 
-            border:none;
-            display:flex; 
-            align-items:center; 
-            justify-content:center; 
-            font-size:50px; 
-            position:relative; 
-            overflow:hidden;
+            border:none; display:flex; align-items:center; justify-content:center; 
+            font-size:50px; position:relative; overflow:hidden;
             box-shadow:inset 0 0 25px rgba(0,0,0,0.5);
         }
         .animal-card .card-icon::after {
-            content:'?'; 
-            position:absolute; 
-            font-size:48px; 
-            color:rgba(255,255,255,0.12); 
-            font-weight:900;
-            top:50%;
-            left:50%;
-            transform:translate(-50%,-50%);
+            content:'?'; position:absolute; font-size:48px; 
+            color:rgba(255,255,255,0.12); font-weight:900;
+            top:50%; left:50%; transform:translate(-50%,-50%);
         }
         .animal-card.revealed .card-icon::after { display:none; }
         .animal-card .card-name { 
-            position:absolute;
-            bottom:8px;
-            left:50%;
-            transform:translateX(-50%);
-            font-size:11px; 
-            color:var(--gold-light); 
-            font-weight:600; 
-            white-space:nowrap; 
-            z-index:1;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+            position:absolute; bottom:8px; left:50%; transform:translateX(-50%);
+            font-size:11px; color:var(--gold-light); font-weight:600; 
+            white-space:nowrap; z-index:1; text-shadow: 0 1px 3px rgba(0,0,0,0.8);
         }
         .animal-card .card-rarity { 
-            position:absolute;
-            top:8px;
-            right:8px;
-            font-size:9px; 
-            z-index:1;
-            background:rgba(0,0,0,0.6);
-            padding:2px 6px;
-            border-radius:6px;
+            position:absolute; top:8px; right:8px; font-size:9px; z-index:1;
+            background:rgba(0,0,0,0.6); padding:2px 6px; border-radius:6px;
         }
         .animal-card .check-mark { position:absolute; top:6px; left:6px; width:22px; height:22px; background:var(--gold-glow); border-radius:50%; display:none; align-items:center; justify-content:center; font-size:12px; color:#000; font-weight:700; z-index:2; }
         .animal-card.selected .check-mark { display:flex; }
 
-        /* 盲盒卡片 */
-        .box-card { 
-            background:rgba(19,32,22,0.8); 
-            border:1px solid rgba(180,145,70,0.3); 
-            border-radius:16px; 
-            padding:20px 15px; 
-            margin-bottom:14px; 
-            text-align:center; 
-            backdrop-filter:blur(8px); 
-            transition:all 0.3s; 
-            position:relative; 
-            box-shadow:0 4px 20px rgba(0,0,0,0.3); 
-        }
+        .box-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.3); border-radius:16px; padding:20px 15px; margin-bottom:14px; text-align:center; backdrop-filter:blur(8px); transition:all 0.3s; position:relative; box-shadow:0 4px 20px rgba(0,0,0,0.3); }
         .box-card:hover { border-color:rgba(220,187,92,0.6); box-shadow:0 8px 30px rgba(180,145,70,0.25); transform:translateY(-2px); }
-        .box-card.recommended { border-color:rgba(220,187,92,0.6); box-shadow:0 0 25px rgba(180,145,70,0.25); }
-        .box-icon-large { 
-            width:100%; 
-            height:140px; 
-            border-radius:14px; 
-            background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); 
-            border:1px solid rgba(212,175,85,0.35); 
-            display:flex; 
-            align-items:center; 
-            justify-content:center; 
-            font-size:70px; 
-            margin-bottom:12px; 
-            box-shadow:inset 0 0 25px rgba(0,0,0,0.6), 0 0 20px rgba(180,145,70,0.2); 
-            position:relative; 
-        }
-        .badge-recommend { position:absolute; top:-10px; right:15px; background:linear-gradient(180deg, #e7c778 0%, #b48b3a 100%); color:#0a130e; padding:5px 14px; border-radius:12px; font-size:11px; font-weight:700; box-shadow:0 4px 15px rgba(180,145,70,0.5); z-index:5; animation:pulse 2s infinite; }
-        @keyframes pulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.05); } }
+        .box-icon-large { width:100%; height:140px; border-radius:14px; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); border:1px solid rgba(212,175,85,0.35); display:flex; align-items:center; justify-content:center; font-size:70px; margin-bottom:12px; box-shadow:inset 0 0 25px rgba(0,0,0,0.6), 0 0 20px rgba(180,145,70,0.2); position:relative; }
         .box-card h3 { color:var(--gold-light); font-size:18px; font-weight:700; margin-bottom:4px; }
         .box-card .desc { color:var(--text-secondary); font-size:12px; margin-bottom:8px; }
         .box-card .price { color:var(--gold-glow); font-size:16px; font-weight:700; margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:4px; }
@@ -188,176 +111,42 @@
         .btn-mint { width:100%; padding:12px; background:linear-gradient(180deg, #e7c778 0%, #b48b3a 70%, #7a5822 100%); color:#0a130e; border:1px solid #f5e3b3; border-radius:14px; font-weight:700; font-size:16px; cursor:pointer; box-shadow:0 6px 20px rgba(180,145,70,0.35); transition:all 0.2s; letter-spacing:0.5px; }
         .btn-mint:hover { background:linear-gradient(180deg, #f5da8a 0%, #c79d46 70%, #8f6826 100%); box-shadow:0 10px 25px rgba(220,180,70,0.55); transform:scale(1.02); }
 
-        /* ========== 弹窗样式 ========== */
         .modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:1000; justify-content:center; align-items:center; }
         .modal-overlay.open { display:flex; }
-
-        .modal-box { 
-            position:relative;
-            width:380px; 
-            max-width:90vw;
-            background: radial-gradient(circle at center, #13221e 0%, #09110d 100%); 
-            border-radius:20px;
-            border: 2px solid var(--gold-glow);
-            box-shadow:0 20px 50px rgba(0,0,0,0.9), 0 0 60px rgba(180,145,70,0.4);
-            padding:20px 15px 20px;
-            display:flex;
-            flex-direction:column;
-            align-items:center;
-            animation:modalIn 0.3s ease;
-        }
+        .modal-box { position:relative; width:380px; max-width:90vw; background: radial-gradient(circle at center, #13221e 0%, #09110d 100%); border-radius:20px; border: 2px solid var(--gold-glow); box-shadow:0 20px 50px rgba(0,0,0,0.9), 0 0 60px rgba(180,145,70,0.4); padding:20px 15px 20px; display:flex; flex-direction:column; align-items:center; animation:modalIn 0.3s ease; }
         @keyframes modalIn { from { transform:scale(0.8); opacity:0; } to { transform:scale(1); opacity:1; } }
-
-        .modal-box .modal-id-top {
-            color: var(--text-secondary);
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        .modal-box .modal-img-area {
-            width:200px;
-            height:200px;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            overflow:hidden;
-            margin-bottom: 10px;
-        }
-        .modal-box .modal-img-area img {
-            width:100%;
-            height:100%;
-            object-fit:contain;
-        }
-        .modal-box .modal-img-area .emoji-fallback {
-            font-size:100px;
-        }
-
-        .modal-box .stamp-panel {
-            width: 100%;
-            background: rgba(20, 34, 28, 0.6);
-            border: 1px solid rgba(168, 139, 68, 0.3);
-            border-radius: 12px;
-            padding: 18px 15px 10px;
-            text-align: center;
-            margin-bottom: 8px;
-            position: relative;
-            margin-top: 10px;
-        }
-
-        .modal-box .stamp-title {
-            display: inline-block;
-            background: linear-gradient(to bottom, #e6c971, #a88b44);
-            color: #1a1a1a;
-            font-size: 15px; 
-            font-weight: bold;
-            letter-spacing: 3px;
-            padding: 4px 24px;
-            border-radius: 4px;
-            text-shadow: 0 1px 1px rgba(255,255,255,0.3);
-            white-space: nowrap;
-            position: absolute;
-            top: -14px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 5;
-        }
-        .modal-box .stamp-title::before, 
-        .modal-box .stamp-title::after {
-            content: '●';
-            display: inline-block;
-            color: #1a1a1a;
-            font-size: 5px;
-            margin: 0 8px;
-            vertical-align: middle;
-            text-shadow: none;
-        }
-
-        .modal-box .stamp-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr; 
-            grid-template-rows: auto auto;  
-            gap: 6px 10px; 
-            padding: 0 5px;
-            margin-top: 4px;
-        }
-        .modal-box .stamp-row {
-            display: flex;
-            justify-content: center;
-            align-items: baseline;
-            font-size: 11px; 
-        }
-        .modal-box .stamp-label {
-            color: #cbb780;
-            margin-right: 4px;
-            font-weight: 500;
-            white-space: nowrap; 
-        }
-        .modal-box .stamp-value {
-            color: #faf6e8;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-
-        .modal-box .modal-price-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-        .modal-box .modal-price-display {
-            color: var(--gold-glow);
-            font-size: 20px;
-            font-weight: 700;
-        }
-        .modal-box .modal-mint-days {
-            color: rgba(255,255,255,0.5);
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .modal-btns { 
-            display:flex; 
-            gap:10px; 
-            width: 100%;
-        }
-        .btn-confirm { 
-            flex:1; 
-            padding:12px; 
-            background:linear-gradient(180deg, #e7c778 0%, #b48b3a 100%); 
-            color:#0a130e; 
-            border:none; 
-            border-radius:25px; 
-            font-weight:700; 
-            font-size:15px; 
-            cursor:pointer; 
-        }
-        .btn-cancel { 
-            flex:1; 
-            padding:12px; 
-            background:transparent; 
-            border:1px solid var(--gold-glow); 
-            color:var(--gold-glow); 
-            border-radius:25px; 
-            font-size:15px; 
-            cursor:pointer; 
-        }
+        .modal-box .modal-id-top { color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 2px; margin-bottom: 10px; text-align: center; }
+        .modal-box .modal-img-area { width:200px; height:200px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom: 10px; }
+        .modal-box .modal-img-area img { width:100%; height:100%; object-fit:contain; }
+        .modal-box .modal-img-area .emoji-fallback { font-size:100px; }
+        .modal-box .stamp-panel { width: 100%; background: rgba(20, 34, 28, 0.6); border: 1px solid rgba(168, 139, 68, 0.3); border-radius: 12px; padding: 18px 15px 10px; text-align: center; margin-bottom: 8px; position: relative; margin-top: 10px; }
+        .modal-box .stamp-title { display: inline-block; background: linear-gradient(to bottom, #e6c971, #a88b44); color: #1a1a1a; font-size: 15px; font-weight: bold; letter-spacing: 3px; padding: 4px 24px; border-radius: 4px; text-shadow: 0 1px 1px rgba(255,255,255,0.3); white-space: nowrap; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); z-index: 5; }
+        .modal-box .stamp-title::before, .modal-box .stamp-title::after { content: '●'; display: inline-block; color: #1a1a1a; font-size: 5px; margin: 0 8px; vertical-align: middle; text-shadow: none; }
+        .modal-box .stamp-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap: 6px 10px; padding: 0 5px; margin-top: 4px; }
+        .modal-box .stamp-row { display: flex; justify-content: center; align-items: baseline; font-size: 11px; }
+        .modal-box .stamp-label { color: #cbb780; margin-right: 4px; font-weight: 500; white-space: nowrap; }
+        .modal-box .stamp-value { color: #faf6e8; font-weight: 500; letter-spacing: 0.5px; }
+        .modal-box .modal-price-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; }
+        .modal-box .modal-price-display { color: var(--gold-glow); font-size: 20px; font-weight: 700; }
+        .modal-box .modal-mint-days { color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 500; }
+        .modal-btns { display:flex; gap:10px; width: 100%; }
+        .btn-confirm { flex:1; padding:12px; background:linear-gradient(180deg, #e7c778 0%, #b48b3a 100%); color:#0a130e; border:none; border-radius:25px; font-weight:700; font-size:15px; cursor:pointer; }
+        .btn-cancel { flex:1; padding:12px; background:transparent; border:1px solid var(--gold-glow); color:var(--gold-glow); border-radius:25px; font-size:15px; cursor:pointer; }
         .btn-cancel:hover { background:rgba(180,145,70,0.1); }
         .btn-confirm:hover { background:linear-gradient(180deg, #f5da8a 0%, #c79d46 100%); }
 
         .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
         .nft-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; padding:12px; text-align:center; backdrop-filter:blur(8px); cursor:pointer; transition:all 0.3s; }
         .nft-card:hover { border-color:rgba(220,187,92,0.6); transform:translateY(-3px); }
-        .nft-card .frame { width:100%; height:90px; border-radius:10px; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); border:1px solid rgba(212,175,85,0.3); display:flex; align-items:center; justify-content:center; font-size:45px; margin-bottom:8px; }
+        .nft-card .frame { width:100%; height:90px; border-radius:10px; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); border:1px solid rgba(212,175,85,0.3); display:flex; align-items:center; justify-content:center; font-size:45px; margin-bottom:8px; overflow:hidden; }
+        .nft-card .frame img { width:100%; height:100%; object-fit:contain; }
         .nft-card .name { color:white; font-size:13px; font-weight:600; }
         .nft-card .rarity { font-size:11px; }
         .r-legendary { color:#ffb84d; } .r-epic { color:#d98eff; } .r-rare { color:#6db3ff; } .r-common { color:#ccc; }
         .market-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; overflow:hidden; backdrop-filter:blur(8px); cursor:pointer; transition:all 0.3s; }
         .market-card:hover { border-color:rgba(220,187,92,0.6); transform:translateY(-3px); }
-        .market-card .frame { width:100%; height:100px; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); display:flex; align-items:center; justify-content:center; font-size:50px; }
+        .market-card .frame { width:100%; height:100px; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); display:flex; align-items:center; justify-content:center; font-size:50px; overflow:hidden; }
+        .market-card .frame img { width:100%; height:100%; object-fit:contain; }
         .market-card .info { padding:10px; }
         .btn-sm { width:100%; padding:7px; border:1px solid rgba(180,145,70,0.5); background:transparent; color:var(--gold-glow); border-radius:10px; font-size:11px; cursor:pointer; }
         .stats { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; padding:15px; margin-bottom:15px; display:flex; justify-content:space-around; text-align:center; backdrop-filter:blur(8px); }
@@ -396,22 +185,20 @@
                 </div>
             </div>
 
+            <!-- ========== NFT页面 ========== -->
             <div class="page active" id="page-nft">
-                <div class="title">
-                    <h2>✦ NFT集邮 ✦</h2>
-                    <p>随机获取铸造链上邮票NFT，获得链上邮票可兑换USDT</p>
-                </div>
+                <div class="title"><h2>✦ NFT集邮 ✦</h2><p>随机获取铸造链上邮票NFT，获得链上邮票可兑换USDT</p></div>
                 <div class="grid-3" id="cardGrid"></div>
-                <div class="lottery-btn-area">
-                    <button class="btn-lottery" id="btnLottery" onclick="startLottery()">📮 随机铸邮</button>
-                </div>
+                <div class="lottery-btn-area"><button class="btn-lottery" id="btnLottery" onclick="startLottery()">📮 随机铸邮</button></div>
             </div>
 
+            <!-- ========== 娱乐页面 ========== -->
             <div class="page" id="page-entertainment">
                 <div class="title"><h2>🎮 收藏邮票NFT</h2><p>链上邮票资产，价值无限可能</p></div>
                 <div class="box-card"><div class="box-icon-large">🎁</div><h3>普通盲盒</h3><p class="desc">随机稀有动物卡牌</p><div class="price"><i class="fab fa-ethereum"></i> 0.001 BNB</div><button class="btn-mint" onclick="mint('普通盲盒')">Mint 抽取</button><p class="remain">剩余 1240/3000</p></div>
             </div>
 
+            <!-- ========== 市场页面 ========== -->
             <div class="page" id="page-market">
                 <div class="title"><h2>📖 动物图鉴市场</h2><p>探索珍稀动物卡牌 · 收藏链上唯一珍品</p></div>
                 <div class="filter-bar">
@@ -422,7 +209,7 @@
                     <span class="filter-btn" onclick="filterMarket('common',this)">普通</span>
                 </div>
                 <div class="grid-2" id="marketGrid">
-                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail(cardData[0])"><div class="frame">🐅</div><div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p style="color:#ffb84d;font-size:11px;">传世孤品 · 仅1枚</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail(cardData[0])"><div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div><div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p style="color:#ffb84d;font-size:11px;">传世孤品 · 仅1枚</p><button class="btn-sm">查看详情</button></div></div>
                     <div class="market-card" data-rarity="legendary" onclick="showCardDetail(cardData[1])"><div class="frame">🐼</div><div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p style="color:#ffb84d;font-size:11px;">传说 · 总量100</p><button class="btn-sm">查看详情</button></div></div>
                     <div class="market-card" data-rarity="epic" onclick="showCardDetail(cardData[2])"><div class="frame">🦏</div><div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p style="color:#d98eff;font-size:11px;">史诗 · 总量600</p><button class="btn-sm">查看详情</button></div></div>
                     <div class="market-card" data-rarity="rare" onclick="showCardDetail(cardData[3])"><div class="frame">🦅</div><div class="info"><p style="color:white;font-weight:600;">金雕</p><p style="color:#6db3ff;font-size:11px;">稀有 · 总量1500</p><button class="btn-sm">查看详情</button></div></div>
@@ -431,6 +218,7 @@
                 </div>
             </div>
 
+            <!-- ========== 收藏页面 ========== -->
             <div class="page" id="page-favorite">
                 <div class="title"><h2>🗂️ 我的藏品</h2><p>你的珍稀动物收藏库 · 墨绿鎏金典藏</p></div>
                 <div class="stats">
@@ -440,7 +228,7 @@
                     <div class="stat-item"><div class="val">4.8</div><div class="lbl">估值 BNB</div></div>
                 </div>
                 <div class="grid-2">
-                    <div class="nft-card" onclick="showCardDetail(cardData[0])"><div class="frame">🐅</div><div class="name">最贵邮票</div><div class="rarity r-legendary">传世孤品</div></div>
+                    <div class="nft-card" onclick="showCardDetailFav(cardData[0])"><div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div><div class="name">最贵邮票</div><div class="rarity r-legendary">传世孤品</div></div>
                     <div class="nft-card" onclick="showCardDetail(cardData[1])"><div class="frame">🐼</div><div class="name">大熊猫</div><div class="rarity r-legendary">传说</div></div>
                     <div class="nft-card" onclick="showCardDetail(cardData[2])"><div class="frame">🦏</div><div class="name">白犀牛</div><div class="rarity r-epic">史诗</div></div>
                     <div class="nft-card" onclick="showCardDetail(cardData[3])"><div class="frame">🦅</div><div class="name">金雕</div><div class="rarity r-rare">稀有</div></div>
@@ -451,6 +239,7 @@
                 </div>
             </div>
 
+            <!-- ========== 生态页面 ========== -->
             <div class="page" id="page-ecosystem">
                 <div class="title"><h2>🌐 生态讯息</h2><p>系统通知 · 交易动态 · 活动提醒</p></div>
                 <div class="msg-item unread" onclick="alert('✅ 交易成功')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>交易成功</span><span class="msg-time">10分钟前</span></div><div class="msg-content">至尊礼盒Mint成功！获得稀有卡牌</div></div>
@@ -460,13 +249,11 @@
             </div>
         </div>
 
+        <!-- 弹窗 -->
         <div class="modal-overlay" id="cardModal">
             <div class="modal-box">
                 <div class="modal-id-top" id="modalIdTop">#0001</div>
-                <div class="modal-img-area">
-                    <img id="modalImg" src="" alt="" style="display:none;">
-                    <span class="emoji-fallback" id="modalEmoji">🎁</span>
-                </div>
+                <div class="modal-img-area"><img id="modalImg" src="" alt=""></div>
                 <div class="stamp-panel">
                     <div class="stamp-title" id="modalName">最贵邮票</div>
                     <div class="stamp-grid">
@@ -480,9 +267,9 @@
                     <span class="modal-price-display" id="modalPrice">2.5 BNB</span>
                     <span class="modal-mint-days">铸造7天</span>
                 </div>
-                <div class="modal-btns">
+                <div class="modal-btns" id="modalBtns">
                     <button class="btn-cancel" onclick="closeModal()">取 消</button>
-                    <button class="btn-confirm" onclick="confirmCard()">确 认</button>
+                    <button class="btn-confirm" id="btnConfirm" onclick="confirmCard()">确 认</button>
                 </div>
             </div>
         </div>
@@ -509,33 +296,23 @@
             { icon:'🐬', name:'中华白海豚', rarity:'稀有', id:'#3345', year:'现代', estimate:'10万美元', source:'中国南海', price:'0.1 BNB', color:'#6db3ff', img:'images/youpiao10.png' }
         ];
         let selectedCard = null, selectedElement = null;
-        let isLotteryRunning = false;
-        let lotteryInterval = null;
+        let isLotteryRunning = false, lotteryInterval = null;
+        let currentPage = 'nft';
 
         function renderCards(gridId, pageKey) {
             const grid = document.getElementById(gridId);
             if (!grid) return;
             grid.innerHTML = cardData.map((card, index) => `
                 <div class="animal-card" data-index="${index}" data-page="${pageKey}">
-                    <div class="check-mark">✓</div>
-                    <div class="card-icon"></div>
-                    <div class="card-name">随机铸邮</div>
-                    <div class="card-rarity" style="color:var(--text-secondary)">NFT</div>
+                    <div class="check-mark">✓</div><div class="card-icon"></div>
+                    <div class="card-name">随机铸邮</div><div class="card-rarity" style="color:var(--text-secondary)">NFT</div>
                 </div>`).join('');
         }
         function selectCard(index, element, pageKey) { return; }
         function showCardDetail(card) {
+            currentPage = 'default';
             const modalImg = document.getElementById('modalImg');
-            const modalEmoji = document.getElementById('modalEmoji');
-            if (card.img) {
-                modalImg.src = card.img;
-                modalImg.style.display = 'block';
-                modalEmoji.style.display = 'none';
-            } else {
-                modalImg.style.display = 'none';
-                modalEmoji.style.display = 'block';
-                modalEmoji.textContent = card.icon;
-            }
+            if (card.img) { modalImg.src = card.img; } else { modalImg.src = ''; }
             document.getElementById('modalIdTop').textContent = card.id;
             document.getElementById('modalName').textContent = card.name;
             document.getElementById('modalYear').textContent = card.year;
@@ -544,6 +321,22 @@
             document.getElementById('modalRarity').style.color = card.color || '#ffb84d';
             document.getElementById('modalSource').textContent = card.source;
             document.getElementById('modalPrice').textContent = card.price;
+            document.getElementById('btnConfirm').textContent = '确 认';
+            document.getElementById('cardModal').classList.add('open');
+        }
+        function showCardDetailFav(card) {
+            currentPage = 'favorite';
+            const modalImg = document.getElementById('modalImg');
+            if (card.img) { modalImg.src = card.img; } else { modalImg.src = ''; }
+            document.getElementById('modalIdTop').textContent = card.id;
+            document.getElementById('modalName').textContent = card.name;
+            document.getElementById('modalYear').textContent = card.year;
+            document.getElementById('modalEstimate').textContent = card.estimate;
+            document.getElementById('modalRarity').textContent = card.rarity;
+            document.getElementById('modalRarity').style.color = card.color || '#ffb84d';
+            document.getElementById('modalSource').textContent = card.source;
+            document.getElementById('modalPrice').textContent = card.price;
+            document.getElementById('btnConfirm').textContent = '出 售';
             document.getElementById('cardModal').classList.add('open');
         }
         function closeModal() {
@@ -551,21 +344,26 @@
             if(selectedElement){ selectedElement.classList.remove('selected'); selectedElement=null; selectedCard=null; }
         }
         function confirmCard() {
-            if(selectedCard&&selectedElement){ selectedElement.classList.add('revealed'); selectedElement.querySelector('.card-icon').textContent=selectedCard.icon; selectedElement.querySelector('.card-name').textContent=selectedCard.name; selectedElement.querySelector('.card-rarity').textContent=selectedCard.rarity; selectedElement.querySelector('.card-rarity').style.color=selectedCard.color; alert(`✅ 已确认：${selectedCard.name} (${selectedCard.rarity})\n编号：${selectedCard.id}`); }
+            if(currentPage === 'favorite') {
+                alert('✅ 出售成功！');
+            } else if(selectedCard&&selectedElement){ 
+                selectedElement.classList.add('revealed'); 
+                selectedElement.querySelector('.card-icon').textContent=selectedCard.icon; 
+                selectedElement.querySelector('.card-name').textContent=selectedCard.name; 
+                selectedElement.querySelector('.card-rarity').textContent=selectedCard.rarity; 
+                selectedElement.querySelector('.card-rarity').style.color=selectedCard.color; 
+                alert(`✅ 已确认：${selectedCard.name} (${selectedCard.rarity})\n编号：${selectedCard.id}`); 
+            }
             document.getElementById('cardModal').classList.remove('open');
         }
-
         function startLottery() {
             if (isLotteryRunning) return;
             isLotteryRunning = true;
             const btn = document.getElementById('btnLottery');
-            btn.disabled = true;
-            btn.textContent = '📮 铸邮中...';
+            btn.disabled = true; btn.textContent = '📮 铸邮中...';
             const cards = document.querySelectorAll('#cardGrid .animal-card');
             const totalCards = cards.length;
-            let currentIndex = 0;
-            let speed = 80;
-            let rounds = 0;
+            let currentIndex = 0, speed = 80, rounds = 0;
             const maxRounds = 3;
             cards.forEach(c => { c.classList.remove('highlight', 'selected'); });
             if (selectedElement) { selectedElement = null; selectedCard = null; }
@@ -573,35 +371,29 @@
                 cards.forEach(c => c.classList.remove('highlight'));
                 cards[currentIndex].classList.add('highlight');
                 currentIndex++;
-                if (currentIndex >= totalCards) {
-                    currentIndex = 0;
-                    rounds++;
-                    if (rounds >= maxRounds - 1) speed += 30;
-                }
+                if (currentIndex >= totalCards) { currentIndex = 0; rounds++; if (rounds >= maxRounds - 1) speed += 30; }
                 if (rounds >= maxRounds && currentIndex === Math.floor(Math.random() * totalCards)) {
-                    clearInterval(lotteryInterval);
-                    lotteryInterval = null;
+                    clearInterval(lotteryInterval); lotteryInterval = null;
                     const finalIndex = Math.floor(Math.random() * totalCards);
                     cards.forEach(c => c.classList.remove('highlight'));
                     const finalCard = cards[finalIndex];
                     finalCard.classList.add('selected', 'highlight');
-                    selectedCard = cardData[finalIndex];
-                    selectedElement = finalCard;
+                    selectedCard = cardData[finalIndex]; selectedElement = finalCard;
+                    currentPage = 'default';
                     setTimeout(() => {
                         showCardDetail(selectedCard);
-                        isLotteryRunning = false;
-                        btn.disabled = false;
-                        btn.textContent = '📮 随机铸邮';
+                        isLotteryRunning = false; btn.disabled = false; btn.textContent = '📮 随机铸邮';
                     }, 500);
                 }
             }, speed);
         }
-
         function mint(type) { alert('⛓️ 链上Mint盲盒 · ' + type + ' (演示模式)'); }
         document.getElementById('cardModal').addEventListener('click',function(e){ if(e.target===this)closeModal(); });
         function switchPage(page,el){
-            document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+page).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active');
+            document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); 
+            document.getElementById('page-'+page).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); 
+            el.classList.add('active');
             document.getElementById('logoIcon').textContent={nft:'🦏',entertainment:'🎮',market:'🏪',favorite:'❤️',ecosystem:'🌐'}[page]||'🦏';
         }
         function filterMarket(rarity,btn){
