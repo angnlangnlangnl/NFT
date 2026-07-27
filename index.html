@@ -49,7 +49,6 @@
         .section-header h3 { color:var(--gold-light); font-size:18px; font-weight:600; }
         .selected-count { background:var(--gold-glow); color:#000; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700; }
 
-        /* 跑马灯抽奖按钮 - 移到底部 */
         .lottery-btn-area { text-align:center; margin-top:15px; }
         .btn-lottery { 
             display:inline-block; 
@@ -400,7 +399,6 @@
                 </div>
             </div>
 
-            <!-- ========== 挑选NFT页面 ========== -->
             <div class="page active" id="page-nft">
                 <div class="title">
                     <h2>✦ 极危珍稀盲盒 ✦</h2>
@@ -411,13 +409,11 @@
                     <span class="selected-count" id="selectedCount">已选 0</span>
                 </div>
                 <div class="grid-3" id="cardGrid"></div>
-                <!-- 跑马灯抽奖按钮 - 移到卡片下方 -->
                 <div class="lottery-btn-area">
                     <button class="btn-lottery" id="btnLottery" onclick="startLottery()">📮 随机铸邮</button>
                 </div>
             </div>
 
-            <!-- ========== 娱乐页面 ========== -->
             <div class="page" id="page-entertainment">
                 <div class="title"><h2>🎮 娱乐盲盒</h2><p>抽取你的专属珍稀动物卡牌</p></div>
                 <div class="box-card"><div class="box-icon-large">🎁</div><h3>普通盲盒</h3><p class="desc">随机稀有动物卡牌</p><div class="price"><i class="fab fa-ethereum"></i> 0.001 BNB</div><button class="btn-mint" onclick="mint('普通盲盒')">Mint 抽取</button><p class="remain">剩余 1240/3000</p></div>
@@ -425,7 +421,6 @@
                 <div class="box-card"><div class="box-icon-large">👑</div><h3>至尊礼盒</h3><p class="desc">必得史诗或传说动物卡牌</p><div class="price"><i class="fab fa-ethereum"></i> 0.02 BNB</div><button class="btn-mint" onclick="mint('至尊礼盒')">Mint 抽取</button><p class="remain">剩余 89/200</p></div>
             </div>
 
-            <!-- ========== 市场页面 ========== -->
             <div class="page" id="page-market">
                 <div class="title"><h2>📖 动物图鉴市场</h2><p>探索珍稀动物卡牌 · 收藏链上唯一珍品</p></div>
                 <div class="filter-bar">
@@ -445,7 +440,6 @@
                 </div>
             </div>
 
-            <!-- ========== 收藏页面 ========== -->
             <div class="page" id="page-favorite">
                 <div class="title"><h2>🗂️ 我的藏品</h2><p>你的珍稀动物收藏库 · 墨绿鎏金典藏</p></div>
                 <div class="stats">
@@ -466,7 +460,6 @@
                 </div>
             </div>
 
-            <!-- ========== 生态页面 ========== -->
             <div class="page" id="page-ecosystem">
                 <div class="title"><h2>🌐 生态讯息</h2><p>系统通知 · 交易动态 · 活动提醒</p></div>
                 <div class="msg-item unread" onclick="alert('✅ 交易成功')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>交易成功</span><span class="msg-time">10分钟前</span></div><div class="msg-content">至尊礼盒Mint成功！获得稀有卡牌</div></div>
@@ -476,7 +469,6 @@
             </div>
         </div>
 
-        <!-- ========== 弹窗 ========== -->
         <div class="modal-overlay" id="cardModal">
             <div class="modal-box">
                 <div class="modal-id-top" id="modalIdTop">#0001</div>
@@ -536,7 +528,7 @@
                 <div class="animal-card" data-index="${index}" data-page="${pageKey}" onclick="selectCard(${index}, this, '${pageKey}')">
                     <div class="check-mark">✓</div>
                     <div class="card-icon"></div>
-                    <div class="card-name">选择卡片</div>
+                    <div class="card-name">价值0.00U</div>
                     <div class="card-rarity" style="color:var(--text-secondary)">未知</div>
                 </div>`).join('');
         }
@@ -578,51 +570,40 @@
             document.getElementById('cardModal').classList.remove('open');
         }
 
-        // ==================== 跑马灯抽奖功能 ====================
         function startLottery() {
             if (isLotteryRunning) return;
             isLotteryRunning = true;
             const btn = document.getElementById('btnLottery');
             btn.disabled = true;
             btn.textContent = '📮 铸邮中...';
-            
             const cards = document.querySelectorAll('#cardGrid .animal-card');
             const totalCards = cards.length;
             let currentIndex = 0;
             let speed = 80;
             let rounds = 0;
             const maxRounds = 3;
-            
             cards.forEach(c => { c.classList.remove('highlight', 'selected'); });
             if (selectedElement) { selectedElement = null; selectedCard = null; }
             document.getElementById('selectedCount').textContent = '已选 0';
-            
             lotteryInterval = setInterval(() => {
                 cards.forEach(c => c.classList.remove('highlight'));
                 cards[currentIndex].classList.add('highlight');
                 currentIndex++;
-                
                 if (currentIndex >= totalCards) {
                     currentIndex = 0;
                     rounds++;
-                    if (rounds >= maxRounds - 1) {
-                        speed += 30;
-                    }
+                    if (rounds >= maxRounds - 1) speed += 30;
                 }
-                
                 if (rounds >= maxRounds && currentIndex === Math.floor(Math.random() * totalCards)) {
                     clearInterval(lotteryInterval);
                     lotteryInterval = null;
-                    
                     const finalIndex = Math.floor(Math.random() * totalCards);
                     cards.forEach(c => c.classList.remove('highlight'));
                     const finalCard = cards[finalIndex];
                     finalCard.classList.add('selected', 'highlight');
-                    
                     selectedCard = cardData[finalIndex];
                     selectedElement = finalCard;
                     document.getElementById('selectedCount').textContent = '已选 1';
-                    
                     setTimeout(() => {
                         showCardDetail(selectedCard);
                         isLotteryRunning = false;
