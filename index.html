@@ -92,9 +92,9 @@
         .animal-card:hover { border-color:var(--gold-glow); box-shadow:0 0 20px rgba(180,145,70,0.3); transform:translateY(-3px); }
         .animal-card.selected { border-color:var(--gold-glow); box-shadow:0 0 25px rgba(180,145,70,0.5); background:rgba(180,145,70,0.15); }
         .animal-card.highlight { 
-            border-color:#ff6b6b; 
-            box-shadow:0 0 30px rgba(255,107,107,0.7); 
-            background:rgba(255,107,107,0.15); 
+            border-color:var(--gold-glow); 
+            box-shadow:0 0 35px rgba(220,180,70,0.9), 0 0 60px rgba(180,145,70,0.5); 
+            background:rgba(180,145,70,0.2); 
             animation:highlightPulse 0.3s ease;
         }
         @keyframes highlightPulse { 
@@ -397,8 +397,8 @@
 
             <div class="page active" id="page-nft">
                 <div class="title">
-                    <h2>✦ 极危珍稀盲盒 ✦</h2>
-                    <p>每张卡牌都是链上唯一的动物守护者 · 点击盲盒揭晓你的卡牌</p>
+                    <h2>✦ NFT集邮 ✦</h2>
+                    <p>随机获取铸造链上邮票NFT，获得链上邮票可兑换USDT</p>
                 </div>
                 <div class="grid-3" id="cardGrid"></div>
                 <div class="lottery-btn-area">
@@ -517,19 +517,14 @@
             const grid = document.getElementById(gridId);
             if (!grid) return;
             grid.innerHTML = cardData.map((card, index) => `
-                <div class="animal-card" data-index="${index}" data-page="${pageKey}" onclick="selectCard(${index}, this, '${pageKey}')">
+                <div class="animal-card" data-index="${index}" data-page="${pageKey}">
                     <div class="check-mark">✓</div>
                     <div class="card-icon"></div>
-                    <div class="card-name">价值0.00U</div>
+                    <div class="card-name">随机铸邮</div>
                     <div class="card-rarity" style="color:var(--text-secondary)">NFT</div>
                 </div>`).join('');
         }
-        function selectCard(index, element, pageKey) {
-            if (isLotteryRunning) return;
-            document.querySelectorAll(`.animal-card[data-page="${pageKey}"]`).forEach(c => c.classList.remove('selected'));
-            selectedCard = cardData[index]; selectedElement = element; element.classList.add('selected');
-            showCardDetail(selectedCard);
-        }
+        function selectCard(index, element, pageKey) { return; }
         function showCardDetail(card) {
             const modalImg = document.getElementById('modalImg');
             const modalEmoji = document.getElementById('modalEmoji');
