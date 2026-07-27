@@ -81,13 +81,6 @@
         .btn-cancel:hover { background:rgba(180,145,70,0.1); }
         .btn-confirm:hover { background:linear-gradient(180deg, #f5da8a 0%, #c79d46 100%); }
         .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
-        .nft-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; padding:12px; text-align:center; backdrop-filter:blur(8px); cursor:pointer; transition:all 0.3s; }
-        .nft-card:hover { border-color:rgba(220,187,92,0.6); transform:translateY(-3px); }
-        .nft-card .frame { width:100%; height:90px; border-radius:10px; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); border:1px solid rgba(212,175,85,0.3); display:flex; align-items:center; justify-content:center; font-size:45px; margin-bottom:8px; overflow:hidden; padding:0; }
-        .nft-card .frame img { width:100%; height:100%; object-fit:contain; display:block; }
-        .nft-card .name { color:white; font-size:13px; font-weight:600; }
-        .nft-card .rarity { font-size:11px; }
-        .r-legendary { color:#ffb84d; } .r-epic { color:#d98eff; } .r-rare { color:#6db3ff; } .r-common { color:#ccc; }
         .market-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; overflow:hidden; backdrop-filter:blur(8px); cursor:pointer; transition:all 0.3s; display:flex; flex-direction:column; }
         .market-card:hover { border-color:rgba(220,187,92,0.6); transform:translateY(-3px); }
         .market-card .frame { width:100%; display:flex; align-items:center; justify-content:center; font-size:50px; overflow:hidden; padding:0; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); }
@@ -95,6 +88,9 @@
         .market-card .info { padding:10px; }
         .usdt-value { color: var(--usdt-color); font-size: 11px; }
         .btn-sm { width:100%; padding:7px; border:1px solid rgba(180,145,70,0.5); background:transparent; color:var(--gold-glow); border-radius:10px; font-size:11px; cursor:pointer; }
+        .mint-progress-bar { width:100%; height:6px; background:rgba(255,255,255,0.1); border-radius:3px; margin-top:6px; overflow:hidden; }
+        .mint-progress-fill { height:100%; background:linear-gradient(to right, var(--gold-deep), var(--gold-glow)); border-radius:3px; transition:width 0.5s ease; }
+        .mint-status-text { font-size:10px; color:var(--text-secondary); margin-top:3px; }
         .stats { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; padding:15px; margin-bottom:15px; display:flex; justify-content:space-around; text-align:center; backdrop-filter:blur(8px); }
         .stat-item { flex:1; } .stat-item .val { color:var(--gold-light); font-size:22px; font-weight:700; } .stat-item .lbl { color:var(--text-secondary); font-size:11px; }
         .stat-div { width:1px; background:rgba(180,145,70,0.2); }
@@ -152,10 +148,7 @@
                     <span class="filter-btn" onclick="filterMarket('common',this)">普通</span>
                 </div>
                 <div class="grid-2" id="marketGrid">
-                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail(cardData[0])">
-                        <div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div>
-                        <div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div>
-                    </div>
+                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail(cardData[0])"><div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div><div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
                     <div class="market-card" data-rarity="legendary" onclick="showCardDetail(cardData[1])"><div class="frame">🐼</div><div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
                     <div class="market-card" data-rarity="epic" onclick="showCardDetail(cardData[2])"><div class="frame">🦏</div><div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
                     <div class="market-card" data-rarity="rare" onclick="showCardDetail(cardData[3])"><div class="frame">🦅</div><div class="info"><p style="color:white;font-weight:600;">金雕</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
@@ -172,15 +165,51 @@
                     <div class="stat-item"><div class="val">2</div><div class="lbl">传说</div></div><div class="stat-div"></div>
                     <div class="stat-item"><div class="val">4.8</div><div class="lbl">估值 BNB</div></div>
                 </div>
-                <div class="grid-2">
-                    <div class="nft-card" onclick="showCardDetailFav(cardData[0])"><div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div><div class="name">最贵邮票</div><div class="rarity r-legendary">传世孤品</div></div>
-                    <div class="nft-card" onclick="showCardDetail(cardData[1])"><div class="frame">🐼</div><div class="name">大熊猫</div><div class="rarity r-legendary">传说</div></div>
-                    <div class="nft-card" onclick="showCardDetail(cardData[2])"><div class="frame">🦏</div><div class="name">白犀牛</div><div class="rarity r-epic">史诗</div></div>
-                    <div class="nft-card" onclick="showCardDetail(cardData[3])"><div class="frame">🦅</div><div class="name">金雕</div><div class="rarity r-rare">稀有</div></div>
-                    <div class="nft-card" onclick="showCardDetail(cardData[4])"><div class="frame">🐘</div><div class="name">亚洲象</div><div class="rarity r-rare">稀有</div></div>
-                    <div class="nft-card" onclick="showCardDetail(cardData[5])"><div class="frame">🐯</div><div class="name">孟加拉虎</div><div class="rarity r-rare">稀有</div></div>
-                    <div class="nft-card" onclick="showCardDetail(cardData[6])"><div class="frame">🦊</div><div class="name">藏狐</div><div class="rarity r-common">普通</div></div>
-                    <div class="nft-card" onclick="showCardDetail(cardData[7])"><div class="frame">🦌</div><div class="name">麋鹿</div><div class="rarity r-common">普通</div></div>
+                <div class="grid-2" id="favoriteGrid">
+                    <div class="market-card" data-rarity="legendary" data-index="0">
+                        <div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div>
+                        <div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
+                            <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:30%"></div></div>
+                            <p class="mint-status-text">铸邮中 30%</p>
+                        </div>
+                    </div>
+                    <div class="market-card" data-rarity="legendary" data-index="1">
+                        <div class="frame">🐼</div>
+                        <div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
+                            <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:60%"></div></div>
+                            <p class="mint-status-text">铸邮中 60%</p>
+                        </div>
+                    </div>
+                    <div class="market-card" data-rarity="epic" data-index="2">
+                        <div class="frame">🦏</div>
+                        <div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
+                            <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:100%"></div></div>
+                            <p class="mint-status-text">铸邮已完成</p>
+                            <button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[2])">查看详情</button>
+                        </div>
+                    </div>
+                    <div class="market-card" data-rarity="rare" data-index="3">
+                        <div class="frame">🦅</div>
+                        <div class="info"><p style="color:white;font-weight:600;">金雕</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
+                            <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:90%"></div></div>
+                            <p class="mint-status-text">铸邮中 90%</p>
+                        </div>
+                    </div>
+                    <div class="market-card" data-rarity="rare" data-index="4">
+                        <div class="frame">🐘</div>
+                        <div class="info"><p style="color:white;font-weight:600;">亚洲象</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
+                            <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:100%"></div></div>
+                            <p class="mint-status-text">铸邮已完成</p>
+                            <button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[4])">查看详情</button>
+                        </div>
+                    </div>
+                    <div class="market-card" data-rarity="common" data-index="6">
+                        <div class="frame">🦊</div>
+                        <div class="info"><p style="color:white;font-weight:600;">藏狐</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
+                            <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:10%"></div></div>
+                            <p class="mint-status-text">铸邮中 10%</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -228,15 +257,15 @@
 
     <script>
         const cardData = [
-            { icon:'🐅', name:'最贵邮票', rarity:'传世孤品', id:'#0001', year:'1840', estimate:'约850万美元', source:'英国邮政史', price:'2.5 BNB', color:'#ffb84d', img:'images/youpiao1.png' },
-            { icon:'🐼', name:'大熊猫', rarity:'传说', id:'#0007', year:'远古', estimate:'无价', source:'中国四川', price:'3.0 BNB', color:'#ffb84d', img:'images/youpiao2.png' },
-            { icon:'🦏', name:'白犀牛', rarity:'史诗', id:'#0892', year:'现代', estimate:'45万美元', source:'非洲草原', price:'0.45 BNB', color:'#d98eff', img:'images/youpiao3.png' },
-            { icon:'🦅', name:'金雕', rarity:'稀有', id:'#2210', year:'现代', estimate:'8万美元', source:'北半球', price:'0.08 BNB', color:'#6db3ff', img:'images/youpiao4.png' },
-            { icon:'🐘', name:'亚洲象', rarity:'稀有', id:'#1502', year:'现代', estimate:'7万美元', source:'东南亚', price:'0.07 BNB', color:'#6db3ff', img:'images/youpiao5.png' },
-            { icon:'🐯', name:'孟加拉虎', rarity:'稀有', id:'#1024', year:'现代', estimate:'9万美元', source:'印度', price:'0.09 BNB', color:'#6db3ff', img:'images/youpiao7.png' },
-            { icon:'🦊', name:'藏狐', rarity:'普通', id:'#2451', year:'现代', estimate:'1万美元', source:'青藏高原', price:'0.01 BNB', color:'#ccc', img:'images/youpiao6.png' },
-            { icon:'🦚', name:'绿孔雀', rarity:'史诗', id:'#0103', year:'现代', estimate:'50万美元', source:'东南亚', price:'0.5 BNB', color:'#d98eff', img:'images/youpiao9.png' },
-            { icon:'🐬', name:'中华白海豚', rarity:'稀有', id:'#3345', year:'现代', estimate:'10万美元', source:'中国南海', price:'0.1 BNB', color:'#6db3ff', img:'images/youpiao10.png' }
+            { icon:'🐅', name:'最贵邮票', rarity:'传世孤品', id:'#0001', year:'1840', estimate:'约850万美元', source:'英国邮政史', price:'2.5 BNB', color:'#ffb84d', img:'images/youpiao1.png', progress:30 },
+            { icon:'🐼', name:'大熊猫', rarity:'传说', id:'#0007', year:'远古', estimate:'无价', source:'中国四川', price:'3.0 BNB', color:'#ffb84d', img:'images/youpiao2.png', progress:60 },
+            { icon:'🦏', name:'白犀牛', rarity:'史诗', id:'#0892', year:'现代', estimate:'45万美元', source:'非洲草原', price:'0.45 BNB', color:'#d98eff', img:'images/youpiao3.png', progress:100 },
+            { icon:'🦅', name:'金雕', rarity:'稀有', id:'#2210', year:'现代', estimate:'8万美元', source:'北半球', price:'0.08 BNB', color:'#6db3ff', img:'images/youpiao4.png', progress:90 },
+            { icon:'🐘', name:'亚洲象', rarity:'稀有', id:'#1502', year:'现代', estimate:'7万美元', source:'东南亚', price:'0.07 BNB', color:'#6db3ff', img:'images/youpiao5.png', progress:100 },
+            { icon:'🐯', name:'孟加拉虎', rarity:'稀有', id:'#1024', year:'现代', estimate:'9万美元', source:'印度', price:'0.09 BNB', color:'#6db3ff', img:'images/youpiao7.png', progress:50 },
+            { icon:'🦊', name:'藏狐', rarity:'普通', id:'#2451', year:'现代', estimate:'1万美元', source:'青藏高原', price:'0.01 BNB', color:'#ccc', img:'images/youpiao6.png', progress:10 },
+            { icon:'🦚', name:'绿孔雀', rarity:'史诗', id:'#0103', year:'现代', estimate:'50万美元', source:'东南亚', price:'0.5 BNB', color:'#d98eff', img:'images/youpiao9.png', progress:75 },
+            { icon:'🐬', name:'中华白海豚', rarity:'稀有', id:'#3345', year:'现代', estimate:'10万美元', source:'中国南海', price:'0.1 BNB', color:'#6db3ff', img:'images/youpiao10.png', progress:45 }
         ];
         let selectedCard = null, selectedElement = null;
         let isLotteryRunning = false, lotteryInterval = null;
@@ -268,6 +297,10 @@
             document.getElementById('cardModal').classList.add('open');
         }
         function showCardDetailFav(card) {
+            if(card.progress < 100) {
+                alert('⏳ 铸邮中，请等待完成...');
+                return;
+            }
             currentPage = 'favorite';
             const modalImg = document.getElementById('modalImg');
             if (card.img) { modalImg.src = card.img; } else { modalImg.src = ''; }
