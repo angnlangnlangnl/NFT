@@ -48,6 +48,39 @@
         .section-header { display:flex; justify-content:space-between; align-items:center; margin:10px 0 12px; }
         .section-header h3 { color:var(--gold-light); font-size:18px; font-weight:600; }
         .selected-count { background:var(--gold-glow); color:#000; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700; }
+
+        /* 跑马灯抽奖按钮 - 移到底部 */
+        .lottery-btn-area { text-align:center; margin-top:15px; }
+        .btn-lottery { 
+            display:inline-block; 
+            padding:14px 40px; 
+            background:linear-gradient(180deg, #e7c778 0%, #b48b3a 70%, #7a5822 100%); 
+            color:#0a130e; 
+            border:1px solid #f5e3b3; 
+            border-radius:30px; 
+            font-weight:700; 
+            font-size:16px; 
+            cursor:pointer; 
+            box-shadow:0 6px 20px rgba(180,145,70,0.35); 
+            transition:all 0.2s; 
+            letter-spacing:1px;
+            animation:glowPulse 2s infinite;
+        }
+        .btn-lottery:hover { 
+            background:linear-gradient(180deg, #f5da8a 0%, #c79d46 70%, #8f6826 100%); 
+            box-shadow:0 10px 25px rgba(220,180,70,0.55); 
+            transform:scale(1.03); 
+        }
+        .btn-lottery:disabled {
+            opacity:0.6;
+            cursor:not-allowed;
+            animation:none;
+        }
+        @keyframes glowPulse { 
+            0%,100% { box-shadow:0 6px 20px rgba(180,145,70,0.35); } 
+            50% { box-shadow:0 6px 35px rgba(220,180,70,0.7); } 
+        }
+
         .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
         .animal-card { 
             background:rgba(19,32,22,0.8); 
@@ -63,6 +96,16 @@
         }
         .animal-card:hover { border-color:var(--gold-glow); box-shadow:0 0 20px rgba(180,145,70,0.3); transform:translateY(-3px); }
         .animal-card.selected { border-color:var(--gold-glow); box-shadow:0 0 25px rgba(180,145,70,0.5); background:rgba(180,145,70,0.15); }
+        .animal-card.highlight { 
+            border-color:#ff6b6b; 
+            box-shadow:0 0 30px rgba(255,107,107,0.7); 
+            background:rgba(255,107,107,0.15); 
+            animation:highlightPulse 0.3s ease;
+        }
+        @keyframes highlightPulse { 
+            0%,100% { transform:scale(1); } 
+            50% { transform:scale(1.05); } 
+        }
         .animal-card .card-icon { 
             width:100%; 
             height:100%; 
@@ -208,7 +251,6 @@
             margin-top: 10px;
         }
 
-        /* 标题横幅 - 移除阴影效果 */
         .modal-box .stamp-title {
             display: inline-block;
             background: linear-gradient(to bottom, #e6c971, #a88b44);
@@ -263,12 +305,22 @@
             letter-spacing: 0.5px;
         }
 
+        .modal-box .modal-price-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
         .modal-box .modal-price-display {
             color: var(--gold-glow);
             font-size: 20px;
             font-weight: 700;
-            margin-bottom: 12px;
-            text-align: center;
+        }
+        .modal-box .modal-mint-days {
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            font-weight: 500;
         }
 
         .modal-btns { 
@@ -348,6 +400,7 @@
                 </div>
             </div>
 
+            <!-- ========== 挑选NFT页面 ========== -->
             <div class="page active" id="page-nft">
                 <div class="title">
                     <h2>✦ 极危珍稀盲盒 ✦</h2>
@@ -358,8 +411,13 @@
                     <span class="selected-count" id="selectedCount">已选 0</span>
                 </div>
                 <div class="grid-3" id="cardGrid"></div>
+                <!-- 跑马灯抽奖按钮 - 移到卡片下方 -->
+                <div class="lottery-btn-area">
+                    <button class="btn-lottery" id="btnLottery" onclick="startLottery()">📮 随机铸邮</button>
+                </div>
             </div>
 
+            <!-- ========== 娱乐页面 ========== -->
             <div class="page" id="page-entertainment">
                 <div class="title"><h2>🎮 娱乐盲盒</h2><p>抽取你的专属珍稀动物卡牌</p></div>
                 <div class="box-card"><div class="box-icon-large">🎁</div><h3>普通盲盒</h3><p class="desc">随机稀有动物卡牌</p><div class="price"><i class="fab fa-ethereum"></i> 0.001 BNB</div><button class="btn-mint" onclick="mint('普通盲盒')">Mint 抽取</button><p class="remain">剩余 1240/3000</p></div>
@@ -367,6 +425,7 @@
                 <div class="box-card"><div class="box-icon-large">👑</div><h3>至尊礼盒</h3><p class="desc">必得史诗或传说动物卡牌</p><div class="price"><i class="fab fa-ethereum"></i> 0.02 BNB</div><button class="btn-mint" onclick="mint('至尊礼盒')">Mint 抽取</button><p class="remain">剩余 89/200</p></div>
             </div>
 
+            <!-- ========== 市场页面 ========== -->
             <div class="page" id="page-market">
                 <div class="title"><h2>📖 动物图鉴市场</h2><p>探索珍稀动物卡牌 · 收藏链上唯一珍品</p></div>
                 <div class="filter-bar">
@@ -386,6 +445,7 @@
                 </div>
             </div>
 
+            <!-- ========== 收藏页面 ========== -->
             <div class="page" id="page-favorite">
                 <div class="title"><h2>🗂️ 我的藏品</h2><p>你的珍稀动物收藏库 · 墨绿鎏金典藏</p></div>
                 <div class="stats">
@@ -406,6 +466,7 @@
                 </div>
             </div>
 
+            <!-- ========== 生态页面 ========== -->
             <div class="page" id="page-ecosystem">
                 <div class="title"><h2>🌐 生态讯息</h2><p>系统通知 · 交易动态 · 活动提醒</p></div>
                 <div class="msg-item unread" onclick="alert('✅ 交易成功')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>交易成功</span><span class="msg-time">10分钟前</span></div><div class="msg-content">至尊礼盒Mint成功！获得稀有卡牌</div></div>
@@ -415,6 +476,7 @@
             </div>
         </div>
 
+        <!-- ========== 弹窗 ========== -->
         <div class="modal-overlay" id="cardModal">
             <div class="modal-box">
                 <div class="modal-id-top" id="modalIdTop">#0001</div>
@@ -431,7 +493,10 @@
                         <div class="stamp-row"><span class="stamp-label">来源：</span><span class="stamp-value" id="modalSource">英国邮政史</span></div>
                     </div>
                 </div>
-                <div class="modal-price-display" id="modalPrice">2.5 BNB</div>
+                <div class="modal-price-row">
+                    <span class="modal-price-display" id="modalPrice">2.5 BNB</span>
+                    <span class="modal-mint-days">铸造7天</span>
+                </div>
                 <div class="modal-btns">
                     <button class="btn-cancel" onclick="closeModal()">取 消</button>
                     <button class="btn-confirm" onclick="confirmCard()">确 认</button>
@@ -461,6 +526,8 @@
             { icon:'🐬', name:'中华白海豚', rarity:'稀有', id:'#3345', year:'现代', estimate:'10万美元', source:'中国南海', price:'0.1 BNB', color:'#6db3ff', img:'images/youpiao10.png' }
         ];
         let selectedCard = null, selectedElement = null;
+        let isLotteryRunning = false;
+        let lotteryInterval = null;
 
         function renderCards(gridId, pageKey) {
             const grid = document.getElementById(gridId);
@@ -474,6 +541,7 @@
                 </div>`).join('');
         }
         function selectCard(index, element, pageKey) {
+            if (isLotteryRunning) return;
             document.querySelectorAll(`.animal-card[data-page="${pageKey}"]`).forEach(c => c.classList.remove('selected'));
             selectedCard = cardData[index]; selectedElement = element; element.classList.add('selected');
             const c = document.getElementById(pageKey==='nft'?'selectedCount':'selectedCount2'); if(c) c.textContent='已选 1';
@@ -509,6 +577,62 @@
             if(selectedCard&&selectedElement){ selectedElement.classList.add('revealed'); selectedElement.querySelector('.card-icon').textContent=selectedCard.icon; selectedElement.querySelector('.card-name').textContent=selectedCard.name; selectedElement.querySelector('.card-rarity').textContent=selectedCard.rarity; selectedElement.querySelector('.card-rarity').style.color=selectedCard.color; alert(`✅ 已确认：${selectedCard.name} (${selectedCard.rarity})\n编号：${selectedCard.id}`); }
             document.getElementById('cardModal').classList.remove('open');
         }
+
+        // ==================== 跑马灯抽奖功能 ====================
+        function startLottery() {
+            if (isLotteryRunning) return;
+            isLotteryRunning = true;
+            const btn = document.getElementById('btnLottery');
+            btn.disabled = true;
+            btn.textContent = '📮 铸邮中...';
+            
+            const cards = document.querySelectorAll('#cardGrid .animal-card');
+            const totalCards = cards.length;
+            let currentIndex = 0;
+            let speed = 80;
+            let rounds = 0;
+            const maxRounds = 3;
+            
+            cards.forEach(c => { c.classList.remove('highlight', 'selected'); });
+            if (selectedElement) { selectedElement = null; selectedCard = null; }
+            document.getElementById('selectedCount').textContent = '已选 0';
+            
+            lotteryInterval = setInterval(() => {
+                cards.forEach(c => c.classList.remove('highlight'));
+                cards[currentIndex].classList.add('highlight');
+                currentIndex++;
+                
+                if (currentIndex >= totalCards) {
+                    currentIndex = 0;
+                    rounds++;
+                    if (rounds >= maxRounds - 1) {
+                        speed += 30;
+                    }
+                }
+                
+                if (rounds >= maxRounds && currentIndex === Math.floor(Math.random() * totalCards)) {
+                    clearInterval(lotteryInterval);
+                    lotteryInterval = null;
+                    
+                    const finalIndex = Math.floor(Math.random() * totalCards);
+                    cards.forEach(c => c.classList.remove('highlight'));
+                    const finalCard = cards[finalIndex];
+                    finalCard.classList.add('selected', 'highlight');
+                    
+                    selectedCard = cardData[finalIndex];
+                    selectedElement = finalCard;
+                    document.getElementById('selectedCount').textContent = '已选 1';
+                    
+                    setTimeout(() => {
+                        showCardDetail(selectedCard);
+                        isLotteryRunning = false;
+                        btn.disabled = false;
+                        btn.textContent = '📮 随机铸邮';
+                    }, 500);
+                }
+            }, speed);
+        }
+
         function mint(type) { alert('⛓️ 链上Mint盲盒 · ' + type + ' (演示模式)'); }
         document.getElementById('cardModal').addEventListener('click',function(e){ if(e.target===this)closeModal(); });
         function switchPage(page,el){
