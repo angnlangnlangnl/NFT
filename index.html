@@ -99,6 +99,25 @@
         .filter-bar { display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; }
         .filter-btn { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.3); color:var(--gold-glow); padding:6px 14px; border-radius:20px; font-size:12px; cursor:pointer; }
         .filter-btn.active { background:rgba(180,145,70,0.2); border-color:var(--gold-glow); }
+        .invite-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; padding:15px; margin-bottom:10px; backdrop-filter:blur(8px); }
+        .invite-card h4 { color:var(--gold-light); font-size:14px; font-weight:600; margin-bottom:8px; }
+        .invite-card .invite-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid rgba(180,145,70,0.1); font-size:12px; }
+        .invite-card .invite-row:last-child { border-bottom:none; }
+        .invite-label { color:var(--text-secondary); }
+        .invite-value { color:white; font-weight:600; }
+        .qr-area { text-align:center; padding:10px; }
+        .qr-area .qr-icon { font-size:80px; margin-bottom:8px; }
+        .qr-area .qr-text { color:var(--text-secondary); font-size:11px; }
+        .team-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; padding:15px; margin-bottom:10px; backdrop-filter:blur(8px); }
+        .team-card h4 { color:var(--gold-light); font-size:14px; font-weight:600; margin-bottom:8px; }
+        .team-row { display:flex; gap:10px; }
+        .team-item { flex:1; text-align:center; background:rgba(0,0,0,0.2); border-radius:10px; padding:10px; }
+        .team-item .team-val { color:var(--gold-glow); font-size:18px; font-weight:700; }
+        .team-item .team-lbl { color:var(--text-secondary); font-size:10px; margin-top:2px; }
+        .record-list { display:flex; flex-direction:column; gap:6px; }
+        .record-item { display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); border-radius:8px; padding:8px 10px; font-size:11px; }
+        .record-addr { color:var(--text-secondary); font-size:10px; }
+        .record-value { color:var(--gold-glow); font-weight:600; }
         .msg-item { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.2); border-radius:14px; padding:14px; backdrop-filter:blur(8px); cursor:pointer; margin-bottom:8px; }
         .msg-item.unread { border-left:3px solid var(--gold-glow); }
         .msg-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
@@ -168,59 +187,79 @@
                     <div class="stat-item"><div class="val">4.8</div><div class="lbl">总估值 USDT</div></div>
                 </div>
                 <div class="grid-2" id="favoriteGrid">
-                    <div class="market-card" data-rarity="legendary" data-index="0">
-                        <div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div>
-                        <div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
-                            <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:30%"></div></div>
-                            <p class="mint-status-text">铸邮中 30%</p>
-                            <button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[0])">出售</button>
-                        </div>
-                    </div>
-                    <div class="market-card" data-rarity="legendary" data-index="1">
-                        <div class="frame">🐼</div>
-                        <div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
-                            <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:60%"></div></div>
-                            <p class="mint-status-text">铸邮中 60%</p>
-                            <button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[1])">出售</button>
-                        </div>
-                    </div>
-                    <div class="market-card" data-rarity="epic" data-index="2">
-                        <div class="frame">🦏</div>
-                        <div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
-                            <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:100%"></div></div>
-                            <p class="mint-status-text">铸邮已完成</p>
-                            <button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[2])">出售</button>
-                        </div>
-                    </div>
-                    <div class="market-card" data-rarity="rare" data-index="3">
-                        <div class="frame">🦅</div>
-                        <div class="info"><p style="color:white;font-weight:600;">金雕</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
-                            <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:90%"></div></div>
-                            <p class="mint-status-text">铸邮中 90%</p>
-                            <button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[3])">出售</button>
-                        </div>
-                    </div>
-                    <div class="market-card" data-rarity="rare" data-index="4">
-                        <div class="frame">🐘</div>
-                        <div class="info"><p style="color:white;font-weight:600;">亚洲象</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
-                            <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:100%"></div></div>
-                            <p class="mint-status-text">铸邮已完成</p>
-                            <button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[4])">出售</button>
-                        </div>
-                    </div>
-                    <div class="market-card" data-rarity="common" data-index="6">
-                        <div class="frame">🦊</div>
-                        <div class="info"><p style="color:white;font-weight:600;">藏狐</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
-                            <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:10%"></div></div>
-                            <p class="mint-status-text">铸邮中 10%</p>
-                            <button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[6])">出售</button>
-                        </div>
-                    </div>
+                    <div class="market-card" data-rarity="legendary" data-index="0"><div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div><div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:30%"></div></div><p class="mint-status-text">铸邮中 30%</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[0])">出售</button></div></div>
+                    <div class="market-card" data-rarity="legendary" data-index="1"><div class="frame">🐼</div><div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:60%"></div></div><p class="mint-status-text">铸邮中 60%</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[1])">出售</button></div></div>
+                    <div class="market-card" data-rarity="epic" data-index="2"><div class="frame">🦏</div><div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:100%"></div></div><p class="mint-status-text">铸邮已完成</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[2])">出售</button></div></div>
+                    <div class="market-card" data-rarity="rare" data-index="3"><div class="frame">🦅</div><div class="info"><p style="color:white;font-weight:600;">金雕</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:90%"></div></div><p class="mint-status-text">铸邮中 90%</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[3])">出售</button></div></div>
+                    <div class="market-card" data-rarity="rare" data-index="4"><div class="frame">🐘</div><div class="info"><p style="color:white;font-weight:600;">亚洲象</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:100%"></div></div><p class="mint-status-text">铸邮已完成</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[4])">出售</button></div></div>
+                    <div class="market-card" data-rarity="common" data-index="6"><div class="frame">🦊</div><div class="info"><p style="color:white;font-weight:600;">藏狐</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:10%"></div></div><p class="mint-status-text">铸邮中 10%</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[6])">出售</button></div></div>
                 </div>
             </div>
 
-            <div class="page" id="page-ecosystem">
-                <div class="title"><h2>🌐 生态讯息</h2><p>系统通知 · 交易动态 · 活动提醒</p></div>
+            <!-- ========== 讯息页面（原生态页面） ========== -->
+            <div class="page" id="page-messages">
+                <div class="title"><h2>📬 讯息中心</h2><p>邀请好友 · 团队数据 · 系统通知</p></div>
+
+                <!-- 扫描邀请卡片 -->
+                <div class="invite-card">
+                    <h4>📱 扫描邀请</h4>
+                    <div class="qr-area">
+                        <div class="qr-icon">📱</div>
+                        <div class="qr-text">邀请链接：https://app.nft-stamp.com/ref=0xAb12...5678</div>
+                    </div>
+                    <div class="invite-row">
+                        <span class="invite-label">累计邀请</span>
+                        <span class="invite-value">128 人</span>
+                    </div>
+                    <div class="invite-row">
+                        <span class="invite-label">累计奖励</span>
+                        <span class="invite-value"><i class="fab fa-usdt"></i> 256.00 USDT</span>
+                    </div>
+                </div>
+
+                <!-- 团队信息卡片 -->
+                <div class="team-card">
+                    <h4>👥 团队信息</h4>
+                    <div class="team-row">
+                        <div class="team-item">
+                            <div class="team-val">56</div>
+                            <div class="team-lbl">直推人数</div>
+                        </div>
+                        <div class="team-item">
+                            <div class="team-val">1,280</div>
+                            <div class="team-lbl">团队总人数</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 邀请记录卡片 -->
+                <div class="invite-card">
+                    <h4>📋 邀请记录</h4>
+                    <div class="record-list">
+                        <div class="record-item">
+                            <span>0x1234...5678</span>
+                            <span class="record-addr">2026-07-28 14:30</span>
+                            <span class="record-value">+5.00 USDT</span>
+                        </div>
+                        <div class="record-item">
+                            <span>0x8765...4321</span>
+                            <span class="record-addr">2026-07-27 09:15</span>
+                            <span class="record-value">+3.50 USDT</span>
+                        </div>
+                        <div class="record-item">
+                            <span>0x2468...1357</span>
+                            <span class="record-addr">2026-07-26 18:45</span>
+                            <span class="record-value">+8.20 USDT</span>
+                        </div>
+                        <div class="record-item">
+                            <span>0x9876...5432</span>
+                            <span class="record-addr">2026-07-25 11:00</span>
+                            <span class="record-value">+2.00 USDT</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 系统通知 -->
                 <div class="msg-item unread" onclick="alert('✅ 交易成功')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>交易成功</span><span class="msg-time">10分钟前</span></div><div class="msg-content">至尊礼盒Mint成功！获得稀有卡牌</div></div>
                 <div class="msg-item unread" onclick="alert('🎉 盲盒上新')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>盲盒上新通知</span><span class="msg-time">1小时前</span></div><div class="msg-content">极危珍稀系列盲盒已上线！</div></div>
                 <div class="msg-item" onclick="alert('🏆 限时活动')"><div class="msg-header"><span class="msg-title">限时活动开启</span><span class="msg-time">3小时前</span></div><div class="msg-content">珍稀动物守护者活动开启</div></div>
@@ -280,7 +319,7 @@
             <div class="nav-item" data-page="entertainment" onclick="switchPage('entertainment',this)"><i class="fas fa-gamepad nav-icon"></i><span>娱乐</span></div>
             <div class="nav-item" data-page="market" onclick="switchPage('market',this)"><i class="fas fa-store nav-icon"></i><span>市场</span></div>
             <div class="nav-item" data-page="favorite" onclick="switchPage('favorite',this)"><i class="fas fa-heart nav-icon"></i><span>收藏</span></div>
-            <div class="nav-item" data-page="ecosystem" onclick="switchPage('ecosystem',this)"><i class="fas fa-globe nav-icon"></i><span>生态</span></div>
+            <div class="nav-item" data-page="messages" onclick="switchPage('messages',this)"><i class="fas fa-comments nav-icon"></i><span>讯息</span></div>
         </div>
     </div>
 
@@ -356,7 +395,7 @@
         function mint(type) { alert('⛓️ 链上Mint盲盒 · ' + type + ' (演示模式)'); }
         document.getElementById('cardModalMarket').addEventListener('click',function(e){ if(e.target===this)closeModalMarket(); });
         document.getElementById('cardModalFav').addEventListener('click',function(e){ if(e.target===this)closeModalFav(); });
-        function switchPage(page,el){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+page).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); document.getElementById('logoIcon').textContent={nft:'🦏',entertainment:'🎮',market:'🏪',favorite:'❤️',ecosystem:'🌐'}[page]||'🦏'; }
+        function switchPage(page,el){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+page).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); document.getElementById('logoIcon').textContent={nft:'🦏',entertainment:'🎮',market:'🏪',favorite:'❤️',messages:'💬'}[page]||'🦏'; }
         function filterMarket(rarity,btn){ document.querySelectorAll('#page-market .filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('#marketGrid .market-card').forEach(c=>c.style.display=(rarity==='all'||c.getAttribute('data-rarity')===rarity)?'':'none'); }
         const lb=document.getElementById('langBtn'),ld=document.getElementById('langDropdown'); lb.addEventListener('click',e=>{e.stopPropagation();ld.classList.toggle('open');}); document.addEventListener('click',e=>{if(!ld.contains(e.target)&&e.target!==lb)ld.classList.remove('open');}); document.querySelectorAll('.lang-option').forEach(o=>o.addEventListener('click',function(){localStorage.setItem('bcbsLang',this.getAttribute('data-lang'));ld.classList.remove('open');}));
         const wb=document.getElementById('walletBtn'); let ac=null; wb.addEventListener('click',async function(){ if(ac){ac=null;wb.textContent='Connect';wb.classList.remove('connected');return;} if(!window.ethereum){alert('请安装 MetaMask');return;} wb.innerHTML='...'; try{const a=await window.ethereum.request({method:'eth_requestAccounts'});ac=a[0];wb.textContent=ac.substring(0,6)+'...'+ac.substring(ac.length-4);wb.classList.add('connected');}catch(e){wb.textContent='Connect';} }); (async()=>{if(window.ethereum){try{const a=await window.ethereum.request({method:'eth_accounts'});if(a.length>0){ac=a[0];wb.textContent=ac.substring(0,6)+'...'+ac.substring(ac.length-4);wb.classList.add('connected');}}catch(e){}}})();
