@@ -49,7 +49,7 @@
         .section-header h3 { color:var(--gold-light); font-size:18px; font-weight:600; }
         .selected-count { background:var(--gold-glow); color:#000; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:700; }
 
-        /* 跑马灯抽奖按钮 - 底部 */
+        /* 跑马灯抽奖按钮 - 移到底部 */
         .lottery-btn-area { text-align:center; margin-top:15px; }
         .btn-lottery { 
             display:inline-block; 
@@ -411,9 +411,9 @@
                     <span class="selected-count" id="selectedCount">已选 0</span>
                 </div>
                 <div class="grid-3" id="cardGrid"></div>
-                <!-- 跑马灯抽奖按钮 -->
+                <!-- 跑马灯抽奖按钮 - 移到卡片下方 -->
                 <div class="lottery-btn-area">
-                    <button class="btn-lottery" id="btnLottery" onclick="startLottery()"><i class="fab fa-ethereum"></i> 0.001 BNB 随机铸邮</button>
+                    <button class="btn-lottery" id="btnLottery" onclick="startLottery()">📮 随机铸邮</button>
                 </div>
             </div>
 
@@ -584,7 +584,7 @@
             isLotteryRunning = true;
             const btn = document.getElementById('btnLottery');
             btn.disabled = true;
-            btn.innerHTML = '<i class="fab fa-ethereum"></i> 0.001 BNB 铸邮中...';
+            btn.textContent = '📮 铸邮中...';
             
             const cards = document.querySelectorAll('#cardGrid .animal-card');
             const totalCards = cards.length;
@@ -627,7 +627,7 @@
                         showCardDetail(selectedCard);
                         isLotteryRunning = false;
                         btn.disabled = false;
-                        btn.innerHTML = '<i class="fab fa-ethereum"></i> 0.001 BNB 随机铸邮';
+                        btn.textContent = '📮 随机铸邮';
                     }, 500);
                 }
             }, speed);
