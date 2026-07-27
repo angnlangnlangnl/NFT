@@ -80,6 +80,8 @@
         .btn-cancel { flex:1; padding:12px; background:transparent; border:1px solid var(--gold-glow); color:var(--gold-glow); border-radius:25px; font-size:15px; cursor:pointer; }
         .btn-cancel:hover { background:rgba(180,145,70,0.1); }
         .btn-confirm:hover { background:linear-gradient(180deg, #f5da8a 0%, #c79d46 100%); }
+        .btn-close-full { width:100%; padding:12px; background:transparent; border:1px solid var(--gold-glow); color:var(--gold-glow); border-radius:25px; font-weight:700; font-size:15px; cursor:pointer; }
+        .btn-close-full:hover { background:rgba(180,145,70,0.1); }
         .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
         .market-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; overflow:hidden; backdrop-filter:blur(8px); cursor:pointer; transition:all 0.3s; display:flex; flex-direction:column; }
         .market-card:hover { border-color:rgba(220,187,92,0.6); transform:translateY(-3px); }
@@ -148,12 +150,12 @@
                     <span class="filter-btn" onclick="filterMarket('common',this)">普通</span>
                 </div>
                 <div class="grid-2" id="marketGrid">
-                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail(cardData[0])"><div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div><div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail(cardData[1])"><div class="frame">🐼</div><div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="epic" onclick="showCardDetail(cardData[2])"><div class="frame">🦏</div><div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="rare" onclick="showCardDetail(cardData[3])"><div class="frame">🦅</div><div class="info"><p style="color:white;font-weight:600;">金雕</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="rare" onclick="showCardDetail(cardData[4])"><div class="frame">🐘</div><div class="info"><p style="color:white;font-weight:600;">亚洲象</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="common" onclick="showCardDetail(cardData[6])"><div class="frame">🦊</div><div class="info"><p style="color:white;font-weight:600;">藏狐</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="legendary" onclick="showCardDetailMarket(cardData[0])"><div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div><div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="legendary" onclick="showCardDetailMarket(cardData[1])"><div class="frame">🐼</div><div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="epic" onclick="showCardDetailMarket(cardData[2])"><div class="frame">🦏</div><div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="rare" onclick="showCardDetailMarket(cardData[3])"><div class="frame">🦅</div><div class="info"><p style="color:white;font-weight:600;">金雕</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="rare" onclick="showCardDetailMarket(cardData[4])"><div class="frame">🐘</div><div class="info"><p style="color:white;font-weight:600;">亚洲象</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="common" onclick="showCardDetailMarket(cardData[6])"><div class="frame">🦊</div><div class="info"><p style="color:white;font-weight:600;">藏狐</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
                 </div>
             </div>
 
@@ -171,6 +173,7 @@
                         <div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
                             <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:30%"></div></div>
                             <p class="mint-status-text">铸邮中 30%</p>
+                            <button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[0])">出售</button>
                         </div>
                     </div>
                     <div class="market-card" data-rarity="legendary" data-index="1">
@@ -178,6 +181,7 @@
                         <div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
                             <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:60%"></div></div>
                             <p class="mint-status-text">铸邮中 60%</p>
+                            <button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[1])">出售</button>
                         </div>
                     </div>
                     <div class="market-card" data-rarity="epic" data-index="2">
@@ -185,7 +189,7 @@
                         <div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
                             <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:100%"></div></div>
                             <p class="mint-status-text">铸邮已完成</p>
-                            <button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[2])">查看详情</button>
+                            <button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[2])">出售</button>
                         </div>
                     </div>
                     <div class="market-card" data-rarity="rare" data-index="3">
@@ -193,6 +197,7 @@
                         <div class="info"><p style="color:white;font-weight:600;">金雕</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
                             <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:90%"></div></div>
                             <p class="mint-status-text">铸邮中 90%</p>
+                            <button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[3])">出售</button>
                         </div>
                     </div>
                     <div class="market-card" data-rarity="rare" data-index="4">
@@ -200,7 +205,7 @@
                         <div class="info"><p style="color:white;font-weight:600;">亚洲象</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
                             <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:100%"></div></div>
                             <p class="mint-status-text">铸邮已完成</p>
-                            <button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[4])">查看详情</button>
+                            <button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[4])">出售</button>
                         </div>
                     </div>
                     <div class="market-card" data-rarity="common" data-index="6">
@@ -208,6 +213,7 @@
                         <div class="info"><p style="color:white;font-weight:600;">藏狐</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p>
                             <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:10%"></div></div>
                             <p class="mint-status-text">铸邮中 10%</p>
+                            <button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[6])">出售</button>
                         </div>
                     </div>
                 </div>
@@ -222,26 +228,51 @@
             </div>
         </div>
 
-        <div class="modal-overlay" id="cardModal">
+        <!-- 市场弹窗：只有关闭按钮 -->
+        <div class="modal-overlay" id="cardModalMarket">
             <div class="modal-box">
-                <div class="modal-id-top" id="modalIdTop">#0001</div>
-                <div class="modal-img-area"><img id="modalImg" src="" alt=""></div>
+                <div class="modal-id-top" id="modalIdTopMarket">#0001</div>
+                <div class="modal-img-area"><img id="modalImgMarket" src="" alt=""></div>
                 <div class="stamp-panel">
-                    <div class="stamp-title" id="modalName">最贵邮票</div>
+                    <div class="stamp-title" id="modalNameMarket">最贵邮票</div>
                     <div class="stamp-grid">
-                        <div class="stamp-row"><span class="stamp-label">年份：</span><span class="stamp-value" id="modalYear">1840</span></div>
-                        <div class="stamp-row"><span class="stamp-label">估值：</span><span class="stamp-value" id="modalEstimate">约850万美元</span></div>
-                        <div class="stamp-row"><span class="stamp-label">稀有度：</span><span class="stamp-value" id="modalRarity">传世孤品</span></div>
-                        <div class="stamp-row"><span class="stamp-label">来源：</span><span class="stamp-value" id="modalSource">英国邮政史</span></div>
+                        <div class="stamp-row"><span class="stamp-label">年份：</span><span class="stamp-value" id="modalYearMarket">1840</span></div>
+                        <div class="stamp-row"><span class="stamp-label">估值：</span><span class="stamp-value" id="modalEstimateMarket">约850万美元</span></div>
+                        <div class="stamp-row"><span class="stamp-label">稀有度：</span><span class="stamp-value" id="modalRarityMarket">传世孤品</span></div>
+                        <div class="stamp-row"><span class="stamp-label">来源：</span><span class="stamp-value" id="modalSourceMarket">英国邮政史</span></div>
                     </div>
                 </div>
                 <div class="modal-price-row">
-                    <span class="modal-price-display" id="modalPrice">2.5 BNB</span>
+                    <span class="modal-price-display" id="modalPriceMarket">2.5 BNB</span>
                     <span class="modal-mint-days">铸造7天</span>
                 </div>
-                <div class="modal-btns" id="modalBtns">
-                    <button class="btn-cancel" onclick="closeModal()">取 消</button>
-                    <button class="btn-confirm" id="btnConfirm" onclick="confirmCard()">确 认</button>
+                <div class="modal-btns">
+                    <button class="btn-close-full" onclick="closeModalMarket()">关 闭</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 收藏弹窗：出售+取消 -->
+        <div class="modal-overlay" id="cardModalFav">
+            <div class="modal-box">
+                <div class="modal-id-top" id="modalIdTopFav">#0001</div>
+                <div class="modal-img-area"><img id="modalImgFav" src="" alt=""></div>
+                <div class="stamp-panel">
+                    <div class="stamp-title" id="modalNameFav">最贵邮票</div>
+                    <div class="stamp-grid">
+                        <div class="stamp-row"><span class="stamp-label">年份：</span><span class="stamp-value" id="modalYearFav">1840</span></div>
+                        <div class="stamp-row"><span class="stamp-label">估值：</span><span class="stamp-value" id="modalEstimateFav">约850万美元</span></div>
+                        <div class="stamp-row"><span class="stamp-label">稀有度：</span><span class="stamp-value" id="modalRarityFav">传世孤品</span></div>
+                        <div class="stamp-row"><span class="stamp-label">来源：</span><span class="stamp-value" id="modalSourceFav">英国邮政史</span></div>
+                    </div>
+                </div>
+                <div class="modal-price-row">
+                    <span class="modal-price-display" id="modalPriceFav">2.5 BNB</span>
+                    <span class="modal-mint-days">铸造7天</span>
+                </div>
+                <div class="modal-btns">
+                    <button class="btn-cancel" onclick="closeModalFav()">取 消</button>
+                    <button class="btn-confirm" onclick="confirmCardFav()">出 售</button>
                 </div>
             </div>
         </div>
@@ -269,7 +300,6 @@
         ];
         let selectedCard = null, selectedElement = null;
         let isLotteryRunning = false, lotteryInterval = null;
-        let currentPage = 'nft';
 
         function renderCards(gridId, pageKey) {
             const grid = document.getElementById(gridId);
@@ -281,49 +311,65 @@
                 </div>`).join('');
         }
         function selectCard(index, element, pageKey) { return; }
-        function showCardDetail(card) {
-            currentPage = 'default';
-            const modalImg = document.getElementById('modalImg');
-            if (card.img) { modalImg.src = card.img; } else { modalImg.src = ''; }
-            document.getElementById('modalIdTop').textContent = card.id;
-            document.getElementById('modalName').textContent = card.name;
-            document.getElementById('modalYear').textContent = card.year;
-            document.getElementById('modalEstimate').textContent = card.estimate;
-            document.getElementById('modalRarity').textContent = card.rarity;
-            document.getElementById('modalRarity').style.color = card.color || '#ffb84d';
-            document.getElementById('modalSource').textContent = card.source;
-            document.getElementById('modalPrice').textContent = card.price;
-            document.getElementById('btnConfirm').textContent = '确 认';
-            document.getElementById('cardModal').classList.add('open');
+
+        // 市场弹窗（只有关闭按钮）
+        function showCardDetailMarket(card) {
+            if (card.img) { document.getElementById('modalImgMarket').src = card.img; } else { document.getElementById('modalImgMarket').src = ''; }
+            document.getElementById('modalIdTopMarket').textContent = card.id;
+            document.getElementById('modalNameMarket').textContent = card.name;
+            document.getElementById('modalYearMarket').textContent = card.year;
+            document.getElementById('modalEstimateMarket').textContent = card.estimate;
+            document.getElementById('modalRarityMarket').textContent = card.rarity;
+            document.getElementById('modalRarityMarket').style.color = card.color || '#ffb84d';
+            document.getElementById('modalSourceMarket').textContent = card.source;
+            document.getElementById('modalPriceMarket').textContent = card.price;
+            document.getElementById('cardModalMarket').classList.add('open');
         }
+        function closeModalMarket() {
+            document.getElementById('cardModalMarket').classList.remove('open');
+        }
+
+        // 收藏弹窗（出售+取消），铸邮中提示不可交易
         function showCardDetailFav(card) {
             if(card.progress < 100) {
-                alert('⏳ 铸邮中，请等待完成...');
+                alert('⏳ 铸邮中，暂不可交易！');
                 return;
             }
-            currentPage = 'favorite';
-            const modalImg = document.getElementById('modalImg');
+            if (card.img) { document.getElementById('modalImgFav').src = card.img; } else { document.getElementById('modalImgFav').src = ''; }
+            document.getElementById('modalIdTopFav').textContent = card.id;
+            document.getElementById('modalNameFav').textContent = card.name;
+            document.getElementById('modalYearFav').textContent = card.year;
+            document.getElementById('modalEstimateFav').textContent = card.estimate;
+            document.getElementById('modalRarityFav').textContent = card.rarity;
+            document.getElementById('modalRarityFav').style.color = card.color || '#ffb84d';
+            document.getElementById('modalSourceFav').textContent = card.source;
+            document.getElementById('modalPriceFav').textContent = card.price;
+            document.getElementById('cardModalFav').classList.add('open');
+        }
+        function closeModalFav() {
+            document.getElementById('cardModalFav').classList.remove('open');
+        }
+        function confirmCardFav() {
+            alert('✅ 出售成功！');
+            document.getElementById('cardModalFav').classList.remove('open');
+        }
+
+        // 抽奖弹窗（确认+取消）
+        function showCardDetail(card) {
+            // 保留旧的弹窗逻辑用于NFT抽奖页面
+            const modalImg = document.getElementById('modalImgMarket');
             if (card.img) { modalImg.src = card.img; } else { modalImg.src = ''; }
-            document.getElementById('modalIdTop').textContent = card.id;
-            document.getElementById('modalName').textContent = card.name;
-            document.getElementById('modalYear').textContent = card.year;
-            document.getElementById('modalEstimate').textContent = card.estimate;
-            document.getElementById('modalRarity').textContent = card.rarity;
-            document.getElementById('modalRarity').style.color = card.color || '#ffb84d';
-            document.getElementById('modalSource').textContent = card.source;
-            document.getElementById('modalPrice').textContent = card.price;
-            document.getElementById('btnConfirm').textContent = '出 售';
-            document.getElementById('cardModal').classList.add('open');
+            document.getElementById('modalIdTopMarket').textContent = card.id;
+            document.getElementById('modalNameMarket').textContent = card.name;
+            document.getElementById('modalYearMarket').textContent = card.year;
+            document.getElementById('modalEstimateMarket').textContent = card.estimate;
+            document.getElementById('modalRarityMarket').textContent = card.rarity;
+            document.getElementById('modalRarityMarket').style.color = card.color || '#ffb84d';
+            document.getElementById('modalSourceMarket').textContent = card.source;
+            document.getElementById('modalPriceMarket').textContent = card.price;
+            document.getElementById('cardModalMarket').classList.add('open');
         }
-        function closeModal() {
-            document.getElementById('cardModal').classList.remove('open');
-            if(selectedElement){ selectedElement.classList.remove('selected'); selectedElement=null; selectedCard=null; }
-        }
-        function confirmCard() {
-            if(currentPage === 'favorite') { alert('✅ 出售成功！'); }
-            else if(selectedCard&&selectedElement){ selectedElement.classList.add('revealed'); selectedElement.querySelector('.card-icon').textContent=selectedCard.icon; selectedElement.querySelector('.card-name').textContent=selectedCard.name; selectedElement.querySelector('.card-rarity').textContent=selectedCard.rarity; selectedElement.querySelector('.card-rarity').style.color=selectedCard.color; alert(`✅ 已确认：${selectedCard.name} (${selectedCard.rarity})\n编号：${selectedCard.id}`); }
-            document.getElementById('cardModal').classList.remove('open');
-        }
+
         function startLottery() {
             if (isLotteryRunning) return;
             isLotteryRunning = true; const btn = document.getElementById('btnLottery'); btn.disabled = true; btn.textContent = '📮 铸邮中...';
@@ -336,12 +382,13 @@
                 if (rounds >= maxRounds && currentIndex === Math.floor(Math.random() * totalCards)) { clearInterval(lotteryInterval); lotteryInterval = null;
                     const finalIndex = Math.floor(Math.random() * totalCards); cards.forEach(c => c.classList.remove('highlight'));
                     const finalCard = cards[finalIndex]; finalCard.classList.add('selected', 'highlight');
-                    selectedCard = cardData[finalIndex]; selectedElement = finalCard; currentPage = 'default';
-                    setTimeout(() => { showCardDetail(selectedCard); isLotteryRunning = false; btn.disabled = false; btn.textContent = '📮 随机铸邮'; }, 500); }
+                    selectedCard = cardData[finalIndex]; selectedElement = finalCard;
+                    setTimeout(() => { showCardDetailMarket(selectedCard); isLotteryRunning = false; btn.disabled = false; btn.textContent = '📮 随机铸邮'; }, 500); }
             }, speed);
         }
         function mint(type) { alert('⛓️ 链上Mint盲盒 · ' + type + ' (演示模式)'); }
-        document.getElementById('cardModal').addEventListener('click',function(e){ if(e.target===this)closeModal(); });
+        document.getElementById('cardModalMarket').addEventListener('click',function(e){ if(e.target===this)closeModalMarket(); });
+        document.getElementById('cardModalFav').addEventListener('click',function(e){ if(e.target===this)closeModalFav(); });
         function switchPage(page,el){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+page).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); document.getElementById('logoIcon').textContent={nft:'🦏',entertainment:'🎮',market:'🏪',favorite:'❤️',ecosystem:'🌐'}[page]||'🦏'; }
         function filterMarket(rarity,btn){ document.querySelectorAll('#page-market .filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('#marketGrid .market-card').forEach(c=>c.style.display=(rarity==='all'||c.getAttribute('data-rarity')===rarity)?'':'none'); }
         const lb=document.getElementById('langBtn'),ld=document.getElementById('langDropdown'); lb.addEventListener('click',e=>{e.stopPropagation();ld.classList.toggle('open');}); document.addEventListener('click',e=>{if(!ld.contains(e.target)&&e.target!==lb)ld.classList.remove('open');}); document.querySelectorAll('.lang-option').forEach(o=>o.addEventListener('click',function(){localStorage.setItem('bcbsLang',this.getAttribute('data-lang'));ld.classList.remove('open');}));
