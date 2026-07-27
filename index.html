@@ -160,12 +160,12 @@
             </div>
 
             <div class="page" id="page-favorite">
-                <div class="title"><h2>🗂️ 我的藏品</h2><p>你的珍稀动物收藏库 · 墨绿鎏金典藏</p></div>
+                <div class="title"><h2>🗂️ 我的藏品</h2><p>你的珍稀NFT邮票收藏库 · 随时兑USDT</p></div>
                 <div class="stats">
                     <div class="stat-item"><div class="val">8</div><div class="lbl">总藏品</div></div><div class="stat-div"></div>
-                    <div class="stat-item"><div class="val">3</div><div class="lbl">稀有以上</div></div><div class="stat-div"></div>
-                    <div class="stat-item"><div class="val">2</div><div class="lbl">传说</div></div><div class="stat-div"></div>
-                    <div class="stat-item"><div class="val">4.8</div><div class="lbl">估值 BNB</div></div>
+                    <div class="stat-item"><div class="val">3</div><div class="lbl">可售USDT</div></div><div class="stat-div"></div>
+                    <div class="stat-item"><div class="val">2</div><div class="lbl">已售USDT</div></div><div class="stat-div"></div>
+                    <div class="stat-item"><div class="val">4.8</div><div class="lbl">总估值 USDT</div></div>
                 </div>
                 <div class="grid-2" id="favoriteGrid">
                     <div class="market-card" data-rarity="legendary" data-index="0">
@@ -228,7 +228,6 @@
             </div>
         </div>
 
-        <!-- 市场弹窗：只有关闭按钮 -->
         <div class="modal-overlay" id="cardModalMarket">
             <div class="modal-box">
                 <div class="modal-id-top" id="modalIdTopMarket">#0001</div>
@@ -252,7 +251,6 @@
             </div>
         </div>
 
-        <!-- 收藏弹窗：出售+取消 -->
         <div class="modal-overlay" id="cardModalFav">
             <div class="modal-box">
                 <div class="modal-id-top" id="modalIdTopFav">#0001</div>
@@ -311,8 +309,6 @@
                 </div>`).join('');
         }
         function selectCard(index, element, pageKey) { return; }
-
-        // 市场弹窗（只有关闭按钮）
         function showCardDetailMarket(card) {
             if (card.img) { document.getElementById('modalImgMarket').src = card.img; } else { document.getElementById('modalImgMarket').src = ''; }
             document.getElementById('modalIdTopMarket').textContent = card.id;
@@ -325,16 +321,9 @@
             document.getElementById('modalPriceMarket').textContent = card.price;
             document.getElementById('cardModalMarket').classList.add('open');
         }
-        function closeModalMarket() {
-            document.getElementById('cardModalMarket').classList.remove('open');
-        }
-
-        // 收藏弹窗（出售+取消），铸邮中提示不可交易
+        function closeModalMarket() { document.getElementById('cardModalMarket').classList.remove('open'); }
         function showCardDetailFav(card) {
-            if(card.progress < 100) {
-                alert('⏳ 铸邮中，暂不可交易！');
-                return;
-            }
+            if(card.progress < 100) { alert('⏳ 铸邮中，暂不可交易！'); return; }
             if (card.img) { document.getElementById('modalImgFav').src = card.img; } else { document.getElementById('modalImgFav').src = ''; }
             document.getElementById('modalIdTopFav').textContent = card.id;
             document.getElementById('modalNameFav').textContent = card.name;
@@ -346,30 +335,8 @@
             document.getElementById('modalPriceFav').textContent = card.price;
             document.getElementById('cardModalFav').classList.add('open');
         }
-        function closeModalFav() {
-            document.getElementById('cardModalFav').classList.remove('open');
-        }
-        function confirmCardFav() {
-            alert('✅ 出售成功！');
-            document.getElementById('cardModalFav').classList.remove('open');
-        }
-
-        // 抽奖弹窗（确认+取消）
-        function showCardDetail(card) {
-            // 保留旧的弹窗逻辑用于NFT抽奖页面
-            const modalImg = document.getElementById('modalImgMarket');
-            if (card.img) { modalImg.src = card.img; } else { modalImg.src = ''; }
-            document.getElementById('modalIdTopMarket').textContent = card.id;
-            document.getElementById('modalNameMarket').textContent = card.name;
-            document.getElementById('modalYearMarket').textContent = card.year;
-            document.getElementById('modalEstimateMarket').textContent = card.estimate;
-            document.getElementById('modalRarityMarket').textContent = card.rarity;
-            document.getElementById('modalRarityMarket').style.color = card.color || '#ffb84d';
-            document.getElementById('modalSourceMarket').textContent = card.source;
-            document.getElementById('modalPriceMarket').textContent = card.price;
-            document.getElementById('cardModalMarket').classList.add('open');
-        }
-
+        function closeModalFav() { document.getElementById('cardModalFav').classList.remove('open'); }
+        function confirmCardFav() { alert('✅ 出售成功！'); document.getElementById('cardModalFav').classList.remove('open'); }
         function startLottery() {
             if (isLotteryRunning) return;
             isLotteryRunning = true; const btn = document.getElementById('btnLottery'); btn.disabled = true; btn.textContent = '📮 铸邮中...';
