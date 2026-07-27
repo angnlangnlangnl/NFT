@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
-        :root { --bg:#0d1a14; --gold-light:#f8ecc9; --gold:#d6b878; --gold-deep:#9e7a3a; --gold-glow:#dbb45c; --text-secondary:#b8a47b; }
+        :root { --bg:#0d1a14; --gold-light:#f8ecc9; --gold:#d6b878; --gold-deep:#9e7a3a; --gold-glow:#dbb45c; --text-secondary:#b8a47b; --usdt-color:#dbb45c; }
         body { background-color: #0d1a14; display:flex; justify-content:center; align-items:center; height:100vh; height:100dvh; overflow:hidden; position:fixed; top:0; left:0; right:0; bottom:0; color:#fff; }
         .app { width:100%; max-width:420px; height:100%; background: radial-gradient(circle at 50% 10%, #1a2e1f 0%, #0d1a14 100%); border-radius:20px; box-shadow:0 0 40px rgba(180,145,70,0.15); display:flex; flex-direction:column; position:relative; overflow:hidden; }
         .app::before { content:''; position:absolute; top:0; left:0; right:0; bottom:0; background-image:radial-gradient(rgba(180,145,70,0.06) 1px, transparent 1px); background-size:40px 40px; opacity:0.5; z-index:0; pointer-events:none; border-radius:20px; }
@@ -93,6 +93,7 @@
         .market-card .frame { width:100%; display:flex; align-items:center; justify-content:center; font-size:50px; overflow:hidden; padding:0; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); }
         .market-card .frame img { width:100%; height:auto; display:block; }
         .market-card .info { padding:10px; }
+        .usdt-value { color: var(--usdt-color); font-size: 11px; }
         .btn-sm { width:100%; padding:7px; border:1px solid rgba(180,145,70,0.5); background:transparent; color:var(--gold-glow); border-radius:10px; font-size:11px; cursor:pointer; }
         .stats { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; padding:15px; margin-bottom:15px; display:flex; justify-content:space-around; text-align:center; backdrop-filter:blur(8px); }
         .stat-item { flex:1; } .stat-item .val { color:var(--gold-light); font-size:22px; font-weight:700; } .stat-item .lbl { color:var(--text-secondary); font-size:11px; }
@@ -153,13 +154,13 @@
                 <div class="grid-2" id="marketGrid">
                     <div class="market-card" data-rarity="legendary" onclick="showCardDetail(cardData[0])">
                         <div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div>
-                        <div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p style="color:#ffb84d;font-size:11px;">传世孤品 · 仅1枚</p><button class="btn-sm">查看详情</button></div>
+                        <div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div>
                     </div>
-                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail(cardData[1])"><div class="frame">🐼</div><div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p style="color:#ffb84d;font-size:11px;">传说 · 总量100</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="epic" onclick="showCardDetail(cardData[2])"><div class="frame">🦏</div><div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p style="color:#d98eff;font-size:11px;">史诗 · 总量600</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="rare" onclick="showCardDetail(cardData[3])"><div class="frame">🦅</div><div class="info"><p style="color:white;font-weight:600;">金雕</p><p style="color:#6db3ff;font-size:11px;">稀有 · 总量1500</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="rare" onclick="showCardDetail(cardData[4])"><div class="frame">🐘</div><div class="info"><p style="color:white;font-weight:600;">亚洲象</p><p style="color:#6db3ff;font-size:11px;">稀有 · 总量1500</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="common" onclick="showCardDetail(cardData[6])"><div class="frame">🦊</div><div class="info"><p style="color:white;font-weight:600;">藏狐</p><p style="color:#ccc;font-size:11px;">普通 · 总量3000</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="legendary" onclick="showCardDetail(cardData[1])"><div class="frame">🐼</div><div class="info"><p style="color:white;font-weight:600;">大熊猫</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="epic" onclick="showCardDetail(cardData[2])"><div class="frame">🦏</div><div class="info"><p style="color:white;font-weight:600;">白犀牛</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="rare" onclick="showCardDetail(cardData[3])"><div class="frame">🦅</div><div class="info"><p style="color:white;font-weight:600;">金雕</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="rare" onclick="showCardDetail(cardData[4])"><div class="frame">🐘</div><div class="info"><p style="color:white;font-weight:600;">亚洲象</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="common" onclick="showCardDetail(cardData[6])"><div class="frame">🦊</div><div class="info"><p style="color:white;font-weight:600;">藏狐</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
                 </div>
             </div>
 
