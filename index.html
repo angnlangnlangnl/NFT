@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>珍稀动物盲盒 · NFT DApp</title>
+    <title>NFT集邮 · DApp</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -45,7 +45,7 @@
         .title h2 { font-size:24px; font-weight:700; background:linear-gradient(180deg, #f5e3b3 0%, #c5a455 60%, #8a6327 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; text-shadow:0 0 20px rgba(180,145,70,0.5); margin-bottom:4px; }
         .title p { color:#b8a16a; font-size:12px; }
 
-        .lottery-btn-area { text-align:center; margin-top:12px; }
+        .lottery-btn-area { text-align:center; margin-top:12px; display:flex; gap:10px; justify-content:center; align-items:center; }
         .btn-lottery { 
             display:inline-block; 
             padding:12px 36px; 
@@ -70,6 +70,28 @@
             opacity:0.6;
             cursor:not-allowed;
             animation:none;
+        }
+        .btn-sound {
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            width:40px;
+            height:40px;
+            background:rgba(19,32,22,0.8);
+            border:1px solid rgba(180,145,70,0.4);
+            color:var(--gold-glow);
+            border-radius:50%;
+            font-size:18px;
+            cursor:pointer;
+            transition:all 0.2s;
+        }
+        .btn-sound:hover {
+            background:rgba(180,145,70,0.2);
+            border-color:var(--gold-glow);
+        }
+        .btn-sound.muted {
+            color:rgba(255,255,255,0.3);
+            border-color:rgba(255,255,255,0.2);
         }
         @keyframes glowPulse { 
             0%,100% { box-shadow:0 6px 20px rgba(180,145,70,0.35); } 
@@ -403,6 +425,7 @@
                 <div class="grid-3" id="cardGrid"></div>
                 <div class="lottery-btn-area">
                     <button class="btn-lottery" id="btnLottery" onclick="startLottery()">📮 随机铸邮</button>
+                    <button class="btn-sound" id="btnSound" onclick="toggleSound()" title="音效开关">🔊</button>
                 </div>
             </div>
 
@@ -512,7 +535,64 @@
         let selectedCard = null, selectedElement = null;
         let isLotteryRunning = false;
         let lotteryInterval = null;
+        let soundEnabled = true;
+        let tickCount = 0;
 
+        // ==================== 音效系统 ====================
+        function createBeep(frequency, duration, type = 'sine', volume = 0.15) {
+            if (!soundEnabled) return;
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioCtx.createOscillator();
+                const gainNode = audioCtx.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+                
+                oscillator.type = type;
+                oscillator.frequency.setValueAtTime(frequency, audioCtx.currentTime);
+                gainNode.gain.setValueAtTime(volume, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+                
+                oscillator.start(audioCtx.currentTime);
+                oscillator.stop(audioCtx.currentTime + duration);
+            } catch(e) {
+                // 静默处理音效错误
+            }
+        }
+
+        function playTickSound() {
+            createBeep(880, 0.06, 'square', 0.08);
+        }
+
+        function playWinSound() {
+            const notes = [523, 659, 784, 1047];
+            notes.forEach((freq, i) => {
+                setTimeout(() => createBeep(freq, 0.3, 'sine', 0.2), i * 150);
+            });
+        }
+
+        function playStartSound() {
+            createBeep(440, 0.2, 'sine', 0.12);
+            setTimeout(() => createBeep(660, 0.15, 'sine', 0.12), 120);
+            setTimeout(() => createBeep(880, 0.1, 'sine', 0.12), 240);
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const btn = document.getElementById('btnSound');
+            if (soundEnabled) {
+                btn.textContent = '🔊';
+                btn.classList.remove('muted');
+                btn.title = '音效开关';
+            } else {
+                btn.textContent = '🔇';
+                btn.classList.add('muted');
+                btn.title = '音效已关闭';
+            }
+        }
+
+        // ==================== 渲染卡片 ====================
         function renderCards(gridId, pageKey) {
             const grid = document.getElementById(gridId);
             if (!grid) return;
@@ -524,7 +604,9 @@
                     <div class="card-rarity" style="color:var(--text-secondary)">NFT</div>
                 </div>`).join('');
         }
+
         function selectCard(index, element, pageKey) { return; }
+
         function showCardDetail(card) {
             const modalImg = document.getElementById('modalImg');
             const modalEmoji = document.getElementById('modalEmoji');
@@ -547,18 +629,32 @@
             document.getElementById('modalPrice').textContent = card.price;
             document.getElementById('cardModal').classList.add('open');
         }
+
         function closeModal() {
             document.getElementById('cardModal').classList.remove('open');
             if(selectedElement){ selectedElement.classList.remove('selected'); selectedElement=null; selectedCard=null; }
         }
+
         function confirmCard() {
-            if(selectedCard&&selectedElement){ selectedElement.classList.add('revealed'); selectedElement.querySelector('.card-icon').textContent=selectedCard.icon; selectedElement.querySelector('.card-name').textContent=selectedCard.name; selectedElement.querySelector('.card-rarity').textContent=selectedCard.rarity; selectedElement.querySelector('.card-rarity').style.color=selectedCard.color; alert(`✅ 已确认：${selectedCard.name} (${selectedCard.rarity})\n编号：${selectedCard.id}`); }
+            if(selectedCard&&selectedElement){ 
+                selectedElement.classList.add('revealed'); 
+                selectedElement.querySelector('.card-icon').textContent=selectedCard.icon; 
+                selectedElement.querySelector('.card-name').textContent=selectedCard.name; 
+                selectedElement.querySelector('.card-rarity').textContent=selectedCard.rarity; 
+                selectedElement.querySelector('.card-rarity').style.color=selectedCard.color; 
+                alert(`✅ 已确认：${selectedCard.name} (${selectedCard.rarity})\n编号：${selectedCard.id}`); 
+            }
             document.getElementById('cardModal').classList.remove('open');
         }
 
         function startLottery() {
             if (isLotteryRunning) return;
             isLotteryRunning = true;
+            tickCount = 0;
+            
+            // 播放开始音效
+            playStartSound();
+            
             const btn = document.getElementById('btnLottery');
             btn.disabled = true;
             btn.textContent = '📮 铸邮中...';
@@ -568,26 +664,41 @@
             let speed = 80;
             let rounds = 0;
             const maxRounds = 3;
+            
             cards.forEach(c => { c.classList.remove('highlight', 'selected'); });
             if (selectedElement) { selectedElement = null; selectedCard = null; }
+            
             lotteryInterval = setInterval(() => {
                 cards.forEach(c => c.classList.remove('highlight'));
                 cards[currentIndex].classList.add('highlight');
+                
+                // 每隔2次播放滴答声
+                tickCount++;
+                if (tickCount % 2 === 0) {
+                    playTickSound();
+                }
+                
                 currentIndex++;
                 if (currentIndex >= totalCards) {
                     currentIndex = 0;
                     rounds++;
                     if (rounds >= maxRounds - 1) speed += 30;
                 }
+                
                 if (rounds >= maxRounds && currentIndex === Math.floor(Math.random() * totalCards)) {
                     clearInterval(lotteryInterval);
                     lotteryInterval = null;
+                    
+                    // 播放中奖音效
+                    playWinSound();
+                    
                     const finalIndex = Math.floor(Math.random() * totalCards);
                     cards.forEach(c => c.classList.remove('highlight'));
                     const finalCard = cards[finalIndex];
                     finalCard.classList.add('selected', 'highlight');
                     selectedCard = cardData[finalIndex];
                     selectedElement = finalCard;
+                    
                     setTimeout(() => {
                         showCardDetail(selectedCard);
                         isLotteryRunning = false;
@@ -599,20 +710,28 @@
         }
 
         function mint(type) { alert('⛓️ 链上Mint盲盒 · ' + type + ' (演示模式)'); }
+        
         document.getElementById('cardModal').addEventListener('click',function(e){ if(e.target===this)closeModal(); });
+        
         function switchPage(page,el){
-            document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+page).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active');
+            document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); 
+            document.getElementById('page-'+page).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); 
+            el.classList.add('active');
             document.getElementById('logoIcon').textContent={nft:'🦏',entertainment:'🎮',market:'🏪',favorite:'❤️',ecosystem:'🌐'}[page]||'🦏';
         }
+        
         function filterMarket(rarity,btn){
-            document.querySelectorAll('#page-market .filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+            document.querySelectorAll('#page-market .filter-btn').forEach(b=>b.classList.remove('active')); 
+            btn.classList.add('active');
             document.querySelectorAll('#marketGrid .market-card').forEach(c=>c.style.display=(rarity==='all'||c.getAttribute('data-rarity')===rarity)?'':'none');
         }
+        
         const lb=document.getElementById('langBtn'),ld=document.getElementById('langDropdown');
         lb.addEventListener('click',e=>{e.stopPropagation();ld.classList.toggle('open');});
         document.addEventListener('click',e=>{if(!ld.contains(e.target)&&e.target!==lb)ld.classList.remove('open');});
         document.querySelectorAll('.lang-option').forEach(o=>o.addEventListener('click',function(){localStorage.setItem('bcbsLang',this.getAttribute('data-lang'));ld.classList.remove('open');}));
+        
         const wb=document.getElementById('walletBtn'); let ac=null;
         wb.addEventListener('click',async function(){
             if(ac){ac=null;wb.textContent='Connect';wb.classList.remove('connected');return;}
@@ -620,6 +739,7 @@
             try{const a=await window.ethereum.request({method:'eth_requestAccounts'});ac=a[0];wb.textContent=ac.substring(0,6)+'...'+ac.substring(ac.length-4);wb.classList.add('connected');}catch(e){wb.textContent='Connect';}
         });
         (async()=>{if(window.ethereum){try{const a=await window.ethereum.request({method:'eth_accounts'});if(a.length>0){ac=a[0];wb.textContent=ac.substring(0,6)+'...'+ac.substring(ac.length-4);wb.classList.add('connected');}}catch(e){}}})();
+        
         renderCards('cardGrid','nft');
     </script>
 </body>
