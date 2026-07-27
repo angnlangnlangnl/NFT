@@ -62,7 +62,7 @@
             overflow:hidden;
         }
         .nft-card .frame img {
-            width:100%; height:100%; object-fit:cover;
+            width:100%; height:100%; object-fit:contain;
         }
         .nft-card .name { color:white; font-size:13px; font-weight:600; }
         .nft-card .rarity { font-size:11px; }
@@ -263,7 +263,7 @@
                 </div>
                 <div class="grid-2">
                     <div class="nft-card" onclick="showCardDetail(cardData[0])">
-                        <div class="frame"><img src="images/background.png" alt="最贵邮票" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"></div>
+                        <div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div>
                         <div class="name">最贵邮票</div><div class="rarity r-legendary">传世孤品</div>
                     </div>
                     <div class="nft-card" onclick="showCardDetail(cardData[1])"><div class="frame">🐼</div><div class="name">大熊猫</div><div class="rarity r-legendary">传说</div></div>
@@ -277,13 +277,11 @@
             </div>
         </div>
 
-        <!-- 弹窗 -->
         <div class="modal-overlay" id="cardModal">
             <div class="modal-box">
                 <div class="modal-id-top" id="modalIdTop">#0001</div>
                 <div class="modal-img-area">
-                    <img id="modalImg" src="" alt="" style="display:none;">
-                    <span class="emoji-fallback" id="modalEmoji">🎁</span>
+                    <img id="modalImg" src="" alt="">
                 </div>
                 <div class="stamp-panel">
                     <div class="stamp-title" id="modalName">最贵邮票</div>
@@ -329,15 +327,10 @@
 
         function showCardDetail(card) {
             const modalImg = document.getElementById('modalImg');
-            const modalEmoji = document.getElementById('modalEmoji');
             if (card.img) {
                 modalImg.src = card.img;
-                modalImg.style.display = 'block';
-                modalEmoji.style.display = 'none';
             } else {
-                modalImg.style.display = 'none';
-                modalEmoji.style.display = 'block';
-                modalEmoji.textContent = card.icon;
+                modalImg.src = '';
             }
             document.getElementById('modalIdTop').textContent = card.id;
             document.getElementById('modalName').textContent = card.name;
