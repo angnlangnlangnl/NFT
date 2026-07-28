@@ -160,13 +160,13 @@
             </div>
 
             <div class="page" id="page-market">
-                <div class="title"><h2>📖 珍邮图鉴市场</h2><p>探索世界珍稀邮票 · 收藏链上唯一珍品</p></div>
+                <div class="title"><h2>📖 动物图鉴市场</h2><p>探索珍稀动物卡牌 · 收藏链上唯一珍品</p></div>
                 <div class="filter-bar">
                     <span class="filter-btn active" onclick="filterMarket('all',this)">全部</span>
-                    <span class="filter-btn" onclick="filterMarket('legendary',this)">孤品</span>
-                    <span class="filter-btn" onclick="filterMarket('epic',this)">极珍</span>
-                    <span class="filter-btn" onclick="filterMarket('rare',this)">珍罕</span>
-                    <span class="filter-btn" onclick="filterMarket('common',this)">稀有</span>
+                    <span class="filter-btn" onclick="filterMarket('legendary',this)">传说</span>
+                    <span class="filter-btn" onclick="filterMarket('epic',this)">史诗</span>
+                    <span class="filter-btn" onclick="filterMarket('rare',this)">稀有</span>
+                    <span class="filter-btn" onclick="filterMarket('common',this)">普通</span>
                 </div>
                 <div class="grid-2" id="marketGrid">
                     <div class="market-card" data-rarity="legendary" onclick="showCardDetailMarket(cardData[0])"><div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div><div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
@@ -174,7 +174,7 @@
                     <div class="market-card" data-rarity="epic" onclick="showCardDetailMarket(cardData[2])"><div class="frame"><img src="images/TOP3.png" alt="倒置的珍妮"></div><div class="info"><p style="color:white;font-weight:600;">倒置的珍妮</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
                     <div class="market-card" data-rarity="rare" onclick="showCardDetailMarket(cardData[3])"><div class="frame"><img src="images/TOP4.png" alt="毛里求斯邮局"></div><div class="info"><p style="color:white;font-weight:600;">毛里求斯邮局</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
                     <div class="market-card" data-rarity="rare" onclick="showCardDetailMarket(cardData[4])"><div class="frame"><img src="images/TOP5.png" alt="夏威夷传教士"></div><div class="info"><p style="color:white;font-weight:600;">夏威夷传教士</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="common" onclick="showCardDetailMarket(cardData[6])"><div class="frame"><img src="images/TOP6.png" alt="全国山河一片红"></div><div class="info"><p style="color:white;font-weight:600;">一片红</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
+                    <div class="market-card" data-rarity="common" onclick="showCardDetailMarket(cardData[6])"><div class="frame"><img src="images/TOP6.png" alt="全国山河一片红"></div><div class="info"><p style="color:white;font-weight:600;">全国山河一片红</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
                 </div>
             </div>
 
@@ -192,15 +192,30 @@
                     <div class="market-card" data-rarity="epic" data-index="2"><div class="frame"><img src="images/TOP3.png" alt="倒置的珍妮"></div><div class="info"><p style="color:white;font-weight:600;">倒置的珍妮</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:100%"></div></div><p class="mint-status-text">铸邮已完成</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[2])">出售</button></div></div>
                     <div class="market-card" data-rarity="rare" data-index="3"><div class="frame"><img src="images/TOP4.png" alt="毛里求斯邮局"></div><div class="info"><p style="color:white;font-weight:600;">毛里求斯邮局</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:90%"></div></div><p class="mint-status-text">铸邮中 90%</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[3])">出售</button></div></div>
                     <div class="market-card" data-rarity="rare" data-index="4"><div class="frame"><img src="images/TOP5.png" alt="夏威夷传教士"></div><div class="info"><p style="color:white;font-weight:600;">夏威夷传教士</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:100%"></div></div><p class="mint-status-text">铸邮已完成</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[4])">出售</button></div></div>
-                    <div class="market-card" data-rarity="common" data-index="6"><div class="frame"><img src="images/TOP6.png" alt="全国山河一片红"></div><div class="info"><p style="color:white;font-weight:600;">一片红</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:10%"></div></div><p class="mint-status-text">铸邮中 10%</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[6])">出售</button></div></div>
+                    <div class="market-card" data-rarity="common" data-index="6"><div class="frame"><img src="images/TOP6.png" alt="全国山河一片红"></div><div class="info"><p style="color:white;font-weight:600;">全国山河一片红</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:10%"></div></div><p class="mint-status-text">铸邮中 10%</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[6])">出售</button></div></div>
                 </div>
             </div>
 
             <div class="page" id="page-messages">
                 <div class="title"><h2>📬 讯息中心</h2><p>邀请好友 · 团队数据 · 系统通知</p></div>
-                <div class="invite-card"><h4>📱 扫描邀请</h4><div class="qr-area"><div class="qr-icon">📱</div><div class="qr-text">邀请链接：https://app.nft-stamp.com/ref=0xAb12...5678</div></div><div class="invite-row"><span class="invite-label">累计邀请</span><span class="invite-value">128 人</span></div><div class="invite-row"><span class="invite-label">累计奖励</span><span class="invite-value"><i class="fab fa-usdt"></i> 256.00 USDT</span></div></div>
-                <div class="team-card"><h4>👥 团队信息</h4><div class="team-row"><div class="team-item"><div class="team-val">56</div><div class="team-lbl">直推人数</div></div><div class="team-item"><div class="team-val">1,280</div><div class="team-lbl">团队总人数</div></div></div></div>
-                <div class="invite-card"><h4>📋 邀请记录</h4><div class="record-list"><div class="record-item"><span>0x1234...5678</span><span class="record-addr">2026-07-28 14:30</span><span class="record-value">+5.00 USDT</span></div><div class="record-item"><span>0x8765...4321</span><span class="record-addr">2026-07-27 09:15</span><span class="record-value">+3.50 USDT</span></div><div class="record-item"><span>0x2468...1357</span><span class="record-addr">2026-07-26 18:45</span><span class="record-value">+8.20 USDT</span></div></div></div>
+                <div class="invite-card">
+                    <h4>📱 扫描邀请</h4>
+                    <div class="qr-area"><div class="qr-icon">📱</div><div class="qr-text">邀请链接：https://app.nft-stamp.com/ref=0xAb12...5678</div></div>
+                    <div class="invite-row"><span class="invite-label">累计邀请</span><span class="invite-value">128 人</span></div>
+                    <div class="invite-row"><span class="invite-label">累计奖励</span><span class="invite-value"><i class="fab fa-usdt"></i> 256.00 USDT</span></div>
+                </div>
+                <div class="team-card">
+                    <h4>👥 团队信息</h4>
+                    <div class="team-row"><div class="team-item"><div class="team-val">56</div><div class="team-lbl">直推人数</div></div><div class="team-item"><div class="team-val">1,280</div><div class="team-lbl">团队总人数</div></div></div>
+                </div>
+                <div class="invite-card">
+                    <h4>📋 邀请记录</h4>
+                    <div class="record-list">
+                        <div class="record-item"><span>0x1234...5678</span><span class="record-addr">2026-07-28 14:30</span><span class="record-value">+5.00 USDT</span></div>
+                        <div class="record-item"><span>0x8765...4321</span><span class="record-addr">2026-07-27 09:15</span><span class="record-value">+3.50 USDT</span></div>
+                        <div class="record-item"><span>0x2468...1357</span><span class="record-addr">2026-07-26 18:45</span><span class="record-value">+8.20 USDT</span></div>
+                    </div>
+                </div>
                 <div class="msg-item unread" onclick="alert('✅ 交易成功')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>交易成功</span><span class="msg-time">10分钟前</span></div><div class="msg-content">至尊礼盒Mint成功！获得稀有卡牌</div></div>
             </div>
         </div>
@@ -288,14 +303,14 @@
     <script>
         const cardData = [
             { icon:'🐅', name:'最贵邮票', rarity:'传世孤品', id:'#0001', year:'1840', estimate:'约850万美元', source:'英国邮政史', price:'2.5 BNB', color:'#ffb84d', img:'images/youpiao1.png', progress:30 },
-            { icon:'🐼', name:'瑞典黄色三先令', rarity:'孤品', id:'#0002', year:'1855', estimate:'227万美元', source:'瑞典印刷事故错色票', price:'3.0 BNB', color:'#ffb84d', img:'images/TOP2.png', progress:60 },
-            { icon:'🦏', name:'倒置的珍妮', rarity:'极珍', id:'#0003', year:'1918', estimate:'300万美元', source:'美国首套航空错版票', price:'0.45 BNB', color:'#d98eff', img:'images/TOP3.png', progress:100 },
-            { icon:'🦅', name:'毛里求斯邮局', rarity:'珍罕', id:'#0004', year:'1847', estimate:'160万美元', source:'舞会请柬专用错刻票', price:'0.08 BNB', color:'#6db3ff', img:'images/TOP4.png', progress:90 },
-            { icon:'🐘', name:'夏威夷传教士', rarity:'珍罕', id:'#0005', year:'1851', estimate:'1304万人民币', source:'夏威夷最早传教士邮票', price:'0.07 BNB', color:'#6db3ff', img:'images/TOP5.png', progress:100 },
-            { icon:'🐯', name:'一片红', rarity:'珍罕', id:'#0006', year:'1968', estimate:'730万人民币', source:'中国撤销发行未流通珍邮', price:'0.09 BNB', color:'#6db3ff', img:'images/TOP6.png', progress:50 },
-            { icon:'🦊', name:'百慕大佩罗特', rarity:'稀有', id:'#0007', year:'1848', estimate:'140万美元', source:'邮局局长手工盖印票', price:'0.01 BNB', color:'#ccc', img:'images/TOP7.png', progress:10 },
-            { icon:'🦚', name:'圭亚那棉纱卷', rarity:'极珍', id:'#0008', year:'1850', estimate:'100万美元', source:'英属圭亚那最早邮票', price:'0.5 BNB', color:'#d98eff', img:'images/TOP8.png', progress:75 },
-            { icon:'🐬', name:'阿根廷对倒双连', rarity:'珍罕', id:'#0009', year:'1859', estimate:'57.5万美元', source:'南美仅此一组对倒错票', price:'0.1 BNB', color:'#6db3ff', img:'images/TOP9.png', progress:45 }
+            { icon:'🐼', name:'瑞典黄色三先令', rarity:'传说', id:'#0002', year:'1855年', estimate:'227万美元', source:'印刷事故错色珍邮', price:'3.0 BNB', color:'#ffb84d', img:'images/TOP2.png', progress:60 },
+            { icon:'🦏', name:'倒置的珍妮', rarity:'史诗', id:'#0003', year:'1918年', estimate:'300万美元', source:'美国首套航空错版邮票', price:'0.45 BNB', color:'#d98eff', img:'images/TOP3.png', progress:100 },
+            { icon:'🦅', name:'毛里求斯邮局', rarity:'稀有', id:'#0004', year:'1847年', estimate:'160万美元', source:'舞会请柬错刻珍邮', price:'0.08 BNB', color:'#6db3ff', img:'images/TOP4.png', progress:90 },
+            { icon:'🐘', name:'夏威夷传教士', rarity:'稀有', id:'#0005', year:'1851年', estimate:'1304万人民币', source:'夏威夷最早传教士邮票', price:'0.07 BNB', color:'#6db3ff', img:'images/TOP5.png', progress:100 },
+            { icon:'🐯', name:'全国山河一片红', rarity:'稀有', id:'#0006', year:'1968年', estimate:'730.25万人民币', source:'撤销发行未流通珍邮', price:'0.09 BNB', color:'#6db3ff', img:'images/TOP6.png', progress:50 },
+            { icon:'🦊', name:'百慕大佩罗特', rarity:'普通', id:'#0007', year:'1848年', estimate:'140万美元', source:'邮局局长手工盖印邮票', price:'0.01 BNB', color:'#ccc', img:'images/TOP7.png', progress:10 },
+            { icon:'🦚', name:'圭亚那棉纱卷', rarity:'史诗', id:'#0008', year:'1850年', estimate:'100万美元', source:'南美殖民时代经典珍邮', price:'0.5 BNB', color:'#d98eff', img:'images/TOP8.png', progress:75 },
+            { icon:'🐬', name:'阿根廷对倒双连', rarity:'稀有', id:'#0009', year:'1859年', estimate:'57.5万美元', source:'仅此一套双连错票孤品', price:'0.1 BNB', color:'#6db3ff', img:'images/TOP9.png', progress:45 }
         ];
         let selectedCard = null, selectedElement = null;
         let isLotteryRunning = false, lotteryInterval = null;
