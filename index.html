@@ -167,8 +167,12 @@
                     <div class="stat-item"><div class="val" id="totalValue">0.00</div><div class="lbl">总估值 USDT</div></div><div class="stat-div"></div>
                     <div class="stat-item"><div class="val" id="batchExchange">0.00</div><div class="lbl">批量兑换</div></div>
                 </div>
-                <div style="text-align:center;margin-bottom:10px;"><button class="btn-lottery" style="padding:8px 20px;font-size:13px;" onclick="batchExchangeAll()">💱 批量兑换全部</button></div>
-                <div class="grid-2" id="favoriteGrid"></div>
+                <div style="text-align:center;margin-bottom:10px;">
+                    <button class="btn-lottery" style="padding:8px 20px;font-size:13px;" id="btnBatchExchange" onclick="batchExchangeAll()">💱 批量兑换全部</button>
+                </div>
+                <div class="grid-2" id="favoriteGrid">
+                    <p style="text-align:center;color:var(--text-secondary);padding:20px;grid-column:1/-1;">连接钱包后加载链上资产...</p>
+                </div>
             </div>
 
             <!-- ========== 市场页 ========== -->
@@ -280,6 +284,7 @@
 
         const FACE_VALUES = [0.001,0.002,0.003,0.004,0.005,0.006,0.007,0.008,0.010];
         const COOLDOWN_MINUTES = [5,10,15,20,25,30,35,75,150];
+        const STAMP_NAMES = ['黑便士','瑞典黄色三先令','倒置的珍妮','毛里求斯邮局','夏威夷传教士','全国山河一片红','百慕大佩罗特','圭亚那棉纱卷','阿根廷对倒双连'];
 
         const cardData = [
             { name:'最贵邮票', rarity:'传世孤品', id:'#0001', year:'1840', estimate:'约850万美元', source:'英国邮政史', price:'2.5 BNB', color:'#ffb84d', img:'images/youpiao1.png', type:0, progress:30 },
@@ -304,8 +309,12 @@
         function formatCooldown(t) { const m = COOLDOWN_MINUTES[t] || 5; if(m < 60) return `${m}分钟`; if(m < 1440) return `${(m/60).toFixed(1)}小时`; return `${(m/1440).toFixed(0)}天`; }
         function showLoading(btn, text) { btn.disabled = true; btn.innerHTML = `<span class="loading-spinner"></span> ${text}`; }
         function resetButton(btn, text) { btn.disabled = false; btn.textContent = text; }
+        function getStampImage(type) {
+            const images = ['images/youpiao1.png','images/TOP2.png','images/TOP3.png','images/TOP4.png','images/TOP5.png','images/TOP6.png','images/TOP7.png','images/TOP8.png','images/TOP9.png'];
+            return images[type] || 'images/youpiao1.png';
+        }
 
-        // ==================== 钱包连接（含自动连接） ====================
+        // ==================== 钱包连接 ====================
         async function initContracts(acc) {
             currentAccount = acc;
             provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -316,7 +325,8 @@
             btn.textContent = currentAccount.substring(0,6) + '...' + currentAccount.substring(38);
             btn.classList.add('connected');
             document.getElementById('refLink').textContent = `https://luckystamp.app/ref=${currentAccount}`;
-            loadMyNFTs(); loadTeamInfo();
+            await loadMyNFTs();
+            loadTeamInfo();
         }
 
         async function autoConnect() {
@@ -333,6 +343,7 @@
                 const btn = document.getElementById('walletBtn');
                 btn.textContent = 'Connect'; btn.classList.remove('connected');
                 document.getElementById('refLink').textContent = '请先连接钱包';
+                myNFTs = []; renderFavoriteGrid(); updateAssetStats();
                 return;
             }
             if (!window.ethereum) { alert('请安装 MetaMask'); return; }
@@ -354,14 +365,11 @@
                 const decimals = await usdtContract.decimals();
                 const amountWei = ethers.utils.parseUnits(amount.toString(), decimals);
                 const allowance = await usdtContract.allowance(currentAccount, CONFIG.CONTRACT_ADDRESS);
-                if (allowance.gte(amountWei)) { console.log('✅ 授权额度充足'); return true; }
-                console.log('⏳ 授权 USDT 到合约:', CONFIG.CONTRACT_ADDRESS);
+                if (allowance.gte(amountWei)) { return true; }
                 const tx = await usdtContract.approve(CONFIG.CONTRACT_ADDRESS, ethers.constants.MaxUint256);
                 await tx.wait();
-                console.log('✅ USDT 授权成功');
                 return true;
             } catch (e) {
-                console.error('USDT 授权失败:', e);
                 if (e.code === 4001) { alert('❌ 您取消了 USDT 授权'); }
                 else { alert('❌ USDT 授权失败：' + (e.reason || e.message || '未知错误')); }
                 return false;
@@ -383,7 +391,7 @@
                 if(contract) {
                     const tx = await contract.bnbBlindBoxLottery({value: ethers.utils.parseEther("0.001")});
                     await tx.wait();
-                } else { await new Promise(r => setTimeout(r, 1500)); }
+                }
                 const prizes = ['🎁 普通邮票NFT','🎀 稀有邮票NFT','👑 史诗邮票NFT','💎 传说邮票NFT','🔥 隐藏款NFT'];
                 todayLotteryCount++; globalLotteryProgress++; updateLotteryDisplay();
                 alert(`🎉 抽奖成功！\n获得：${prizes[Math.floor(Math.random()*prizes.length)]}`);
@@ -406,10 +414,7 @@
             if(!currentAccount){alert('请先连接钱包');return;}
             if(isLotteryRunning)return;
             if(contract) {
-                try {
-                    const coolingDown = await contract.getCoolingDownStatus(currentAccount);
-                    if(coolingDown) { alert('⏳ 您有一个待处理的铸造请求，请先取消或确认完成'); return; }
-                } catch(e) {}
+                try { if(await contract.getCoolingDownStatus(currentAccount)) { alert('⏳ 您有一个待处理的铸造请求'); return; } } catch(e) {}
             }
             isLotteryRunning=true;
             const btn=document.getElementById('btnLottery'); showLoading(btn, '铸造中');
@@ -462,97 +467,162 @@
             if(!currentAccount||!currentMintCard){alert('请先连接钱包并选择铸造卡片');return;}
             const btn = document.getElementById('btnConfirm');
             const mintPrice = FACE_VALUES[currentMintCard.type];
-            
             showLoading(btn, '请求铸造中');
             try {
-                if(contract) { const tx1 = await contract.requestRandomMint(); await tx1.wait(); }
+                if(contract) { await (await contract.requestRandomMint()).wait(); }
                 else { await new Promise(r => setTimeout(r, 800)); }
-            } catch(e) {
-                resetButton(btn, '确认铸造');
-                alert('❌ 铸造请求失败：' + (e.reason || e.message || '未知错误'));
-                return;
-            }
-
+            } catch(e) { resetButton(btn, '确认铸造'); alert('❌ 铸造请求失败：' + (e.reason || e.message)); return; }
             showLoading(btn, '授权 USDT');
-            const approved = await approveUSDT(mintPrice);
-            if (!approved) { resetButton(btn, '确认铸造'); return; }
-
+            if (!(await approveUSDT(mintPrice))) { resetButton(btn, '确认铸造'); return; }
             showLoading(btn, '确认铸造中');
             try {
-                if(contract) { const tx3 = await contract.confirmRandomMint(); await tx3.wait(); }
+                if(contract) { await (await contract.confirmRandomMint()).wait(); }
                 else { await new Promise(r => setTimeout(r, 1000)); }
                 document.getElementById('cardModal').classList.remove('open');
-                document.getElementById('mintResult').innerHTML = `<p style="color:#4caf50;font-size:12px;">✅ 铸造成功！${currentMintCard.name} 已加入你的资产</p><p style="color:var(--text-secondary);font-size:10px;">支付：${mintPrice} USDT | Token #${1000 + currentMintCard.type}</p>`;
-                myNFTs.unshift({...currentMintCard, tokenId: Date.now(), canTrade: false, progress: 0, faceValue: mintPrice});
-                currentMintCard = null; loadMyNFTs();
-            } catch(e) {
-                resetButton(btn, '确认铸造');
-                alert('❌ 铸造确认失败：' + (e.reason || e.message || '请检查合约状态'));
-                return;
-            }
+                document.getElementById('mintResult').innerHTML = `<p style="color:#4caf50;font-size:12px;">✅ 铸造成功！${currentMintCard.name} 已加入你的资产</p>`;
+                currentMintCard = null;
+                await loadMyNFTs();
+            } catch(e) { resetButton(btn, '确认铸造'); alert('❌ 铸造确认失败：' + (e.reason || e.message)); return; }
             resetButton(btn, '确认铸造');
         }
 
-        // ==================== 资产系统 ====================
-        function loadMyNFTs() {
-            if(myNFTs.length === 0) { myNFTs=cardData.filter((c,i)=>i<6).map((c,i)=>({...c,tokenId:1000+i,canTrade:c.progress>=100,faceValue:FACE_VALUES[i]||0.001})); }
-            renderFavoriteGrid();updateAssetStats();
+        // ==================== 资产系统（链上获取） ====================
+        async function loadMyNFTs() {
+            if (!currentAccount || !contract) {
+                document.getElementById('favoriteGrid').innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:20px;grid-column:1/-1;">连接钱包后加载链上资产...</p>';
+                updateAssetStats();
+                return;
+            }
+            const grid = document.getElementById('favoriteGrid');
+            grid.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:20px;grid-column:1/-1;"><span class="loading-spinner"></span> 加载链上资产...</p>';
+            try {
+                const tokenIds = await contract.getOwnedStamps(currentAccount);
+                if (!tokenIds || tokenIds.length === 0) {
+                    myNFTs = [];
+                    grid.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:40px;grid-column:1/-1;">📭 暂无链上资产<br><span style="font-size:11px;">去铸造页面获取你的第一枚邮票NFT</span></p>';
+                    updateAssetStats();
+                    return;
+                }
+                const nftPromises = tokenIds.map(async (id) => {
+                    try {
+                        const info = await contract.getStampInfo(id);
+                        const stampType = info[0].stampType.toNumber();
+                        const faceValue = parseFloat(ethers.utils.formatEther(info[0].faceValue));
+                        const canTradeStatus = await contract.canTrade(id);
+                        return {
+                            tokenId: id.toNumber(),
+                            name: STAMP_NAMES[stampType] || `邮票 #${stampType}`,
+                            stampType: stampType,
+                            faceValue: faceValue,
+                            canTrade: canTradeStatus,
+                            img: getStampImage(stampType),
+                            isListed: info[1],
+                            askPrice: info[1] ? parseFloat(ethers.utils.formatEther(info[2])) : 0
+                        };
+                    } catch (e) {
+                        console.error(`获取 Token ${id} 信息失败:`, e);
+                        return null;
+                    }
+                });
+                const results = await Promise.all(nftPromises);
+                myNFTs = results.filter(n => n !== null);
+                renderFavoriteGrid();
+                updateAssetStats();
+            } catch (e) {
+                console.error('加载资产失败:', e);
+                grid.innerHTML = '<p style="text-align:center;color:#ff4757;padding:20px;grid-column:1/-1;">❌ 加载失败，请刷新重试</p>';
+            }
         }
 
         function renderFavoriteGrid() {
-            const grid=document.getElementById('favoriteGrid'); if(!grid)return;
-            grid.innerHTML=myNFTs.map((nft,i)=>`
-                <div class="market-card">
-                    <div class="frame"><img src="${nft.img}" alt="${nft.name}"></div>
-                    <div class="info"><p style="color:white;font-weight:600;">${nft.name}</p><p class="usdt-value"><i class="fab fa-usdt"></i> 面值 ${nft.faceValue} USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:${nft.progress}%"></div></div><p class="mint-status-text">${nft.canTrade?'可交易':`铸邮中 ${nft.progress}%`}</p><button class="btn-sm" onclick="handleAssetAction(${i})">${nft.canTrade?'出售/兑换':'铸邮中'}</button></div>
-                </div>`).join('');
+            const grid = document.getElementById('favoriteGrid');
+            if (!grid) return;
+            if (myNFTs.length === 0) {
+                grid.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:40px;grid-column:1/-1;">📭 暂无链上资产</p>';
+                return;
+            }
+            grid.innerHTML = myNFTs.map((nft, i) => `
+                <div class="market-card" onclick="handleAssetAction(${i})">
+                    <div class="frame"><img src="${nft.img}" alt="${nft.name}" onerror="this.src='images/youpiao1.png'"></div>
+                    <div class="info">
+                        <p style="color:white;font-weight:600;">${nft.name}</p>
+                        <p class="usdt-value"><i class="fab fa-usdt"></i> 面值 ${nft.faceValue.toFixed(4)} USDT</p>
+                        <p style="font-size:10px;color:var(--text-secondary);">Token #${nft.tokenId}</p>
+                        <p class="mint-status-text">${nft.canTrade ? '✅ 可交易' : '⏳ 冷却中'}</p>
+                        <button class="btn-sm" onclick="event.stopPropagation();handleAssetAction(${i})">${nft.canTrade ? '出售/兑换' : '查看详情'}</button>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function updateAssetStats() {
-            document.getElementById('totalNFT').textContent=myNFTs.length;
-            document.getElementById('canTrade').textContent=myNFTs.filter(n=>n.canTrade).length;
-            const tv=myNFTs.reduce((s,n)=>s+n.faceValue,0);
-            document.getElementById('totalValue').textContent=tv.toFixed(2);
-            document.getElementById('batchExchange').textContent=calcExchange(tv).toFixed(2);
+            document.getElementById('totalNFT').textContent = myNFTs.length;
+            document.getElementById('canTrade').textContent = myNFTs.filter(n => n.canTrade).length;
+            const tv = myNFTs.reduce((s, n) => s + n.faceValue, 0);
+            document.getElementById('totalValue').textContent = tv.toFixed(4);
+            document.getElementById('batchExchange').textContent = calcExchange(tv).toFixed(4);
         }
 
         function handleAssetAction(i) {
-            const nft=myNFTs[i]; if(!nft.canTrade){alert('⏳ 铸邮中，暂不可交易！');return;}
-            document.getElementById('modalImg').src=nft.img||'';
-            document.getElementById('modalIdTop').textContent=`Token #${nft.tokenId}`;
-            document.getElementById('modalName').textContent=nft.name;
-            document.getElementById('modalYear').textContent=nft.year;
-            document.getElementById('modalEstimate').textContent=nft.estimate;
-            document.getElementById('modalRarity').textContent=nft.rarity;document.getElementById('modalRarity').style.color=nft.color;
-            document.getElementById('modalSource').textContent=nft.source;
-            document.getElementById('modalPrice').textContent=`${nft.faceValue} USDT (兑换: ${calcExchange(nft.faceValue).toFixed(4)} USDT)`;
-            document.getElementById('modalCooldown').textContent='可交易';
-            document.getElementById('modalBtns').innerHTML=`<button class="btn-cancel" onclick="closeModal()">取 消</button><button class="btn-confirm" onclick="exchangeNFT(${i})">兑 换</button><button class="btn-confirm" style="margin-left:4px;" onclick="sellNFT(${i})">挂 单</button>`;
+            const nft = myNFTs[i];
+            document.getElementById('modalImg').src = nft.img || '';
+            document.getElementById('modalIdTop').textContent = `Token #${nft.tokenId}`;
+            document.getElementById('modalName').textContent = nft.name;
+            document.getElementById('modalYear').textContent = `类型 ${nft.stampType}`;
+            document.getElementById('modalEstimate').textContent = `面值 ${nft.faceValue.toFixed(4)} USDT`;
+            document.getElementById('modalRarity').textContent = nft.canTrade ? '可交易' : '冷却中';
+            document.getElementById('modalRarity').style.color = nft.canTrade ? '#4caf50' : '#ffa502';
+            document.getElementById('modalSource').textContent = nft.isListed ? `挂单中：${nft.askPrice} USDT` : '未挂单';
+            document.getElementById('modalPrice').textContent = `${nft.faceValue.toFixed(4)} USDT (兑换: ${calcExchange(nft.faceValue).toFixed(6)} USDT)`;
+            document.getElementById('modalCooldown').textContent = nft.canTrade ? '可交易' : '冷却中';
+            document.getElementById('modalBtns').innerHTML = nft.canTrade
+                ? `<button class="btn-cancel" onclick="closeModal()">取 消</button><button class="btn-confirm" onclick="closeModal();exchangeNFT(${i})">兑 换</button><button class="btn-confirm" style="margin-left:4px;" onclick="closeModal();sellNFT(${i})">挂 单</button>`
+                : `<button class="btn-close-full" onclick="closeModal()">关 闭</button>`;
             document.getElementById('cardModal').classList.add('open');
         }
 
-        function exchangeNFT(i) {
-            const nft=myNFTs[i]; document.getElementById('cardModal').classList.remove('open');
-            alert(`💱 兑换成功！获得 ${calcExchange(nft.faceValue).toFixed(4)} USDT`);
-            myNFTs.splice(i,1);renderFavoriteGrid();updateAssetStats();
+        async function exchangeNFT(i) {
+            const nft = myNFTs[i];
+            try {
+                if (contract) { await (await contract.exchangeForUSDT(nft.tokenId)).wait(); }
+                alert(`💱 兑换成功！获得 ${calcExchange(nft.faceValue).toFixed(6)} USDT`);
+                await loadMyNFTs();
+            } catch (e) { alert('❌ 兑换失败：' + (e.reason || e.message)); }
         }
 
         function sellNFT(i) {
-            const price=prompt('请输入挂单价格 (USDT)：',myNFTs[i].faceValue.toFixed(2)); if(!price)return;
-            document.getElementById('cardModal').classList.remove('open');
-            marketListings.push({...myNFTs[i],askPrice:parseFloat(price)});
-            alert(`✅ 已挂单：${myNFTs[i].name} | 价格：${price} USDT`);
-            myNFTs.splice(i,1);renderFavoriteGrid();updateAssetStats();renderMarketGrid();
+            const price = prompt('请输入挂单价格 (USDT)：', myNFTs[i].faceValue.toFixed(4));
+            if (!price) return;
+            (async () => {
+                try {
+                    if (contract) {
+                        const priceWei = ethers.utils.parseEther(price);
+                        await (await contract.listStampForSale(myNFTs[i].tokenId, priceWei)).wait();
+                    }
+                    alert(`✅ 已挂单：${myNFTs[i].name} | 价格：${price} USDT`);
+                    await loadMyNFTs();
+                } catch (e) { alert('❌ 挂单失败：' + (e.reason || e.message)); }
+            })();
         }
 
         async function batchExchangeAll() {
-            if(!currentAccount){alert('请先连接钱包');return;}
-            const tradable=myNFTs.filter(n=>n.canTrade); if(tradable.length===0){alert('没有可兑换的NFT');return;}
-            const total=tradable.reduce((s,n)=>s+calcExchange(n.faceValue),0);
-            if(confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(4)} USDT？`)){
-                myNFTs=myNFTs.filter(n=>!n.canTrade);renderFavoriteGrid();updateAssetStats();
-                alert(`✅ 批量兑换成功！获得 ${total.toFixed(4)} USDT`);
-            }
+            if (!currentAccount) { alert('请先连接钱包'); return; }
+            const tradable = myNFTs.filter(n => n.canTrade);
+            if (tradable.length === 0) { alert('没有可兑换的NFT'); return; }
+            try {
+                if (contract) {
+                    const ids = tradable.map(n => n.tokenId);
+                    const result = await contract.getBatchExchangeAmount(ids);
+                    const total = parseFloat(ethers.utils.formatEther(result.totalAmount));
+                    if (!confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(6)} USDT？`)) return;
+                    await (await contract.batchExchangeForUSDT(ids)).wait();
+                } else {
+                    const total = tradable.reduce((s, n) => s + calcExchange(n.faceValue), 0);
+                    if (!confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(6)} USDT？`)) return;
+                }
+                alert('✅ 批量兑换成功！');
+                await loadMyNFTs();
+            } catch (e) { alert('❌ 批量兑换失败：' + (e.reason || e.message)); }
         }
 
         // ==================== 市场系统 ====================
@@ -585,7 +655,7 @@
             if(!currentAccount){alert('请先连接钱包');return;}
             const card=marketListings[i]; document.getElementById('cardModal').classList.remove('open');
             alert(`🛒 购买成功！${card.name} | 支付 ${card.askPrice} USDT`);
-            myNFTs.push({...card,tokenId:Date.now(),canTrade:true,progress:100,faceValue:card.faceValue||0.005});
+            myNFTs.push({...card,tokenId:Date.now(),canTrade:true,faceValue:card.faceValue||0.005});
             marketListings.splice(i,1);renderFavoriteGrid();updateAssetStats();renderMarketGrid();
         }
 
@@ -595,15 +665,25 @@
         }
 
         // ==================== 团队系统 ====================
-        function loadTeamInfo() {
-            document.getElementById('myLevel').textContent='V3'; document.getElementById('directRefs').textContent='12';
-            document.getElementById('teamSize').textContent='256'; document.getElementById('teamVolume').textContent='12,580';
-            document.getElementById('totalRefs').textContent='12 人'; document.getElementById('totalReward').innerHTML='<i class="fab fa-usdt"></i> 628.50 USDT';
-            document.getElementById('refRecordList').innerHTML=[
-                {addr:'0x1234...5678',time:'2026-07-30 14:30',reward:'+25.00 USDT'},
-                {addr:'0x8765...4321',time:'2026-07-29 09:15',reward:'+18.50 USDT'},
-                {addr:'0x2468...1357',time:'2026-07-28 18:45',reward:'+32.00 USDT'}
-            ].map(r=>`<div class="record-item"><span>${r.addr}</span><span class="record-addr">${r.time}</span><span class="record-value">${r.reward}</span></div>`).join('');
+        async function loadTeamInfo() {
+            if (!currentAccount || !contract) return;
+            try {
+                const info = await contract.getUserLevelInfo(currentAccount);
+                document.getElementById('myLevel').textContent = 'V' + info.level;
+                document.getElementById('directRefs').textContent = info.directCount;
+                document.getElementById('teamSize').textContent = info.teamCount;
+                document.getElementById('teamVolume').textContent = parseFloat(ethers.utils.formatEther(info.teamVolume)).toFixed(2);
+                const refs = await contract.getUserReferrals(currentAccount);
+                document.getElementById('totalRefs').textContent = refs.length + ' 人';
+                document.getElementById('refRecordList').innerHTML = refs.length > 0 
+                    ? refs.map(r => `<div class="record-item"><span>${r.substring(0,6)}...${r.substring(38)}</span><span class="record-value">直推</span></div>`).join('')
+                    : '<div class="record-item"><span style="color:var(--text-secondary)">暂无邀请记录</span></div>';
+            } catch (e) {
+                document.getElementById('myLevel').textContent = '-';
+                document.getElementById('directRefs').textContent = '0';
+                document.getElementById('teamSize').textContent = '0';
+                document.getElementById('teamVolume').textContent = '0.00';
+            }
         }
 
         function closeModal(){document.getElementById('cardModal').classList.remove('open');}
@@ -615,19 +695,19 @@
             document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active');
             document.getElementById('logoIcon').textContent={nft:'🍀',lottery:'🎲',favorite:'💼',market:'🏪',messages:'👥'}[page]||'🍀';
             if(page==='market')renderMarketGrid();
-            if(page==='favorite'){renderFavoriteGrid();updateAssetStats();}
+            if(page==='favorite'){if(currentAccount)loadMyNFTs();}
             if(page==='messages')loadTeamInfo();
             if(page==='lottery')updateLotteryDisplay();
         }
 
         renderCards();renderMarketGrid();updateLotteryDisplay();
-        document.getElementById('favoriteGrid').innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:20px;">连接钱包后加载资产...</p>';
 
         if(window.ethereum) {
             window.ethereum.on('accountsChanged', (accounts) => {
                 if (accounts.length === 0) {
                     currentAccount = null; contract = null; usdtContract = null;
                     const btn = document.getElementById('walletBtn'); btn.textContent = 'Connect'; btn.classList.remove('connected');
+                    myNFTs = []; renderFavoriteGrid(); updateAssetStats();
                 } else { initContracts(accounts[0]); }
             });
             window.ethereum.on('chainChanged', () => { if (currentAccount) initContracts(currentAccount); });
