@@ -201,7 +201,6 @@
             </div>
         </div>
 
-        <!-- 弹窗 -->
         <div class="modal-overlay" id="cardModal">
             <div class="modal-box">
                 <div class="modal-id-top" id="modalIdTop">#0001</div>
@@ -269,6 +268,7 @@
         function formatFaceValue(t){return FACE_VALUES[t]||0.001}
         function calcExchange(fv){return fv*1.05}
         function formatCooldown(t){const m=COOLDOWN_MINUTES[t]||5;if(m<60)return`${m}分钟`;if(m<1440)return`${(m/60).toFixed(1)}小时`;return`${(m/1440).toFixed(0)}天`}
+        function calcCooldownProgress(mintTime,cooldownEnd){const now=Math.floor(Date.now()/1000);if(now>=cooldownEnd)return 100;const total=cooldownEnd-mintTime;const elapsed=now-mintTime;return Math.min(100,Math.max(0,Math.floor(elapsed/total*100)))}
         function showLoading(btn,text){btn.disabled=true;btn.innerHTML=`<span class="loading-spinner"></span> ${text}`}
         function resetButton(btn,text){btn.disabled=false;btn.textContent=text}
         function getStampImage(type){const imgs=['images/youpiao1.png','images/TOP2.png','images/TOP3.png','images/TOP4.png','images/TOP5.png','images/TOP6.png','images/TOP7.png','images/TOP8.png','images/TOP9.png'];return imgs[type]||'images/youpiao1.png'}
@@ -321,14 +321,25 @@
             try{
                 const tokenIds=await contract.getOwnedStamps(currentAccount);
                 if(!tokenIds||tokenIds.length===0){myNFTs=[];grid.innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:40px;grid-column:1/-1;">📭 暂无链上资产<br><span style="font-size:11px;">去铸造页面获取你的第一枚邮票NFT</span></p>';updateAssetStats();return}
-                const nftPromises=tokenIds.map(async(id)=>{try{const info=await contract.getStampInfo(id);const st=info[0].stampType.toNumber();const fv=parseFloat(ethers.utils.formatEther(info[0].faceValue));const ct=await contract.canTrade(id);return{tokenId:id.toNumber(),name:STAMP_NAMES[st]||`邮票 #${st}`,stampType:st,faceValue:fv,canTrade:ct,img:getStampImage(st),isListed:info[1],askPrice:info[1]?parseFloat(ethers.utils.formatEther(info[2])):0,year:STAMP_YEARS[st],estimate:STAMP_ESTIMATES[st],source:STAMP_SOURCES[st],rarity:STAMP_RARITIES[st],color:STAMP_COLORS[st]}}catch(e){console.error(`获取 Token ${id} 信息失败:`,e);return null}});
+                const nftPromises=tokenIds.map(async(id)=>{try{const info=await contract.getStampInfo(id);const st=info[0].stampType.toNumber();const fv=parseFloat(ethers.utils.formatEther(info[0].faceValue));const ct=await contract.canTrade(id);const mintTime=info[0].mintTime.toNumber();const cooldownEnd=info[0].cooldownEnd.toNumber();const progress=calcCooldownProgress(mintTime,cooldownEnd);return{tokenId:id.toNumber(),name:STAMP_NAMES[st]||`邮票 #${st}`,stampType:st,faceValue:fv,canTrade:ct,img:getStampImage(st),isListed:info[1],askPrice:info[1]?parseFloat(ethers.utils.formatEther(info[2])):0,year:STAMP_YEARS[st],estimate:STAMP_ESTIMATES[st],source:STAMP_SOURCES[st],rarity:STAMP_RARITIES[st],color:STAMP_COLORS[st],mintTime:mintTime,cooldownEnd:cooldownEnd,progress:progress}}catch(e){console.error(`获取 Token ${id} 信息失败:`,e);return null}});
                 const results=await Promise.all(nftPromises);myNFTs=results.filter(n=>n!==null);renderFavoriteGrid();updateAssetStats()
             }catch(e){console.error('加载资产失败:',e);grid.innerHTML='<p style="text-align:center;color:#ff4757;padding:20px;grid-column:1/-1;">❌ 加载失败，请刷新重试</p>'}
         }
         function renderFavoriteGrid(){
             const grid=document.getElementById('favoriteGrid');if(!grid)return;
             if(myNFTs.length===0){grid.innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:40px;grid-column:1/-1;">📭 暂无链上资产</p>';return}
-            grid.innerHTML=myNFTs.map((nft,i)=>`<div class="market-card" onclick="handleAssetAction(${i})"><div class="frame"><img src="${nft.img}" alt="${nft.name}" onerror="this.src='images/youpiao1.png'"></div><div class="info"><p style="color:white;font-weight:600;">${nft.name}</p><p class="usdt-value"><i class="fab fa-usdt"></i> 面值 ${nft.faceValue.toFixed(4)} USDT</p><p style="font-size:10px;color:var(--text-secondary);">Token #${nft.tokenId} | ${nft.rarity}</p><p class="mint-status-text">${nft.canTrade?'✅ 可交易':'⏳ 冷却中'}</p><button class="btn-sm" onclick="event.stopPropagation();handleAssetAction(${i})">${nft.canTrade?'出售/兑换':'查看详情'}</button></div></div>`).join('')
+            grid.innerHTML=myNFTs.map((nft,i)=>`
+                <div class="market-card" onclick="handleAssetAction(${i})">
+                    <div class="frame"><img src="${nft.img}" alt="${nft.name}" onerror="this.src='images/youpiao1.png'"></div>
+                    <div class="info">
+                        <p style="color:white;font-weight:600;">${nft.name}</p>
+                        <p class="usdt-value"><i class="fab fa-usdt"></i> 面值 ${nft.faceValue.toFixed(4)} USDT</p>
+                        <p style="font-size:10px;color:var(--text-secondary);">Token #${nft.tokenId} | ${nft.rarity}</p>
+                        <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:${nft.progress}%"></div></div>
+                        <p class="mint-status-text">${nft.canTrade?'✅ 可交易':`⏳ 冷却中 ${nft.progress}%`}</p>
+                        <button class="btn-sm" onclick="event.stopPropagation();handleAssetAction(${i})">${nft.canTrade?'出售/兑换':'查看详情'}</button>
+                    </div>
+                </div>`).join('')
         }
         function updateAssetStats(){
             document.getElementById('totalNFT').textContent=myNFTs.length;
