@@ -40,231 +40,233 @@
         .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 12px 24px; border-radius: 8px; color: #fff; font-weight: bold; z-index: 1000; }
         .toast-success { background: #27ae60; }
         .toast-error { background: #e74c3c; }
-        .toast-info { background: #2980b9; }
         
         .loading { text-align: center; padding: 20px; color: #888; }
-        .address-list { max-height: 250px; overflow-y: auto; }
+        .address-list { max-height: 300px; overflow-y: auto; }
         .address-item { display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #1a1a2e; border-radius: 8px; margin-bottom: 8px; }
-        .address-item .addr { font-size: 11px; color: #888; word-break: break-all; flex: 1; }
+        .address-item .addr { font-size: 12px; color: #888; word-break: break-all; flex: 1; }
         .address-item .remove-btn { background: #e74c3c; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
         
         .badge { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
-        .badge-owner { background: #ffd700; color: #1a1a2e; }
-        .badge-member { background: #27ae60; color: #fff; }
-        .badge-visitor { background: #888; color: #fff; }
+        .badge-success { background: #27ae60; color: #fff; }
+        .badge-warning { background: #f39c12; color: #1a1a2e; }
         
-        .access-denied { text-align: center; padding: 40px 20px; }
-        .access-denied .icon { font-size: 60px; margin-bottom: 20px; }
-        .access-denied p { color: #888; margin-top: 10px; }
-        
-        .share-section { background: #0f3460; border-radius: 12px; padding: 20px; margin-bottom: 16px; text-align: center; }
-        .share-section .big-number { font-size: 36px; color: #ffd700; font-weight: bold; }
-        .share-section .label { color: #888; font-size: 14px; margin-top: 5px; }
+        .no-access { text-align: center; padding: 40px 20px; }
+        .no-access .icon { font-size: 48px; margin-bottom: 15px; }
+        .no-access p { color: #888; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🏆 奖励分配</h1>
-            <p>RewardDistributor</p>
+            <h1>🏆 LuckyStamp</h1>
+            <p>奖励分配面板</p>
         </div>
 
         <div id="wallet-section">
             <button class="btn btn-primary" id="connect-btn" onclick="connectWallet()">连接钱包</button>
         </div>
 
-        <div id="main-section" style="display:none;">
-            <!-- 身份标识 -->
-            <div id="role-badge" style="text-align:center; margin-bottom:16px;"></div>
-
-            <!-- 公开统计（所有人可见） -->
+        <!-- 无权限页面 -->
+        <div id="no-access-section" style="display:none;">
             <div class="card">
-                <div class="card-title">📊 奖励池概览</div>
+                <div class="no-access">
+                    <div class="icon">🔒</div>
+                    <p style="font-size:18px;color:#ffd700;margin-bottom:10px;">仅限分红成员访问</p>
+                    <p>您的地址不在奖励列表中</p>
+                    <p style="font-size:12px;margin-top:10px;color:#666;">如需加入请联系管理员</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 普通用户页面 -->
+        <div id="public-section" style="display:none;">
+            <div class="card">
+                <div class="card-title">📊 奖励总览</div>
+                <div class="info-row"><span class="info-label">奖励地址总数</span><span class="info-value" id="pub-addr-count">0</span></div>
+                <div class="info-row"><span class="info-label">累计分配USDT</span><span class="info-value" id="pub-usdt-total">0</span></div>
+                <div class="info-row"><span class="info-label">累计分配BNB</span><span class="info-value" id="pub-bnb-total">0</span></div>
+                <div class="info-row"><span class="info-label">分配次数</span><span class="info-value" id="pub-dist-count">0</span></div>
+            </div>
+        </div>
+
+        <!-- 分红成员页面 -->
+        <div id="member-section" style="display:none;">
+            <!-- 统计卡片 -->
+            <div class="card">
+                <div class="card-title">📊 合约余额</div>
                 <div class="info-row"><span class="info-label">USDT余额</span><span class="info-value" id="usdt-balance">0</span></div>
                 <div class="info-row"><span class="info-label">BNB余额</span><span class="info-value" id="bnb-balance">0</span></div>
                 <div class="info-row"><span class="info-label">奖励地址数</span><span class="info-value" id="addr-count">0</span></div>
-                <div class="info-row"><span class="info-label">累计分配USDT</span><span class="info-value" id="total-usdt">0</span></div>
-                <div class="info-row"><span class="info-label">累计分配BNB</span><span class="info-value" id="total-bnb">0</span></div>
-                <div class="info-row"><span class="info-label">分配次数</span><span class="info-value" id="dist-count">0</span></div>
+                <div class="info-row"><span class="info-label">累计分配</span><span class="info-value" id="total-dist">0 USDT</span></div>
+                <div class="info-row"><span class="info-label">您的身份</span><span class="info-value"><span class="badge badge-success">分红成员</span></span></div>
             </div>
 
-            <!-- 你的份额（仅成员可见） -->
-            <div id="member-share" class="share-section" style="display:none;">
-                <div class="label">🔥 你的预估份额</div>
-                <div class="big-number" id="share-usdt">0 USDT</div>
-                <div style="margin-top:10px; color:#888;" id="share-bnb">0 BNB</div>
+            <!-- 操作标签 -->
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('distribute')">💰 分配</div>
+                <div class="tab" onclick="switchTab('withdraw')">💸 提现</div>
+                <div class="tab" onclick="switchTab('manage')">👥 管理</div>
             </div>
 
-            <!-- Owner/成员操作面板 -->
-            <div id="owner-panel" style="display:none;">
-                <div class="tabs">
-                    <div class="tab active" onclick="switchTab('distribute')">💰 分配</div>
-                    <div class="tab" onclick="switchTab('withdraw')">💸 提现</div>
-                    <div class="tab" onclick="switchTab('manage')">👥 管理</div>
-                </div>
-
-                <div class="card" id="tab-distribute">
-                    <div class="card-title">💰 奖励分配</div>
-                    <button class="btn btn-primary" onclick="distributeUSDT()">🎯 分配USDT</button>
-                    <button class="btn btn-secondary" onclick="distributeBNB()">💎 分配BNB</button>
-                    <button class="btn btn-primary" onclick="distributeAll()">🚀 一键分配</button>
-                </div>
-
-                <div class="card" id="tab-withdraw" style="display:none;">
-                    <div class="card-title">💸 紧急提现</div>
-                    <div class="input-group">
-                        <label>USDT数量</label>
-                        <input type="number" id="withdraw-usdt" placeholder="0.00" step="0.01">
-                    </div>
-                    <button class="btn btn-danger" onclick="withdrawUSDT()">提现USDT</button>
-                    <div class="input-group" style="margin-top:15px;">
-                        <label>BNB数量</label>
-                        <input type="number" id="withdraw-bnb" placeholder="0.00" step="0.01">
-                    </div>
-                    <button class="btn btn-danger" onclick="withdrawBNB()">提现BNB</button>
-                </div>
-
-                <div class="card" id="tab-manage" style="display:none;">
-                    <div class="card-title">👥 地址管理</div>
-                    <div class="input-group">
-                        <label>添加地址</label>
-                        <input type="text" id="add-addr" placeholder="0x...">
-                    </div>
-                    <button class="btn btn-primary" onclick="addAddress()">➕ 添加</button>
-                    <div class="input-group" style="margin-top:15px;">
-                        <label>批量添加（逗号分隔）</label>
-                        <input type="text" id="add-addrs" placeholder="0x..., 0x...">
-                    </div>
-                    <button class="btn btn-primary" onclick="addAddresses()">➕ 批量添加</button>
-                    <div style="margin-top:20px; color:#ffd700; font-weight:bold;">📋 奖励地址列表</div>
-                    <div class="address-list" id="address-list">加载中...</div>
-                </div>
+            <!-- 分配面板 -->
+            <div class="card" id="tab-distribute">
+                <div class="card-title">💰 奖励分配 (仅Owner)</div>
+                <button class="btn btn-primary" onclick="distributeUSDT()">🎯 分配USDT</button>
+                <button class="btn btn-secondary" onclick="distributeBNB()">💎 分配BNB</button>
+                <button class="btn btn-primary" onclick="distributeAll()">🚀 一键分配</button>
             </div>
 
-            <!-- 无权限提示 -->
-            <div id="visitor-view" class="access-denied">
-                <div class="icon">🔒</div>
-                <p>仅奖励成员可操作</p>
-                <p style="font-size:12px;">你的地址不在奖励列表中</p>
+            <!-- 提现面板 -->
+            <div class="card" id="tab-withdraw" style="display:none;">
+                <div class="card-title">💸 紧急提现 (仅Owner)</div>
+                <div class="input-group">
+                    <label>提现USDT数量</label>
+                    <input type="number" id="withdraw-usdt-amount" placeholder="输入USDT数量" step="0.01">
+                </div>
+                <button class="btn btn-danger" onclick="withdrawUSDT()">提现USDT</button>
+                <div class="input-group" style="margin-top:15px;">
+                    <label>提现BNB数量</label>
+                    <input type="number" id="withdraw-bnb-amount" placeholder="输入BNB数量" step="0.01">
+                </div>
+                <button class="btn btn-danger" onclick="withdrawBNB()">提现BNB</button>
+            </div>
+
+            <!-- 管理面板 -->
+            <div class="card" id="tab-manage" style="display:none;">
+                <div class="card-title">👥 地址管理 (仅Owner)</div>
+                <div class="input-group">
+                    <label>添加单个地址</label>
+                    <input type="text" id="add-address" placeholder="0x...">
+                </div>
+                <button class="btn btn-primary" onclick="addAddress()">➕ 添加地址</button>
+                <div class="input-group" style="margin-top:15px;">
+                    <label>批量添加地址 (逗号分隔)</label>
+                    <input type="text" id="add-addresses" placeholder="0x..., 0x..., 0x...">
+                </div>
+                <button class="btn btn-primary" onclick="addAddresses()">➕ 批量添加</button>
+                <div class="card-title" style="margin-top:20px;">📋 奖励地址列表</div>
+                <div class="address-list" id="address-list">加载中...</div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
     <script>
+        // ============ 配置 ============
         const CONTRACT_ADDRESS = '0x4b5Ef18cA0fAC340A7d6E7d692aA39883d52fDcd';
         const CONTRACT_ABI = [
-            "function getBalances() view returns (uint256 usdt, uint256 bnb)",
-            "function getAddressCount() view returns (uint256)",
-            "function getStats() view returns (uint256 addrCount, uint256 usdtTotal, uint256 bnbTotal, uint256 distCount, uint256 usdtBal, uint256 bnbBal)",
-            "function getAddresses() view returns (address[])",
-            "function isRewardAddress(address) view returns (bool)",
-            "function owner() view returns (address)",
+            "function getBalances() external view returns (uint256 usdt, uint256 bnb)",
+            "function getAddressCount() external view returns (uint256)",
+            "function getStats() external view returns (uint256 addrCount, uint256 usdtTotal, uint256 bnbTotal, uint256 distCount, uint256 usdtBal, uint256 bnbBal)",
+            "function getAddresses() external view returns (address[])",
+            "function isRewardAddress(address) external view returns (bool)",
+            "function owner() external view returns (address)",
             "function distributeUSDT() external",
             "function distributeBNB() external",
             "function distributeAll() external",
-            "function withdrawUSDT(uint256) external",
-            "function withdrawBNB(uint256) external",
-            "function addAddress(address) external",
-            "function addAddresses(address[]) external",
-            "function paused() view returns (bool)"
+            "function withdrawUSDT(uint256 amount) external",
+            "function withdrawBNB(uint256 amount) external",
+            "function addAddress(address addr) external",
+            "function addAddresses(address[] calldata addrs) external"
         ];
 
         let provider, signer, contract, userAddress, isOwner = false, isMember = false;
 
+        // ============ 连接钱包 ============
         async function connectWallet() {
             try {
-                if (!window.ethereum) return showToast('请安装MetaMask', 'error');
-                await window.ethereum.request({ method: 'eth_requestAccounts' });
-                provider = new ethers.providers.Web3Provider(window.ethereum);
-                signer = provider.getSigner();
-                contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-                userAddress = await signer.getAddress();
-
-                const ownerAddr = await contract.owner();
-                isOwner = userAddress.toLowerCase() === ownerAddr.toLowerCase();
-                isMember = await contract.isRewardAddress(userAddress);
-
-                document.getElementById('wallet-section').innerHTML = `
-                    <div class="card" style="text-align:center;">
-                        <p style="color:#888;font-size:12px;word-break:break-all;">${userAddress}</p>
-                    </div>`;
-                document.getElementById('main-section').style.display = 'block';
-
-                updateRoleBadge();
-                await refreshAll();
-
-                window.ethereum.on('accountsChanged', () => location.reload());
-                window.ethereum.on('chainChanged', () => location.reload());
+                if (window.ethereum) {
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    provider = new ethers.providers.Web3Provider(window.ethereum);
+                    signer = provider.getSigner();
+                    contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+                    userAddress = await signer.getAddress();
+                    
+                    const ownerAddr = await contract.owner();
+                    isOwner = userAddress.toLowerCase() === ownerAddr.toLowerCase();
+                    isMember = await contract.isRewardAddress(userAddress);
+                    
+                    document.getElementById('wallet-section').innerHTML = `
+                        <div class="card" style="text-align:center;">
+                            <p style="color:#888;">已连接</p>
+                            <p style="font-size:12px; word-break:break-all;">${userAddress}</p>
+                            ${isOwner ? '<p><span class="badge badge-warning">Owner</span></p>' : ''}
+                            ${isMember ? '<p><span class="badge badge-success">分红成员</span></p>' : ''}
+                        </div>`;
+                    
+                    showCorrectSection();
+                    await refreshData();
+                    
+                    window.ethereum.on('accountsChanged', () => location.reload());
+                    window.ethereum.on('chainChanged', () => location.reload());
+                } else {
+                    showToast('请安装MetaMask', 'error');
+                }
             } catch (e) {
                 showToast('连接失败: ' + e.message, 'error');
             }
         }
 
-        function updateRoleBadge() {
-            let badge = '';
-            if (isOwner) badge = '<span class="badge badge-owner">👑 Owner</span>';
-            else if (isMember) badge = '<span class="badge badge-member">⭐ 奖励成员</span>';
-            else badge = '<span class="badge badge-visitor">👤 访客</span>';
-            document.getElementById('role-badge').innerHTML = badge;
-
-            document.getElementById('owner-panel').style.display = (isOwner || isMember) ? 'block' : 'none';
-            document.getElementById('visitor-view').style.display = (isOwner || isMember) ? 'none' : 'block';
+        // ============ 显示对应页面 ============
+        function showCorrectSection() {
+            document.getElementById('no-access-section').style.display = 'none';
+            document.getElementById('public-section').style.display = 'none';
+            document.getElementById('member-section').style.display = 'none';
+            
+            if (isOwner || isMember) {
+                document.getElementById('member-section').style.display = 'block';
+            } else {
+                // 非成员：不显示任何信息
+                document.getElementById('no-access-section').style.display = 'block';
+            }
         }
 
-        async function refreshAll() {
+        // ============ 刷新数据 ============
+        async function refreshData() {
             try {
                 const stats = await contract.getStats();
-                document.getElementById('usdt-balance').textContent = parseFloat(ethers.utils.formatUnits(stats.usdtBal, 18)).toFixed(4) + ' USDT';
-                document.getElementById('bnb-balance').textContent = parseFloat(ethers.utils.formatEther(stats.bnbBal)).toFixed(4) + ' BNB';
-                document.getElementById('addr-count').textContent = stats.addrCount.toString();
-                document.getElementById('total-usdt').textContent = parseFloat(ethers.utils.formatUnits(stats.usdtTotal, 18)).toFixed(4) + ' USDT';
-                document.getElementById('total-bnb').textContent = parseFloat(ethers.utils.formatEther(stats.bnbTotal)).toFixed(4) + ' BNB';
-                document.getElementById('dist-count').textContent = stats.distCount.toString();
-
-                // 成员显示个人份额
-                if (isMember && stats.addrCount > 0) {
-                    const perUsdt = stats.usdtBal.div(stats.addrCount);
-                    const perBnb = stats.bnbBal.div(stats.addrCount);
-                    document.getElementById('member-share').style.display = 'block';
-                    document.getElementById('share-usdt').textContent = parseFloat(ethers.utils.formatUnits(perUsdt, 18)).toFixed(4) + ' USDT';
-                    document.getElementById('share-bnb').textContent = parseFloat(ethers.utils.formatEther(perBnb)).toFixed(4) + ' BNB';
-                } else if (isMember) {
-                    document.getElementById('member-share').style.display = 'block';
-                    document.getElementById('share-usdt').textContent = '0 USDT';
-                    document.getElementById('share-bnb').textContent = '0 BNB';
-                } else {
-                    document.getElementById('member-share').style.display = 'none';
+                
+                // 公共数据（所有连接用户可看）
+                document.getElementById('pub-addr-count').textContent = stats.addrCount.toString();
+                document.getElementById('pub-usdt-total').textContent = ethers.utils.formatUnits(stats.usdtTotal, 18) + ' USDT';
+                document.getElementById('pub-bnb-total').textContent = ethers.utils.formatEther(stats.bnbTotal) + ' BNB';
+                document.getElementById('pub-dist-count').textContent = stats.distCount.toString();
+                
+                // 成员数据
+                if (isOwner || isMember) {
+                    document.getElementById('usdt-balance').textContent = ethers.utils.formatUnits(stats.usdtBal, 18) + ' USDT';
+                    document.getElementById('bnb-balance').textContent = ethers.utils.formatEther(stats.bnbBal) + ' BNB';
+                    document.getElementById('addr-count').textContent = stats.addrCount.toString();
+                    document.getElementById('total-dist').textContent = ethers.utils.formatUnits(stats.usdtTotal, 18) + ' USDT';
+                    await loadAddressList();
                 }
-
-                if (isOwner || isMember) await loadAddresses();
-            } catch (e) { console.error(e); }
+            } catch (e) {
+                console.error('刷新失败:', e);
+            }
         }
 
-        async function loadAddresses() {
+        // ============ 加载地址列表 ============
+        async function loadAddressList() {
             try {
-                const addrs = await contract.getAddresses();
-                const list = document.getElementById('address-list');
-                if (addrs.length === 0) { list.innerHTML = '<div class="loading">暂无地址</div>'; return; }
-                list.innerHTML = addrs.map((a, i) => `
+                const addresses = await contract.getAddresses();
+                const listDiv = document.getElementById('address-list');
+                if (addresses.length === 0) {
+                    listDiv.innerHTML = '<div class="loading">暂无地址</div>';
+                    return;
+                }
+                listDiv.innerHTML = addresses.map((addr, i) => `
                     <div class="address-item">
                         <span style="color:#ffd700;margin-right:8px;">#${i+1}</span>
-                        <span class="addr">${a}</span>
-                        ${isOwner ? `<button class="remove-btn" onclick="removeAddr('${a}')">移除</button>` : ''}
+                        <span class="addr">${addr}</span>
                     </div>
                 `).join('');
-            } catch (e) { document.getElementById('address-list').innerHTML = '<div class="loading">加载失败</div>'; }
+            } catch (e) {
+                document.getElementById('address-list').innerHTML = '<div class="loading">加载失败</div>';
+            }
         }
 
-        async function removeAddr(addr) {
-            try {
-                const tx = await contract.removeAddress(addr);
-                await tx.wait();
-                showToast('已移除', 'success');
-                await refreshAll();
-            } catch (e) { showToast('失败: ' + e.message, 'error'); }
-        }
-
+        // ============ 标签切换 ============
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             event.target.classList.add('active');
@@ -273,54 +275,120 @@
             document.getElementById('tab-manage').style.display = tab === 'manage' ? 'block' : 'none';
         }
 
+        // ============ 分配操作 ============
         async function distributeUSDT() {
-            try { const tx = await contract.distributeUSDT(); await tx.wait(); showToast('USDT分配成功', 'success'); await refreshAll(); } catch (e) { showToast(e.message, 'error'); }
+            if (!isOwner) return showToast('仅Owner可操作', 'error');
+            try {
+                const tx = await contract.distributeUSDT();
+                showToast('交易已提交...', 'success');
+                await tx.wait();
+                showToast('USDT分配成功！', 'success');
+                await refreshData();
+            } catch (e) {
+                showToast('分配失败: ' + e.message, 'error');
+            }
         }
+
         async function distributeBNB() {
-            try { const tx = await contract.distributeBNB(); await tx.wait(); showToast('BNB分配成功', 'success'); await refreshAll(); } catch (e) { showToast(e.message, 'error'); }
+            if (!isOwner) return showToast('仅Owner可操作', 'error');
+            try {
+                const tx = await contract.distributeBNB();
+                showToast('交易已提交...', 'success');
+                await tx.wait();
+                showToast('BNB分配成功！', 'success');
+                await refreshData();
+            } catch (e) {
+                showToast('分配失败: ' + e.message, 'error');
+            }
         }
+
         async function distributeAll() {
-            try { const tx = await contract.distributeAll(); await tx.wait(); showToast('一键分配成功', 'success'); await refreshAll(); } catch (e) { showToast(e.message, 'error'); }
+            if (!isOwner) return showToast('仅Owner可操作', 'error');
+            try {
+                const tx = await contract.distributeAll();
+                showToast('交易已提交...', 'success');
+                await tx.wait();
+                showToast('一键分配成功！', 'success');
+                await refreshData();
+            } catch (e) {
+                showToast('分配失败: ' + e.message, 'error');
+            }
         }
 
+        // ============ 提现操作 ============
         async function withdrawUSDT() {
+            if (!isOwner) return showToast('仅Owner可操作', 'error');
             try {
-                const v = document.getElementById('withdraw-usdt').value;
-                if (!v || parseFloat(v) <= 0) return showToast('输入金额', 'error');
-                const tx = await contract.withdrawUSDT(ethers.utils.parseUnits(v, 18));
-                await tx.wait(); showToast('提现成功', 'success'); await refreshAll();
-            } catch (e) { showToast(e.message, 'error'); }
+                const amount = document.getElementById('withdraw-usdt-amount').value;
+                if (!amount || parseFloat(amount) <= 0) return showToast('请输入金额', 'error');
+                const parsed = ethers.utils.parseUnits(amount, 18);
+                const tx = await contract.withdrawUSDT(parsed);
+                showToast('提现交易已提交...', 'success');
+                await tx.wait();
+                showToast('USDT提现成功！', 'success');
+                await refreshData();
+            } catch (e) {
+                showToast('提现失败: ' + e.message, 'error');
+            }
         }
+
         async function withdrawBNB() {
+            if (!isOwner) return showToast('仅Owner可操作', 'error');
             try {
-                const v = document.getElementById('withdraw-bnb').value;
-                if (!v || parseFloat(v) <= 0) return showToast('输入金额', 'error');
-                const tx = await contract.withdrawBNB(ethers.utils.parseEther(v));
-                await tx.wait(); showToast('提现成功', 'success'); await refreshAll();
-            } catch (e) { showToast(e.message, 'error'); }
+                const amount = document.getElementById('withdraw-bnb-amount').value;
+                if (!amount || parseFloat(amount) <= 0) return showToast('请输入金额', 'error');
+                const parsed = ethers.utils.parseEther(amount);
+                const tx = await contract.withdrawBNB(parsed);
+                showToast('提现交易已提交...', 'success');
+                await tx.wait();
+                showToast('BNB提现成功！', 'success');
+                await refreshData();
+            } catch (e) {
+                showToast('提现失败: ' + e.message, 'error');
+            }
         }
 
+        // ============ 地址管理 ============
         async function addAddress() {
+            if (!isOwner) return showToast('仅Owner可操作', 'error');
             try {
-                const a = document.getElementById('add-addr').value.trim();
-                if (!ethers.utils.isAddress(a)) return showToast('无效地址', 'error');
-                const tx = await contract.addAddress(a);
-                await tx.wait(); showToast('添加成功', 'success'); document.getElementById('add-addr').value = ''; await refreshAll();
-            } catch (e) { showToast(e.message, 'error'); }
-        }
-        async function addAddresses() {
-            try {
-                const input = document.getElementById('add-addrs').value.trim();
-                const arr = input.split(',').map(a => a.trim()).filter(a => ethers.utils.isAddress(a));
-                if (arr.length === 0) return showToast('无效地址', 'error');
-                const tx = await contract.addAddresses(arr);
-                await tx.wait(); showToast(`${arr.length}个地址添加成功`, 'success'); document.getElementById('add-addrs').value = ''; await refreshAll();
-            } catch (e) { showToast(e.message, 'error'); }
+                const addr = document.getElementById('add-address').value.trim();
+                if (!ethers.utils.isAddress(addr)) return showToast('无效地址', 'error');
+                const tx = await contract.addAddress(addr);
+                showToast('添加中...', 'success');
+                await tx.wait();
+                showToast('地址添加成功！', 'success');
+                document.getElementById('add-address').value = '';
+                await refreshData();
+            } catch (e) {
+                showToast('添加失败: ' + e.message, 'error');
+            }
         }
 
+        async function addAddresses() {
+            if (!isOwner) return showToast('仅Owner可操作', 'error');
+            try {
+                const input = document.getElementById('add-addresses').value.trim();
+                const addresses = input.split(',').map(a => a.trim()).filter(a => ethers.utils.isAddress(a));
+                if (addresses.length === 0) return showToast('无效地址', 'error');
+                const tx = await contract.addAddresses(addresses);
+                showToast('批量添加中...', 'success');
+                await tx.wait();
+                showToast(`${addresses.length}个地址添加成功！`, 'success');
+                document.getElementById('add-addresses').value = '';
+                await refreshData();
+            } catch (e) {
+                showToast('添加失败: ' + e.message, 'error');
+            }
+        }
+
+        // ============ Toast ============
         function showToast(msg, type) {
-            const t = document.createElement('div'); t.className = `toast toast-${type}`; t.textContent = msg;
-            document.body.appendChild(t); setTimeout(() => t.remove(), 3000);
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.textContent = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
         }
     </script>
 </body>
