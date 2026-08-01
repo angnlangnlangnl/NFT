@@ -55,8 +55,9 @@
         .modal-box .stamp-row{display:flex;justify-content:center;align-items:baseline;font-size:11px}
         .modal-box .stamp-label{color:#cbb780;margin-right:4px;font-weight:500;white-space:nowrap}
         .modal-box .stamp-value{color:#faf6e8;font-weight:500;letter-spacing:0.5px}
-        .modal-box .modal-price-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px}
-        .modal-box .modal-price-display{color:var(--gold-glow);font-size:20px;font-weight:700}
+        .modal-box .modal-price-row{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;margin-bottom:12px}
+        .modal-box .modal-price-display{color:var(--gold-glow);font-size:16px;font-weight:700}
+        .modal-box .modal-exchange-display{color:var(--text-secondary);font-size:13px;font-weight:500}
         .modal-box .modal-mint-days{color:rgba(255,255,255,0.5);font-size:12px;font-weight:500}
         .modal-btns{display:flex;gap:10px;width:100%}
         .btn-confirm{flex:1;padding:12px;background:linear-gradient(180deg,#e7c778 0%,#b48b3a 100%);color:#0a130e;border:none;border-radius:25px;font-weight:700;font-size:15px;cursor:pointer}
@@ -154,7 +155,6 @@
                 </div>
             </div>
 
-            <!-- ========== 资产页（调整统计面板） ========== -->
             <div class="page" id="page-favorite">
                 <div class="title"><h2>💼 我的资产</h2><p>你的珍稀NFT邮票收藏库 · 随时兑USDT</p></div>
                 <div class="stats">
@@ -215,8 +215,8 @@
                     </div>
                 </div>
                 <div class="modal-price-row">
-                    <span class="modal-price-display" id="modalPrice">2.5 BNB</span>
-                    <span class="modal-mint-days" id="modalCooldown">铸造7天</span>
+                    <span class="modal-price-display" id="modalPrice">铸造 0.0010 USDT</span>
+                    <span class="modal-exchange-display" id="modalExchange">兑换: 0.001050 USDT</span>
                 </div>
                 <div class="modal-btns" id="modalBtns">
                     <button class="btn-cancel" onclick="closeModal()">取 消</button>
@@ -254,17 +254,11 @@
         const FACE_VALUES=[0.001,0.002,0.003,0.004,0.005,0.006,0.007,0.008,0.010];
         const COOLDOWN_MINUTES=[5,10,15,20,25,30,35,75,150];
         const STAMP_NAMES=['黑便士','瑞典黄色三先令','倒置的珍妮','毛里求斯邮局','夏威夷传教士','全国山河一片红','百慕大佩罗特','圭亚那棉纱卷','阿根廷对倒双连'];
-        const cardData=[
-            {name:'最贵邮票',rarity:'传世孤品',id:'#0001',year:'1840',estimate:'约850万美元',source:'英国邮政史',price:'2.5 BNB',color:'#ffb84d',img:'images/youpiao1.png',type:0,progress:30},
-            {name:'瑞典黄色三先令',rarity:'传说',id:'#0002',year:'1855年',estimate:'227万美元',source:'印刷事故错色珍邮',price:'3.0 BNB',color:'#ffb84d',img:'images/TOP2.png',type:1,progress:60},
-            {name:'倒置的珍妮',rarity:'史诗',id:'#0003',year:'1918年',estimate:'300万美元',source:'美国首套航空错版邮票',price:'0.45 BNB',color:'#d98eff',img:'images/TOP3.png',type:2,progress:100},
-            {name:'毛里求斯邮局',rarity:'稀有',id:'#0004',year:'1847年',estimate:'160万美元',source:'舞会请柬错刻珍邮',price:'0.08 BNB',color:'#6db3ff',img:'images/TOP4.png',type:3,progress:90},
-            {name:'夏威夷传教士',rarity:'稀有',id:'#0005',year:'1851年',estimate:'1304万人民币',source:'夏威夷最早传教士邮票',price:'0.07 BNB',color:'#6db3ff',img:'images/TOP5.png',type:4,progress:100},
-            {name:'全国山河一片红',rarity:'稀有',id:'#0006',year:'1968年',estimate:'730.25万人民币',source:'撤销发行未流通珍邮',price:'0.09 BNB',color:'#6db3ff',img:'images/TOP6.png',type:5,progress:50},
-            {name:'百慕大佩罗特',rarity:'普通',id:'#0007',year:'1848年',estimate:'140万美元',source:'邮局局长手工盖印邮票',price:'0.01 BNB',color:'#ccc',img:'images/TOP7.png',type:6,progress:10},
-            {name:'圭亚那棉纱卷',rarity:'史诗',id:'#0008',year:'1850年',estimate:'100万美元',source:'南美殖民时代经典珍邮',price:'0.5 BNB',color:'#d98eff',img:'images/TOP8.png',type:7,progress:75},
-            {name:'阿根廷对倒双连',rarity:'稀有',id:'#0009',year:'1859年',estimate:'57.5万美元',source:'仅此一套双连错票孤品',price:'0.1 BNB',color:'#6db3ff',img:'images/TOP9.png',type:8,progress:45}
-        ];
+        const STAMP_YEARS=['1840年','1855年','1918年','1847年','1851年','1968年','1848年','1850年','1859年'];
+        const STAMP_SOURCES=['英国邮政史','印刷事故错色珍邮','美国首套航空错版邮票','舞会请柬错刻珍邮','夏威夷最早传教士邮票','撤销发行未流通珍邮','邮局局长手工盖印邮票','南美殖民时代经典珍邮','仅此一套双连错票孤品'];
+        const STAMP_RARITIES=['传世孤品','传说','史诗','稀有','稀有','稀有','普通','史诗','稀有'];
+        const STAMP_COLORS=['#ffb84d','#ffb84d','#d98eff','#6db3ff','#6db3ff','#6db3ff','#ccc','#d98eff','#6db3ff'];
+        const cardData=STAMP_NAMES.map((name,i)=>({name,rarity:STAMP_RARITIES[i],id:`#${String(i+1).padStart(4,'0')}`,year:STAMP_YEARS[i],estimate:'约850万美元',source:STAMP_SOURCES[i],price:'2.5 BNB',color:STAMP_COLORS[i],img:getStampImage(i),type:i,progress:30}));
         let provider=null,signer=null,currentAccount=null,contract=null,usdtContract=null;
         let isLotteryRunning=false,lotteryInterval=null,currentMintCard=null,myNFTs=[],marketListings=[];
         let todayLotteryCount=3,maxLotteryCount=10,globalLotteryProgress=67,totalEarned=0;
@@ -299,18 +293,17 @@
 
         function renderCards(){document.getElementById('cardGrid').innerHTML=cardData.map((c,i)=>`<div class="animal-card" data-index="${i}"><div class="check-mark">✓</div><div class="card-icon"></div><div class="card-name">随机铸邮</div><div class="card-rarity" style="color:var(--text-secondary)">NFT</div></div>`).join('')}
         async function requestMint(){if(!currentAccount){alert('请先连接钱包');return}if(isLotteryRunning)return;if(contract){try{if(await contract.getCoolingDownStatus(currentAccount)){alert('⏳ 您有一个待处理的铸造请求');return}}catch(e){}}isLotteryRunning=true;const btn=document.getElementById('btnLottery');showLoading(btn,'铸造中');document.getElementById('mintResult').style.display='none';const cards=document.querySelectorAll('#cardGrid .animal-card');cards.forEach(c=>{c.classList.remove('highlight','selected')});let idx=0,speed=80,rounds=0;lotteryInterval=setInterval(()=>{cards.forEach(c=>c.classList.remove('highlight'));cards[idx].classList.add('highlight');idx++;if(idx>=cards.length){idx=0;rounds++;if(rounds>=2)speed+=30}if(rounds>=3&&idx===Math.floor(Math.random()*cards.length)){clearInterval(lotteryInterval);lotteryInterval=null;const fi=Math.floor(Math.random()*cards.length);cards.forEach(c=>c.classList.remove('highlight'));cards[fi].classList.add('selected','highlight');currentMintCard=cardData[fi];document.getElementById('mintResult').style.display='block';document.getElementById('mintResult').innerHTML=`<p style="color:var(--gold-glow);font-size:12px;">🎯 选中：${currentMintCard.name}</p><p style="color:var(--text-secondary);font-size:11px;">面值：${FACE_VALUES[fi]} USDT | 冷却：${formatCooldown(fi)}</p>`;showMintConfirmModal(currentMintCard);isLotteryRunning=false;resetButton(btn,'📮 请求铸造')}},speed)}
-        function showMintConfirmModal(card){document.getElementById('modalImg').src=card.img||'';document.getElementById('modalIdTop').textContent=card.id;document.getElementById('modalName').textContent=card.name;document.getElementById('modalYear').textContent=card.year;document.getElementById('modalEstimate').textContent=card.estimate;document.getElementById('modalRarity').textContent=card.rarity;document.getElementById('modalRarity').style.color=card.color;document.getElementById('modalSource').textContent=card.source;document.getElementById('modalPrice').textContent=`${FACE_VALUES[card.type]} USDT`;document.getElementById('modalCooldown').textContent=`冷却${formatCooldown(card.type)}`;document.getElementById('btnConfirm').textContent='确认铸造';document.getElementById('btnConfirm').onclick=confirmMint;document.getElementById('cardModal').classList.add('open')}
+        function showMintConfirmModal(card){document.getElementById('modalImg').src=card.img||'';document.getElementById('modalIdTop').textContent=card.id;document.getElementById('modalName').textContent=card.name;document.getElementById('modalYear').textContent=card.year;document.getElementById('modalEstimate').textContent=card.estimate;document.getElementById('modalRarity').textContent=card.rarity;document.getElementById('modalRarity').style.color=card.color;document.getElementById('modalSource').textContent=card.source;document.getElementById('modalPrice').textContent=`铸造 ${FACE_VALUES[card.type].toFixed(4)} USDT`;document.getElementById('modalExchange').textContent=`兑换: ${calcExchange(FACE_VALUES[card.type]).toFixed(6)} USDT`;document.getElementById('btnConfirm').textContent='确认铸造';document.getElementById('btnConfirm').onclick=confirmMint;document.getElementById('cardModal').classList.add('open')}
         function cancelMint(){document.getElementById('cardModal').classList.remove('open');currentMintCard=null;document.getElementById('mintResult').style.display='none';document.querySelectorAll('#cardGrid .animal-card').forEach(c=>c.classList.remove('selected','highlight'))}
         async function confirmMint(){if(!currentAccount||!currentMintCard){alert('请先连接钱包并选择铸造卡片');return}const btn=document.getElementById('btnConfirm');const mp=FACE_VALUES[currentMintCard.type];showLoading(btn,'请求铸造中');try{if(contract)await(await contract.requestRandomMint()).wait();else await new Promise(r=>setTimeout(r,800))}catch(e){resetButton(btn,'确认铸造');alert('❌ 铸造请求失败：'+(e.reason||e.message));return}showLoading(btn,'授权 USDT');if(!(await approveUSDT(mp))){resetButton(btn,'确认铸造');return}showLoading(btn,'确认铸造中');try{if(contract)await(await contract.confirmRandomMint()).wait();else await new Promise(r=>setTimeout(r,1000))}catch(e){resetButton(btn,'确认铸造');alert('❌ 铸造确认失败：'+(e.reason||e.message));return}document.getElementById('cardModal').classList.remove('open');document.getElementById('mintResult').innerHTML=`<p style="color:#4caf50;font-size:12px;">✅ 铸造成功！${currentMintCard.name} 已加入你的资产</p>`;currentMintCard=null;await loadMyNFTs();resetButton(btn,'确认铸造')}
 
-        // ==================== 资产系统 ====================
         async function loadMyNFTs(){
             if(!currentAccount||!contract){document.getElementById('favoriteGrid').innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:20px;grid-column:1/-1;">连接钱包后加载链上资产...</p>';updateAssetStats();return}
             const grid=document.getElementById('favoriteGrid');grid.innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:20px;grid-column:1/-1;"><span class="loading-spinner"></span> 加载链上资产...</p>';
             try{
                 const tokenIds=await contract.getOwnedStamps(currentAccount);
                 if(!tokenIds||tokenIds.length===0){myNFTs=[];grid.innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:40px;grid-column:1/-1;">📭 暂无链上资产<br><span style="font-size:11px;">去铸造页面获取你的第一枚邮票NFT</span></p>';updateAssetStats();return}
-                const nftPromises=tokenIds.map(async(id)=>{try{const info=await contract.getStampInfo(id);const st=info[0].stampType.toNumber();const fv=parseFloat(ethers.utils.formatEther(info[0].faceValue));const ct=await contract.canTrade(id);return{tokenId:id.toNumber(),name:STAMP_NAMES[st]||`邮票 #${st}`,stampType:st,faceValue:fv,canTrade:ct,img:getStampImage(st),isListed:info[1],askPrice:info[1]?parseFloat(ethers.utils.formatEther(info[2])):0}}catch(e){console.error(`获取 Token ${id} 信息失败:`,e);return null}});
+                const nftPromises=tokenIds.map(async(id)=>{try{const info=await contract.getStampInfo(id);const st=info[0].stampType.toNumber();const fv=parseFloat(ethers.utils.formatEther(info[0].faceValue));const ct=await contract.canTrade(id);return{tokenId:id.toNumber(),name:STAMP_NAMES[st]||`邮票 #${st}`,stampType:st,faceValue:fv,canTrade:ct,img:getStampImage(st),isListed:info[1],askPrice:info[1]?parseFloat(ethers.utils.formatEther(info[2])):0,year:STAMP_YEARS[st],estimate:'约850万美元',source:STAMP_SOURCES[st],rarity:STAMP_RARITIES[st],color:STAMP_COLORS[st]}}catch(e){console.error(`获取 Token ${id} 信息失败:`,e);return null}});
                 const results=await Promise.all(nftPromises);myNFTs=results.filter(n=>n!==null);renderFavoriteGrid();updateAssetStats()
             }catch(e){console.error('加载资产失败:',e);grid.innerHTML='<p style="text-align:center;color:#ff4757;padding:20px;grid-column:1/-1;">❌ 加载失败，请刷新重试</p>'}
         }
@@ -328,13 +321,28 @@
             document.getElementById('batchExchangeVal').textContent=calcExchange(tv).toFixed(4);
         }
         function handleAssetAction(i){
-            const nft=myNFTs[i];document.getElementById('modalImg').src=nft.img||'';document.getElementById('modalIdTop').textContent=`Token #${nft.tokenId}`;document.getElementById('modalName').textContent=nft.name;document.getElementById('modalYear').textContent=`类型 ${nft.stampType}`;document.getElementById('modalEstimate').textContent=`面值 ${nft.faceValue.toFixed(4)} USDT`;document.getElementById('modalRarity').textContent=nft.canTrade?'可交易':'冷却中';document.getElementById('modalRarity').style.color=nft.canTrade?'#4caf50':'#ffa502';document.getElementById('modalSource').textContent=nft.isListed?`挂单中：${nft.askPrice} USDT`:'未挂单';document.getElementById('modalPrice').textContent=`${nft.faceValue.toFixed(4)} USDT (兑换: ${calcExchange(nft.faceValue).toFixed(6)} USDT)`;document.getElementById('modalCooldown').textContent=nft.canTrade?'可交易':'冷却中';document.getElementById('modalBtns').innerHTML=nft.canTrade?`<button class="btn-cancel" onclick="closeModal()">取 消</button><button class="btn-confirm" onclick="closeModal();exchangeNFT(${i})">兑 换</button><button class="btn-confirm" style="margin-left:4px;" onclick="closeModal();sellNFT(${i})">挂 单</button>`:`<button class="btn-close-full" onclick="closeModal()">关 闭</button>`;document.getElementById('cardModal').classList.add('open')}
+            const nft=myNFTs[i];
+            document.getElementById('modalImg').src=nft.img||'';
+            document.getElementById('modalIdTop').textContent=`Token #${nft.tokenId}`;
+            document.getElementById('modalName').textContent=nft.name;
+            document.getElementById('modalYear').textContent=nft.year||'未知';
+            document.getElementById('modalEstimate').textContent=`面值 ${nft.faceValue.toFixed(4)} USDT`;
+            document.getElementById('modalRarity').textContent=nft.canTrade?'可交易':'冷却中';
+            document.getElementById('modalRarity').style.color=nft.canTrade?'#4caf50':'#ffa502';
+            document.getElementById('modalSource').textContent=nft.isListed?`挂单中：${nft.askPrice} USDT`:(nft.source||'未挂单');
+            document.getElementById('modalPrice').textContent=`铸造 ${nft.faceValue.toFixed(4)} USDT`;
+            document.getElementById('modalExchange').textContent=`兑换: ${calcExchange(nft.faceValue).toFixed(6)} USDT`;
+            document.getElementById('modalBtns').innerHTML=nft.canTrade
+                ?`<button class="btn-cancel" onclick="closeModal()">取 消</button><button class="btn-confirm" onclick="closeModal();exchangeNFT(${i})">兑 换</button><button class="btn-confirm" style="margin-left:4px;" onclick="closeModal();sellNFT(${i})">挂 单</button>`
+                :`<button class="btn-close-full" onclick="closeModal()">关 闭</button>`;
+            document.getElementById('cardModal').classList.add('open');
+        }
         async function exchangeNFT(i){const nft=myNFTs[i];try{if(contract)await(await contract.exchangeForUSDT(nft.tokenId)).wait();const earned=calcExchange(nft.faceValue);totalEarned+=earned;alert(`💱 兑换成功！获得 ${earned.toFixed(6)} USDT`);await loadMyNFTs()}catch(e){alert('❌ 兑换失败：'+(e.reason||e.message))}}
         function sellNFT(i){const price=prompt('请输入挂单价格 (USDT)：',myNFTs[i].faceValue.toFixed(4));if(!price)return;(async()=>{try{if(contract){const pw=ethers.utils.parseEther(price);await(await contract.listStampForSale(myNFTs[i].tokenId,pw)).wait()}alert(`✅ 已挂单：${myNFTs[i].name} | 价格：${price} USDT`);await loadMyNFTs()}catch(e){alert('❌ 挂单失败：'+(e.reason||e.message))}})()}
         async function batchExchangeAll(){if(!currentAccount){alert('请先连接钱包');return}const tradable=myNFTs.filter(n=>n.canTrade);if(tradable.length===0){alert('没有可兑换的NFT');return}try{let total;if(contract){const ids=tradable.map(n=>n.tokenId);const result=await contract.getBatchExchangeAmount(ids);total=parseFloat(ethers.utils.formatEther(result.totalAmount));if(!confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(6)} USDT？`))return;await(await contract.batchExchangeForUSDT(ids)).wait()}else{total=tradable.reduce((s,n)=>s+calcExchange(n.faceValue),0);if(!confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(6)} USDT？`))return}totalEarned+=total;alert('✅ 批量兑换成功！');await loadMyNFTs()}catch(e){alert('❌ 批量兑换失败：'+(e.reason||e.message))}}
 
         function renderMarketGrid(){const grid=document.getElementById('marketGrid');if(!grid)return;const all=marketListings.length>0?marketListings:cardData.slice(0,6);grid.innerHTML=all.map((c,i)=>`<div class="market-card" data-rarity="${c.rarity}" onclick="showMarketDetail(${i})"><div class="frame"><img src="${c.img}" alt="${c.name}"></div><div class="info"><p style="color:white;font-weight:600;">${c.name}</p><p class="usdt-value"><i class="fab fa-usdt"></i> ${c.askPrice?`售价 ${c.askPrice} USDT`:'价值 0.00 USDT'}</p><button class="btn-sm">${c.askPrice?'购 买':'查看详情'}</button></div></div>`).join('')}
-        function showMarketDetail(i){const c=(marketListings.length>0?marketListings:cardData.slice(0,6))[i];document.getElementById('modalImg').src=c.img||'';document.getElementById('modalIdTop').textContent=c.id||`#${1000+i}`;document.getElementById('modalName').textContent=c.name;document.getElementById('modalYear').textContent=c.year;document.getElementById('modalEstimate').textContent=c.estimate;document.getElementById('modalRarity').textContent=c.rarity;document.getElementById('modalRarity').style.color=c.color;document.getElementById('modalSource').textContent=c.source;document.getElementById('modalPrice').textContent=c.askPrice?`${c.askPrice} USDT`:(c.price||'2.5 BNB');document.getElementById('modalCooldown').textContent=c.askPrice?'可购买':'铸造7天';document.getElementById('modalBtns').innerHTML=c.askPrice?`<button class="btn-cancel" onclick="closeModal()">取 消</button><button class="btn-confirm" onclick="buyNFT(${i})">购 买</button>`:`<button class="btn-close-full" onclick="closeModal()">关 闭</button>`;document.getElementById('cardModal').classList.add('open')}
+        function showMarketDetail(i){const c=(marketListings.length>0?marketListings:cardData.slice(0,6))[i];document.getElementById('modalImg').src=c.img||'';document.getElementById('modalIdTop').textContent=c.id||`#${1000+i}`;document.getElementById('modalName').textContent=c.name;document.getElementById('modalYear').textContent=c.year;document.getElementById('modalEstimate').textContent=c.estimate;document.getElementById('modalRarity').textContent=c.rarity;document.getElementById('modalRarity').style.color=c.color;document.getElementById('modalSource').textContent=c.source;document.getElementById('modalPrice').textContent=c.askPrice?`${c.askPrice} USDT`:(c.price||'2.5 BNB');document.getElementById('modalExchange').textContent='';document.getElementById('modalBtns').innerHTML=c.askPrice?`<button class="btn-cancel" onclick="closeModal()">取 消</button><button class="btn-confirm" onclick="buyNFT(${i})">购 买</button>`:`<button class="btn-close-full" onclick="closeModal()">关 闭</button>`;document.getElementById('cardModal').classList.add('open')}
         function buyNFT(i){if(!currentAccount){alert('请先连接钱包');return}const c=marketListings[i];document.getElementById('cardModal').classList.remove('open');alert(`🛒 购买成功！${c.name} | 支付 ${c.askPrice} USDT`);myNFTs.push({...c,tokenId:Date.now(),canTrade:true,faceValue:c.faceValue||0.005});marketListings.splice(i,1);renderFavoriteGrid();updateAssetStats();renderMarketGrid()}
         function filterMarket(rarity,btn){document.querySelectorAll('#page-market .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('#marketGrid .market-card').forEach(c=>{c.style.display=(rarity==='all'||c.getAttribute('data-rarity')===rarity||(rarity==='selling'&&marketListings.length>0))?'':'none'})}
 
