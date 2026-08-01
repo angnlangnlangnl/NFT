@@ -3,398 +3,594 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>NFT集邮 · DApp</title>
+    <title>LuckyStamp · NFT集邮 DApp</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; }
-        :root { --bg:#0d1a14; --gold-light:#f8ecc9; --gold:#d6b878; --gold-deep:#9e7a3a; --gold-glow:#dbb45c; --text-secondary:#b8a47b; --usdt-color:#dbb45c; }
-        body { background-color: #0d1a14; display:flex; justify-content:center; align-items:center; height:100vh; height:100dvh; overflow:hidden; position:fixed; top:0; left:0; right:0; bottom:0; color:#fff; }
-        .app { width:100%; max-width:420px; height:100%; background: radial-gradient(circle at 50% 10%, #1a2e1f 0%, #0d1a14 100%); border-radius:20px; box-shadow:0 0 40px rgba(180,145,70,0.15); display:flex; flex-direction:column; position:relative; overflow:hidden; }
-        .app::before { content:''; position:absolute; top:0; left:0; right:0; bottom:0; background-image:radial-gradient(rgba(180,145,70,0.06) 1px, transparent 1px); background-size:40px 40px; opacity:0.5; z-index:0; pointer-events:none; border-radius:20px; }
-        .scroll { flex:1; overflow-y:auto; padding:15px; -webkit-overflow-scrolling:touch; position:relative; z-index:1; }
-        .header { display:flex; justify-content:space-between; align-items:center; padding-bottom:15px; flex-wrap:wrap; }
-        .logo { display:flex; align-items:center; font-size:16px; font-weight:700; color:var(--gold); text-shadow:0 0 15px rgba(180,145,70,0.4); }
-        .logo .icon { font-size:24px; margin-right:6px; }
-        .header-right { display:flex; gap:6px; align-items:center; position:relative; flex-shrink:0; }
-        .lang-btn { background:transparent; border:1px solid rgba(180,145,70,0.25); color:var(--text-secondary); padding:4px 8px; border-radius:6px; font-size:11px; cursor:pointer; white-space:nowrap; }
-        .lang-dropdown { display:none; position:absolute; top:36px; right:0; background:rgba(13,26,20,0.97); backdrop-filter:blur(12px); border:1px solid rgba(180,145,70,0.25); border-radius:12px; padding:10px; width:160px; box-shadow:0 8px 32px rgba(0,0,0,0.8); z-index:999; flex-direction:column; gap:4px; }
-        .lang-dropdown.open { display:flex; }
-        .lang-option { display:flex; align-items:center; justify-content:space-between; padding:6px 10px; border-radius:6px; color:#f0e6d2; font-size:12px; cursor:pointer; }
-        .lang-option:hover { background:rgba(197,164,85,0.15); color:var(--gold-light); }
-        .lang-option .code { color:var(--text-secondary); font-size:10px; margin-left:6px; }
-        .wallet-btn { background:transparent; border:1px solid rgba(214,184,120,0.4); color:var(--gold-glow); padding:5px 10px; border-radius:20px; font-size:11px; cursor:pointer; white-space:nowrap; }
-        .wallet-btn.connected { background:rgba(180,145,70,0.12); border-color:var(--gold-glow); color:var(--gold-light); }
-        .page { display:none; }
-        .page.active { display:block; }
-        .title { text-align:center; margin-bottom:15px; }
-        .title h2 { font-size:24px; font-weight:700; background:linear-gradient(180deg, #f5e3b3 0%, #c5a455 60%, #8a6327 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; text-shadow:0 0 20px rgba(180,145,70,0.5); margin-bottom:4px; }
-        .title p { color:#b8a16a; font-size:12px; }
-        .lottery-btn-area { text-align:center; margin-top:12px; }
-        .btn-lottery { display:inline-block; padding:12px 36px; background:linear-gradient(180deg, #e7c778 0%, #b48b3a 70%, #7a5822 100%); color:#0a130e; border:1px solid #f5e3b3; border-radius:30px; font-weight:700; font-size:15px; cursor:pointer; box-shadow:0 6px 20px rgba(180,145,70,0.35); transition:all 0.2s; letter-spacing:1px; animation:glowPulse 2s infinite; }
-        .btn-lottery:hover { background:linear-gradient(180deg, #f5da8a 0%, #c79d46 70%, #8f6826 100%); box-shadow:0 10px 25px rgba(220,180,70,0.55); transform:scale(1.03); }
-        .btn-lottery:disabled { opacity:0.6; cursor:not-allowed; animation:none; }
-        @keyframes glowPulse { 0%,100% { box-shadow:0 6px 20px rgba(180,145,70,0.35); } 50% { box-shadow:0 6px 35px rgba(220,180,70,0.7); } }
-        .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
-        .animal-card { background:rgba(19,32,22,0.8); border:2px solid rgba(180,145,70,0.25); border-radius:14px; text-align:center; cursor:pointer; transition:all 0.3s; position:relative; backdrop-filter:blur(4px); overflow:hidden; aspect-ratio: 3/4; }
-        .animal-card:hover { border-color:var(--gold-glow); box-shadow:0 0 20px rgba(180,145,70,0.3); transform:translateY(-3px); }
-        .animal-card.selected { border-color:var(--gold-glow); box-shadow:0 0 25px rgba(180,145,70,0.5); background:rgba(180,145,70,0.15); }
-        .animal-card.highlight { border-color:var(--gold-glow); box-shadow:0 0 35px rgba(220,180,70,0.9), 0 0 60px rgba(180,145,70,0.5); background:rgba(180,145,70,0.2); animation:highlightPulse 0.3s ease; }
-        @keyframes highlightPulse { 0%,100% { transform:scale(1); } 50% { transform:scale(1.05); } }
-        .animal-card .card-icon { width:100%; height:100%; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); border:none; display:flex; align-items:center; justify-content:center; font-size:50px; position:relative; overflow:hidden; box-shadow:inset 0 0 25px rgba(0,0,0,0.5); }
-        .animal-card .card-icon::after { content:'?'; position:absolute; font-size:48px; color:rgba(255,255,255,0.12); font-weight:900; top:50%; left:50%; transform:translate(-50%,-50%); }
-        .animal-card.revealed .card-icon::after { display:none; }
-        .animal-card .card-name { position:absolute; bottom:8px; left:50%; transform:translateX(-50%); font-size:11px; color:var(--gold-light); font-weight:600; white-space:nowrap; z-index:1; text-shadow: 0 1px 3px rgba(0,0,0,0.8); }
-        .animal-card .card-rarity { position:absolute; top:8px; right:8px; font-size:9px; z-index:1; background:rgba(0,0,0,0.6); padding:2px 6px; border-radius:6px; }
-        .animal-card .check-mark { position:absolute; top:6px; left:6px; width:22px; height:22px; background:var(--gold-glow); border-radius:50%; display:none; align-items:center; justify-content:center; font-size:12px; color:#000; font-weight:700; z-index:2; }
-        .animal-card.selected .check-mark { display:flex; }
-        .box-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.3); border-radius:16px; padding:20px 15px; margin-bottom:14px; text-align:center; backdrop-filter:blur(8px); transition:all 0.3s; position:relative; box-shadow:0 4px 20px rgba(0,0,0,0.3); }
-        .box-card:hover { border-color:rgba(220,187,92,0.6); box-shadow:0 8px 30px rgba(180,145,70,0.25); transform:translateY(-2px); }
-        .box-icon-large { width:100%; height:140px; border-radius:14px; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); border:1px solid rgba(212,175,85,0.35); display:flex; align-items:center; justify-content:center; font-size:70px; margin-bottom:12px; box-shadow:inset 0 0 25px rgba(0,0,0,0.6), 0 0 20px rgba(180,145,70,0.2); position:relative; }
-        .box-card h3 { color:var(--gold-light); font-size:18px; font-weight:700; margin-bottom:4px; }
-        .box-card .desc { color:var(--text-secondary); font-size:12px; margin-bottom:8px; }
-        .box-card .price { color:var(--gold-glow); font-size:16px; font-weight:700; margin-bottom:12px; display:flex; align-items:center; justify-content:center; gap:4px; }
-        .box-card .remain { color:rgba(255,255,255,0.4); font-size:11px; margin-top:8px; }
-        .btn-mint { width:100%; padding:12px; background:linear-gradient(180deg, #e7c778 0%, #b48b3a 70%, #7a5822 100%); color:#0a130e; border:1px solid #f5e3b3; border-radius:14px; font-weight:700; font-size:16px; cursor:pointer; box-shadow:0 6px 20px rgba(180,145,70,0.35); transition:all 0.2s; letter-spacing:0.5px; }
-        .btn-mint:hover { background:linear-gradient(180deg, #f5da8a 0%, #c79d46 70%, #8f6826 100%); box-shadow:0 10px 25px rgba(220,180,70,0.55); transform:scale(1.02); }
-        .modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); z-index:1000; justify-content:center; align-items:center; }
-        .modal-overlay.open { display:flex; }
-        .modal-box { position:relative; width:380px; max-width:90vw; background: radial-gradient(circle at center, #13221e 0%, #09110d 100%); border-radius:20px; border: 2px solid var(--gold-glow); box-shadow:0 20px 50px rgba(0,0,0,0.9), 0 0 60px rgba(180,145,70,0.4); padding:20px 15px 20px; display:flex; flex-direction:column; align-items:center; animation:modalIn 0.3s ease; }
-        @keyframes modalIn { from { transform:scale(0.8); opacity:0; } to { transform:scale(1); opacity:1; } }
-        .modal-box .modal-id-top { color: var(--text-secondary); font-size: 14px; font-weight: 600; letter-spacing: 2px; margin-bottom: 10px; text-align: center; }
-        .modal-box .modal-img-area { width:200px; height:200px; display:flex; align-items:center; justify-content:center; overflow:hidden; margin-bottom: 10px; }
-        .modal-box .modal-img-area img { width:100%; height:100%; object-fit:contain; }
-        .modal-box .modal-img-area .emoji-fallback { font-size:100px; }
-        .modal-box .stamp-panel { width: 100%; background: rgba(20, 34, 28, 0.6); border: 1px solid rgba(168, 139, 68, 0.3); border-radius: 12px; padding: 18px 15px 10px; text-align: center; margin-bottom: 8px; position: relative; margin-top: 10px; }
-        .modal-box .stamp-title { display: inline-block; background: linear-gradient(to bottom, #e6c971, #a88b44); color: #1a1a1a; font-size: 15px; font-weight: bold; letter-spacing: 3px; padding: 4px 24px; border-radius: 4px; text-shadow: 0 1px 1px rgba(255,255,255,0.3); white-space: nowrap; position: absolute; top: -14px; left: 50%; transform: translateX(-50%); z-index: 5; }
-        .modal-box .stamp-title::before, .modal-box .stamp-title::after { content: '●'; display: inline-block; color: #1a1a1a; font-size: 5px; margin: 0 8px; vertical-align: middle; text-shadow: none; }
-        .modal-box .stamp-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap: 6px 10px; padding: 0 5px; margin-top: 4px; }
-        .modal-box .stamp-row { display: flex; justify-content: center; align-items: baseline; font-size: 11px; }
-        .modal-box .stamp-label { color: #cbb780; margin-right: 4px; font-weight: 500; white-space: nowrap; }
-        .modal-box .stamp-value { color: #faf6e8; font-weight: 500; letter-spacing: 0.5px; }
-        .modal-box .modal-price-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; }
-        .modal-box .modal-price-display { color: var(--gold-glow); font-size: 20px; font-weight: 700; }
-        .modal-box .modal-mint-days { color: rgba(255,255,255,0.5); font-size: 12px; font-weight: 500; }
-        .modal-btns { display:flex; gap:10px; width: 100%; }
-        .btn-confirm { flex:1; padding:12px; background:linear-gradient(180deg, #e7c778 0%, #b48b3a 100%); color:#0a130e; border:none; border-radius:25px; font-weight:700; font-size:15px; cursor:pointer; }
-        .btn-cancel { flex:1; padding:12px; background:transparent; border:1px solid var(--gold-glow); color:var(--gold-glow); border-radius:25px; font-size:15px; cursor:pointer; }
-        .btn-cancel:hover { background:rgba(180,145,70,0.1); }
-        .btn-confirm:hover { background:linear-gradient(180deg, #f5da8a 0%, #c79d46 100%); }
-        .btn-close-full { width:100%; padding:12px; background:transparent; border:1px solid var(--gold-glow); color:var(--gold-glow); border-radius:25px; font-weight:700; font-size:15px; cursor:pointer; }
-        .btn-close-full:hover { background:rgba(180,145,70,0.1); }
-        .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:start; }
-        .market-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; overflow:hidden; backdrop-filter:blur(8px); cursor:pointer; transition:all 0.3s; display:flex; flex-direction:column; }
-        .market-card:hover { border-color:rgba(220,187,92,0.6); transform:translateY(-3px); }
-        .market-card .frame { width:100%; display:flex; align-items:center; justify-content:center; font-size:50px; overflow:hidden; padding:0; background:linear-gradient(145deg, #1f2e22 0%, #0e1d13 100%); }
-        .market-card .frame img { width:100%; height:auto; display:block; }
-        .market-card .info { padding:10px; }
-        .usdt-value { color: var(--usdt-color); font-size: 11px; }
-        .btn-sm { width:100%; padding:7px; border:1px solid rgba(180,145,70,0.5); background:transparent; color:var(--gold-glow); border-radius:10px; font-size:11px; cursor:pointer; }
-        .mint-progress-bar { width:100%; height:6px; background:rgba(255,255,255,0.1); border-radius:3px; margin-top:6px; overflow:hidden; }
-        .mint-progress-fill { height:100%; background:linear-gradient(to right, var(--gold-deep), var(--gold-glow)); border-radius:3px; transition:width 0.5s ease; }
-        .mint-status-text { font-size:10px; color:var(--text-secondary); margin-top:3px; }
-        .stats { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; padding:15px; margin-bottom:15px; display:flex; justify-content:space-around; text-align:center; backdrop-filter:blur(8px); }
-        .stat-item { flex:1; } .stat-item .val { color:var(--gold-light); font-size:22px; font-weight:700; } .stat-item .lbl { color:var(--text-secondary); font-size:11px; }
-        .stat-div { width:1px; background:rgba(180,145,70,0.2); }
-        .filter-bar { display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap; }
-        .filter-btn { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.3); color:var(--gold-glow); padding:6px 14px; border-radius:20px; font-size:12px; cursor:pointer; }
-        .filter-btn.active { background:rgba(180,145,70,0.2); border-color:var(--gold-glow); }
-        .invite-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; padding:15px; margin-bottom:10px; backdrop-filter:blur(8px); }
-        .invite-card h4 { color:var(--gold-light); font-size:14px; font-weight:600; margin-bottom:8px; }
-        .invite-card .invite-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid rgba(180,145,70,0.1); font-size:12px; }
-        .invite-card .invite-row:last-child { border-bottom:none; }
-        .invite-label { color:var(--text-secondary); }
-        .invite-value { color:white; font-weight:600; }
-        .qr-area { text-align:center; padding:10px; }
-        .qr-area .qr-icon { font-size:80px; margin-bottom:8px; }
-        .qr-area .qr-text { color:var(--text-secondary); font-size:11px; }
-        .team-card { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.25); border-radius:14px; padding:15px; margin-bottom:10px; backdrop-filter:blur(8px); }
-        .team-card h4 { color:var(--gold-light); font-size:14px; font-weight:600; margin-bottom:8px; }
-        .team-row { display:flex; gap:10px; }
-        .team-item { flex:1; text-align:center; background:rgba(0,0,0,0.2); border-radius:10px; padding:10px; }
-        .team-item .team-val { color:var(--gold-glow); font-size:18px; font-weight:700; }
-        .team-item .team-lbl { color:var(--text-secondary); font-size:10px; margin-top:2px; }
-        .record-list { display:flex; flex-direction:column; gap:6px; }
-        .record-item { display:flex; justify-content:space-between; align-items:center; background:rgba(0,0,0,0.2); border-radius:8px; padding:8px 10px; font-size:11px; }
-        .record-addr { color:var(--text-secondary); font-size:10px; }
-        .record-value { color:var(--gold-glow); font-weight:600; }
-        .msg-item { background:rgba(19,32,22,0.8); border:1px solid rgba(180,145,70,0.2); border-radius:14px; padding:14px; backdrop-filter:blur(8px); cursor:pointer; margin-bottom:8px; }
-        .msg-item.unread { border-left:3px solid var(--gold-glow); }
-        .msg-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; }
-        .msg-title { color:white; font-weight:600; font-size:14px; } .msg-time { color:rgba(255,255,255,0.4); font-size:11px; } .msg-content { color:var(--text-secondary); font-size:12px; }
-        .dot { display:inline-block; width:8px; height:8px; background:#ff4757; border-radius:50%; margin-right:6px; }
-        .bottom-nav { flex-shrink:0; background:rgba(10,20,13,0.9); backdrop-filter:blur(12px); border:1px solid rgba(180,145,70,0.2); border-radius:20px; box-shadow:0 -4px 30px rgba(0,0,0,0.8); display:flex; justify-content:space-around; padding:10px 0; margin:0 12px 12px 12px; position:relative; z-index:10; }
-        .bottom-nav::before { content:''; position:absolute; top:-1px; left:-1px; right:-1px; bottom:-1px; border-radius:20px; padding:1px; background:linear-gradient(135deg, var(--gold-deep), transparent, var(--gold-light)); -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite:xor; mask-composite:exclude; pointer-events:none; opacity:0.5; }
-        .nav-item { display:flex; flex-direction:column; align-items:center; color:var(--text-secondary); font-size:10px; gap:3px; cursor:pointer; padding:4px 8px; transition:all 0.3s; text-decoration:none; }
-        .nav-item .nav-icon { font-size:16px; }
-        .nav-item.active { color:var(--gold-light); position:relative; }
-        .nav-item.active::after { content:''; position:absolute; top:-5px; left:50%; transform:translateX(-50%); width:18px; height:2px; background:linear-gradient(to right, var(--gold-deep), var(--gold-glow)); border-radius:5px; box-shadow:0 0 15px var(--gold-glow); }
-        .nav-item:not(.active):hover { color:var(--gold-glow); }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+        :root{--bg:#0d1a14;--gold-light:#f8ecc9;--gold:#d6b878;--gold-deep:#9e7a3a;--gold-glow:#dbb45c;--text-secondary:#b8a47b;--usdt-color:#dbb45c}
+        body{background-color:#0d1a14;display:flex;justify-content:center;align-items:center;height:100vh;height:100dvh;overflow:hidden;position:fixed;top:0;left:0;right:0;bottom:0;color:#fff}
+        .app{width:100%;max-width:420px;height:100%;background:radial-gradient(circle at 50% 10%,#1a2e1f 0%,#0d1a14 100%);border-radius:20px;box-shadow:0 0 40px rgba(180,145,70,0.15);display:flex;flex-direction:column;position:relative;overflow:hidden}
+        .app::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background-image:radial-gradient(rgba(180,145,70,0.06) 1px,transparent 1px);background-size:40px 40px;opacity:0.5;z-index:0;pointer-events:none;border-radius:20px}
+        .scroll{flex:1;overflow-y:auto;padding:15px;-webkit-overflow-scrolling:touch;position:relative;z-index:1}
+        .header{display:flex;justify-content:space-between;align-items:center;padding-bottom:15px;flex-wrap:wrap}
+        .logo{display:flex;align-items:center;font-size:16px;font-weight:700;color:var(--gold);text-shadow:0 0 15px rgba(180,145,70,0.4)}
+        .logo .icon{font-size:24px;margin-right:6px}
+        .header-right{display:flex;gap:6px;align-items:center;position:relative;flex-shrink:0}
+        .lang-btn{background:transparent;border:1px solid rgba(180,145,70,0.25);color:var(--text-secondary);padding:4px 8px;border-radius:6px;font-size:11px;cursor:pointer;white-space:nowrap}
+        .wallet-btn{background:transparent;border:1px solid rgba(214,184,120,0.4);color:var(--gold-glow);padding:5px 10px;border-radius:20px;font-size:11px;cursor:pointer;white-space:nowrap}
+        .wallet-btn.connected{background:rgba(180,145,70,0.12);border-color:var(--gold-glow);color:var(--gold-light)}
+        .page{display:none}
+        .page.active{display:block}
+        .title{text-align:center;margin-bottom:15px}
+        .title h2{font-size:24px;font-weight:700;background:linear-gradient(180deg,#f5e3b3 0%,#c5a455 60%,#8a6327 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:0 0 20px rgba(180,145,70,0.5);margin-bottom:4px}
+        .title p{color:#b8a16a;font-size:12px}
+        .btn-lottery{display:inline-block;padding:12px 36px;background:linear-gradient(180deg,#e7c778 0%,#b48b3a 70%,#7a5822 100%);color:#0a130e;border:1px solid #f5e3b3;border-radius:30px;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 6px 20px rgba(180,145,70,0.35);transition:all 0.2s;letter-spacing:1px;animation:glowPulse 2s infinite}
+        .btn-lottery:disabled{opacity:0.6;cursor:not-allowed;animation:none}
+        @keyframes glowPulse{0%,100%{box-shadow:0 6px 20px rgba(180,145,70,0.35)}50%{box-shadow:0 6px 35px rgba(220,180,70,0.7)}}
+        .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+        .animal-card{background:rgba(19,32,22,0.8);border:2px solid rgba(180,145,70,0.25);border-radius:14px;text-align:center;cursor:pointer;transition:all 0.3s;position:relative;backdrop-filter:blur(4px);overflow:hidden;aspect-ratio:3/4}
+        .animal-card:hover{border-color:var(--gold-glow);box-shadow:0 0 20px rgba(180,145,70,0.3);transform:translateY(-3px)}
+        .animal-card.selected{border-color:var(--gold-glow);box-shadow:0 0 25px rgba(180,145,70,0.5);background:rgba(180,145,70,0.15)}
+        .animal-card.highlight{border-color:var(--gold-glow);box-shadow:0 0 35px rgba(220,180,70,0.9),0 0 60px rgba(180,145,70,0.5);background:rgba(180,145,70,0.2);animation:highlightPulse 0.3s ease}
+        @keyframes highlightPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+        .animal-card .card-icon{width:100%;height:100%;background:linear-gradient(145deg,#1f2e22 0%,#0e1d13 100%);border:none;display:flex;align-items:center;justify-content:center;font-size:50px;position:relative;overflow:hidden;box-shadow:inset 0 0 25px rgba(0,0,0,0.5)}
+        .animal-card .card-icon::after{content:'?';position:absolute;font-size:48px;color:rgba(255,255,255,0.12);font-weight:900;top:50%;left:50%;transform:translate(-50%,-50%)}
+        .animal-card.revealed .card-icon::after{display:none}
+        .animal-card .card-name{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:11px;color:var(--gold-light);font-weight:600;white-space:nowrap;z-index:1;text-shadow:0 1px 3px rgba(0,0,0,0.8)}
+        .animal-card .card-rarity{position:absolute;top:8px;right:8px;font-size:9px;z-index:1;background:rgba(0,0,0,0.6);padding:2px 6px;border-radius:6px}
+        .animal-card .check-mark{position:absolute;top:6px;left:6px;width:22px;height:22px;background:var(--gold-glow);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:12px;color:#000;font-weight:700;z-index:2}
+        .animal-card.selected .check-mark{display:flex}
+        .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:1000;justify-content:center;align-items:center}
+        .modal-overlay.open{display:flex}
+        .modal-box{position:relative;width:380px;max-width:90vw;background:radial-gradient(circle at center,#13221e 0%,#09110d 100%);border-radius:20px;border:2px solid var(--gold-glow);box-shadow:0 20px 50px rgba(0,0,0,0.9),0 0 60px rgba(180,145,70,0.4);padding:20px 15px;display:flex;flex-direction:column;align-items:center;animation:modalIn 0.3s ease}
+        @keyframes modalIn{from{transform:scale(0.8);opacity:0}to{transform:scale(1);opacity:1}}
+        .modal-box .modal-id-top{color:var(--text-secondary);font-size:14px;font-weight:600;letter-spacing:2px;margin-bottom:10px;text-align:center}
+        .modal-box .modal-img-area{width:200px;height:200px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:10px}
+        .modal-box .modal-img-area img{width:100%;height:100%;object-fit:contain}
+        .modal-box .stamp-panel{width:100%;background:rgba(20,34,28,0.6);border:1px solid rgba(168,139,68,0.3);border-radius:12px;padding:18px 15px 10px;text-align:center;margin-bottom:8px;position:relative;margin-top:10px}
+        .modal-box .stamp-title{display:inline-block;background:linear-gradient(to bottom,#e6c971,#a88b44);color:#1a1a1a;font-size:15px;font-weight:bold;letter-spacing:3px;padding:4px 24px;border-radius:4px;text-shadow:0 1px 1px rgba(255,255,255,0.3);white-space:nowrap;position:absolute;top:-14px;left:50%;transform:translateX(-50%);z-index:5}
+        .modal-box .stamp-title::before,.modal-box .stamp-title::after{content:'●';display:inline-block;color:#1a1a1a;font-size:5px;margin:0 8px;vertical-align:middle;text-shadow:none}
+        .modal-box .stamp-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;padding:0 5px;margin-top:4px}
+        .modal-box .stamp-row{display:flex;justify-content:center;align-items:baseline;font-size:11px}
+        .modal-box .stamp-label{color:#cbb780;margin-right:4px;font-weight:500;white-space:nowrap}
+        .modal-box .stamp-value{color:#faf6e8;font-weight:500;letter-spacing:0.5px}
+        .modal-box .modal-price-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:12px}
+        .modal-box .modal-price-display{color:var(--gold-glow);font-size:20px;font-weight:700}
+        .modal-box .modal-mint-days{color:rgba(255,255,255,0.5);font-size:12px;font-weight:500}
+        .modal-btns{display:flex;gap:10px;width:100%}
+        .btn-confirm{flex:1;padding:12px;background:linear-gradient(180deg,#e7c778 0%,#b48b3a 100%);color:#0a130e;border:none;border-radius:25px;font-weight:700;font-size:15px;cursor:pointer}
+        .btn-cancel{flex:1;padding:12px;background:transparent;border:1px solid var(--gold-glow);color:var(--gold-glow);border-radius:25px;font-size:15px;cursor:pointer}
+        .btn-close-full{width:100%;padding:12px;background:transparent;border:1px solid var(--gold-glow);color:var(--gold-glow);border-radius:25px;font-weight:700;font-size:15px;cursor:pointer}
+        .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+        .market-card{background:rgba(19,32,22,0.8);border:1px solid rgba(180,145,70,0.25);border-radius:14px;overflow:hidden;backdrop-filter:blur(8px);cursor:pointer;transition:all 0.3s;display:flex;flex-direction:column}
+        .market-card:hover{border-color:rgba(220,187,92,0.6);transform:translateY(-3px)}
+        .market-card .frame{width:100%;display:flex;align-items:center;justify-content:center;font-size:50px;overflow:hidden;padding:0;background:linear-gradient(145deg,#1f2e22 0%,#0e1d13 100%)}
+        .market-card .frame img{width:100%;height:auto;display:block}
+        .market-card .info{padding:10px}
+        .usdt-value{color:var(--usdt-color);font-size:11px}
+        .btn-sm{width:100%;padding:7px;border:1px solid rgba(180,145,70,0.5);background:transparent;color:var(--gold-glow);border-radius:10px;font-size:11px;cursor:pointer}
+        .mint-progress-bar{width:100%;height:6px;background:rgba(255,255,255,0.1);border-radius:3px;margin-top:6px;overflow:hidden}
+        .mint-progress-fill{height:100%;background:linear-gradient(to right,var(--gold-deep),var(--gold-glow));border-radius:3px;transition:width 0.5s ease}
+        .mint-status-text{font-size:10px;color:var(--text-secondary);margin-top:3px}
+        .stats{background:rgba(19,32,22,0.8);border:1px solid rgba(180,145,70,0.25);border-radius:14px;padding:15px;margin-bottom:15px;display:flex;justify-content:space-around;text-align:center;backdrop-filter:blur(8px)}
+        .stat-item{flex:1}.stat-item .val{color:var(--gold-light);font-size:22px;font-weight:700}.stat-item .lbl{color:var(--text-secondary);font-size:11px}
+        .stat-div{width:1px;background:rgba(180,145,70,0.2)}
+        .invite-card{background:rgba(19,32,22,0.8);border:1px solid rgba(180,145,70,0.25);border-radius:14px;padding:15px;margin-bottom:10px;backdrop-filter:blur(8px)}
+        .invite-card h4{color:var(--gold-light);font-size:14px;font-weight:600;margin-bottom:8px}
+        .invite-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(180,145,70,0.1);font-size:12px}
+        .invite-label{color:var(--text-secondary)}.invite-value{color:white;font-weight:600}
+        .qr-area{text-align:center;padding:10px}.qr-icon{font-size:80px;margin-bottom:8px}.qr-text{color:var(--text-secondary);font-size:11px}
+        .team-card{background:rgba(19,32,22,0.8);border:1px solid rgba(180,145,70,0.25);border-radius:14px;padding:15px;margin-bottom:10px;backdrop-filter:blur(8px)}
+        .team-card h4{color:var(--gold-light);font-size:14px;font-weight:600;margin-bottom:8px}
+        .team-row{display:flex;gap:10px}.team-item{flex:1;text-align:center;background:rgba(0,0,0,0.2);border-radius:10px;padding:10px}
+        .team-val{color:var(--gold-glow);font-size:18px;font-weight:700}.team-lbl{color:var(--text-secondary);font-size:10px;margin-top:2px}
+        .record-list{display:flex;flex-direction:column;gap:6px}
+        .record-item{display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,0.2);border-radius:8px;padding:8px 10px;font-size:11px}
+        .record-addr{color:var(--text-secondary);font-size:10px}.record-value{color:var(--gold-glow);font-weight:600}
+        .msg-item{background:rgba(19,32,22,0.8);border:1px solid rgba(180,145,70,0.2);border-radius:14px;padding:14px;backdrop-filter:blur(8px);cursor:pointer;margin-bottom:8px}
+        .msg-item.unread{border-left:3px solid var(--gold-glow)}
+        .msg-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+        .msg-title{color:white;font-weight:600;font-size:14px}.msg-time{color:rgba(255,255,255,0.4);font-size:11px}.msg-content{color:var(--text-secondary);font-size:12px}
+        .dot{display:inline-block;width:8px;height:8px;background:#ff4757;border-radius:50%;margin-right:6px}
+        .bottom-nav{flex-shrink:0;background:rgba(10,20,13,0.9);backdrop-filter:blur(12px);border:1px solid rgba(180,145,70,0.2);border-radius:20px;box-shadow:0 -4px 30px rgba(0,0,0,0.8);display:flex;justify-content:space-around;padding:10px 0;margin:0 8px 8px;position:relative;z-index:10}
+        .bottom-nav::before{content:'';position:absolute;top:-1px;left:-1px;right:-1px;bottom:-1px;border-radius:20px;padding:1px;background:linear-gradient(135deg,var(--gold-deep),transparent,var(--gold-light));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0.5}
+        .nav-item{display:flex;flex-direction:column;align-items:center;color:var(--text-secondary);font-size:9px;gap:2px;cursor:pointer;padding:4px 6px;transition:all 0.3s;text-decoration:none}
+        .nav-item .nav-icon{font-size:15px}
+        .nav-item.active{color:var(--gold-light);position:relative}
+        .nav-item.active::after{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:16px;height:2px;background:linear-gradient(to right,var(--gold-deep),var(--gold-glow));border-radius:5px;box-shadow:0 0 15px var(--gold-glow)}
+        .nav-item:not(.active):hover{color:var(--gold-glow)}
+        .loading-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(180,145,70,0.2);border-top:2px solid var(--gold-glow);border-radius:50%;animation:spin 0.6s linear infinite;margin-right:4px;vertical-align:middle}
+        @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        .box-card{background:rgba(19,32,22,0.8);border:1px solid rgba(180,145,70,0.3);border-radius:16px;padding:20px 15px;margin-bottom:14px;text-align:center;backdrop-filter:blur(8px);transition:all 0.3s;position:relative;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+        .box-icon-large{width:100%;height:140px;border-radius:14px;background:linear-gradient(145deg,#1f2e22 0%,#0e1d13 100%);border:1px solid rgba(212,175,85,0.35);display:flex;align-items:center;justify-content:center;font-size:70px;margin-bottom:12px;box-shadow:inset 0 0 25px rgba(0,0,0,0.6),0 0 20px rgba(180,145,70,0.2)}
+        .box-card h3{color:var(--gold-light);font-size:18px;font-weight:700;margin-bottom:4px}
+        .box-card .desc{color:var(--text-secondary);font-size:12px;margin-bottom:8px}
+        .box-card .price{color:var(--gold-glow);font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:4px}
+        .box-card .remain{color:rgba(255,255,255,0.4);font-size:11px;margin-top:8px}
+        .btn-mint{width:100%;padding:12px;background:linear-gradient(180deg,#e7c778 0%,#b48b3a 70%,#7a5822 100%);color:#0a130e;border:1px solid #f5e3b3;border-radius:14px;font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 6px 20px rgba(180,145,70,0.35);transition:all 0.2s}
+        .btn-mint:hover{background:linear-gradient(180deg,#f5da8a 0%,#c79d46 70%,#8f6826 100%);box-shadow:0 10px 25px rgba(220,180,70,0.55)}
+        .filter-bar{display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap}
+        .filter-btn{background:rgba(19,32,22,0.8);border:1px solid rgba(180,145,70,0.3);color:var(--gold-glow);padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer}
+        .filter-btn.active{background:rgba(180,145,70,0.2);border-color:var(--gold-glow)}
+        .lottery-progress{width:100%;height:8px;background:rgba(255,255,255,0.1);border-radius:4px;margin:10px 0;overflow:hidden}
+        .lottery-progress-fill{height:100%;background:linear-gradient(to right,#ff6b6b,#ffa502);border-radius:4px;transition:width 0.5s ease}
+        .lottery-info{display:flex;justify-content:space-between;font-size:11px;color:var(--text-secondary);margin-bottom:4px}
+        .badge-recommend{position:absolute;top:-10px;right:15px;background:linear-gradient(180deg,#e7c778 0%,#b48b3a 100%);color:#0a130e;padding:5px 14px;border-radius:12px;font-size:11px;font-weight:700;box-shadow:0 4px 15px rgba(180,145,70,0.5);z-index:5;animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
     </style>
 </head>
 <body>
     <div class="app">
         <div class="scroll">
             <div class="header">
-                <div class="logo"><span class="icon" id="logoIcon">🦏</span><span>RARE</span></div>
+                <div class="logo"><span class="icon" id="logoIcon">🍀</span><span>LuckyStamp</span></div>
                 <div class="header-right">
-                    <button class="lang-btn" id="langBtn">CN ⌄</button>
-                    <div class="lang-dropdown" id="langDropdown">
-                        <div class="lang-option" data-lang="cn"><span>🇨🇳 简体中文</span><span class="code">CN</span></div>
-                        <div class="lang-option" data-lang="en"><span>🇺🇸 English</span><span class="code">EN</span></div>
-                        <div class="lang-option" data-lang="zh"><span>🇭🇰 繁體中文</span><span class="code">ZH</span></div>
-                    </div>
-                    <button id="walletBtn" class="wallet-btn">Connect</button>
+                    <button id="walletBtn" class="wallet-btn" onclick="connectWallet()">Connect</button>
                 </div>
             </div>
 
+            <!-- ========== 铸造页 ========== -->
             <div class="page active" id="page-nft">
                 <div class="title"><h2>✦ NFT集邮 ✦</h2><p>随机获取铸造链上邮票NFT，获得链上邮票可兑换USDT</p></div>
                 <div class="grid-3" id="cardGrid"></div>
-                <div class="lottery-btn-area"><button class="btn-lottery" id="btnLottery" onclick="startLottery()">📮 随机铸邮</button></div>
+                <div style="text-align:center;margin-top:12px;">
+                    <button class="btn-lottery" id="btnLottery" onclick="requestMint()">📮 请求铸造</button>
+                </div>
+                <div id="mintResult" style="text-align:center;margin-top:10px;display:none;">
+                    <p style="color:var(--gold-glow);font-size:12px;">铸造请求已发送，请确认...</p>
+                </div>
             </div>
 
-            <div class="page" id="page-entertainment">
-                <div class="title"><h2>🎮 收藏邮票NFT</h2><p>链上邮票资产，价值无限可能</p></div>
-                <div class="box-card"><div class="box-icon-large">🎁</div><h3>普通盲盒</h3><p class="desc">随机稀有动物卡牌</p><div class="price"><i class="fab fa-ethereum"></i> 0.001 BNB</div><button class="btn-mint" onclick="mint('普通盲盒')">Mint 抽取</button><p class="remain">剩余 1240/3000</p></div>
+            <!-- ========== BNB抽奖页 ========== -->
+            <div class="page" id="page-lottery">
+                <div class="title"><h2>🎲 BNB 盲盒抽奖</h2><p>支付 0.001 BNB 参与抽奖，赢取稀有邮票NFT</p></div>
+                <div class="box-card recommended">
+                    <div class="badge-recommend">🔥 热门</div>
+                    <div class="box-icon-large">🎁</div>
+                    <h3>BNB 盲盒抽奖</h3>
+                    <p class="desc">随机获得稀有邮票NFT卡牌</p>
+                    <div class="price"><i class="fab fa-ethereum"></i> 0.001 BNB</div>
+                    <div class="lottery-info">
+                        <span>今日已抽：<span id="todayCount" style="color:var(--gold-glow)">0</span>/10 次</span>
+                        <span>剩余次数：<span id="remainCount" style="color:var(--gold-glow)">10</span></span>
+                    </div>
+                    <div class="lottery-progress">
+                        <div class="lottery-progress-fill" id="lotteryProgress" style="width:0%"></div>
+                    </div>
+                    <p style="font-size:10px;color:var(--text-secondary);margin-bottom:8px;">全网进度：距离下次大奖还需 <span id="globalProgress" style="color:#ffa502;">100</span> 次</p>
+                    <button class="btn-mint" onclick="bnbLottery()">🎰 参与抽奖</button>
+                    <p class="remain">剩余 1240/3000</p>
+                </div>
+                <div id="lotteryResult" style="text-align:center;margin-top:10px;display:none;">
+                    <p style="color:var(--gold-glow);font-size:12px;"></p>
+                </div>
             </div>
 
+            <!-- ========== 资产页 ========== -->
+            <div class="page" id="page-favorite">
+                <div class="title"><h2>💼 我的资产</h2><p>你的珍稀NFT邮票收藏库 · 随时兑USDT</p></div>
+                <div class="stats">
+                    <div class="stat-item"><div class="val" id="totalNFT">0</div><div class="lbl">持有NFT</div></div>
+                    <div class="stat-div"></div>
+                    <div class="stat-item"><div class="val" id="canTrade">0</div><div class="lbl">可售</div></div>
+                    <div class="stat-div"></div>
+                    <div class="stat-item"><div class="val" id="totalValue">0.00</div><div class="lbl">总估值 USDT</div></div>
+                    <div class="stat-div"></div>
+                    <div class="stat-item"><div class="val" id="batchExchange">0.00</div><div class="lbl">批量兑换</div></div>
+                </div>
+                <div style="text-align:center;margin-bottom:10px;">
+                    <button class="btn-lottery" style="padding:8px 20px;font-size:13px;" onclick="batchExchangeAll()">💱 批量兑换全部</button>
+                </div>
+                <div class="grid-2" id="favoriteGrid"></div>
+            </div>
+
+            <!-- ========== 市场页 ========== -->
             <div class="page" id="page-market">
-                <div class="title"><h2>📖 动物图鉴市场</h2><p>探索珍稀动物卡牌 · 收藏链上唯一珍品</p></div>
+                <div class="title"><h2>🏪 交易市场</h2><p>探索珍稀邮票NFT · 收藏链上唯一珍品</p></div>
                 <div class="filter-bar">
                     <span class="filter-btn active" onclick="filterMarket('all',this)">全部</span>
+                    <span class="filter-btn" onclick="filterMarket('selling',this)">出售中</span>
                     <span class="filter-btn" onclick="filterMarket('legendary',this)">传说</span>
                     <span class="filter-btn" onclick="filterMarket('epic',this)">史诗</span>
-                    <span class="filter-btn" onclick="filterMarket('rare',this)">稀有</span>
-                    <span class="filter-btn" onclick="filterMarket('common',this)">普通</span>
                 </div>
-                <div class="grid-2" id="marketGrid">
-                    <div class="market-card" data-rarity="legendary" onclick="showCardDetailMarket(cardData[0])"><div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div><div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="legendary" onclick="showCardDetailMarket(cardData[1])"><div class="frame"><img src="images/TOP2.png" alt="瑞典黄色三先令"></div><div class="info"><p style="color:white;font-weight:600;">瑞典黄色三先令</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="epic" onclick="showCardDetailMarket(cardData[2])"><div class="frame"><img src="images/TOP3.png" alt="倒置的珍妮"></div><div class="info"><p style="color:white;font-weight:600;">倒置的珍妮</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="rare" onclick="showCardDetailMarket(cardData[3])"><div class="frame"><img src="images/TOP4.png" alt="毛里求斯邮局"></div><div class="info"><p style="color:white;font-weight:600;">毛里求斯邮局</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="rare" onclick="showCardDetailMarket(cardData[4])"><div class="frame"><img src="images/TOP5.png" alt="夏威夷传教士"></div><div class="info"><p style="color:white;font-weight:600;">夏威夷传教士</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
-                    <div class="market-card" data-rarity="common" onclick="showCardDetailMarket(cardData[6])"><div class="frame"><img src="images/TOP6.png" alt="全国山河一片红"></div><div class="info"><p style="color:white;font-weight:600;">全国山河一片红</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><button class="btn-sm">查看详情</button></div></div>
-                </div>
+                <div class="grid-2" id="marketGrid"></div>
             </div>
 
-            <div class="page" id="page-favorite">
-                <div class="title"><h2>🗂️ 我的藏品</h2><p>你的珍稀NFT邮票收藏库 · 随时兑USDT</p></div>
-                <div class="stats">
-                    <div class="stat-item"><div class="val">8</div><div class="lbl">总藏品</div></div><div class="stat-div"></div>
-                    <div class="stat-item"><div class="val">3</div><div class="lbl">可售USDT</div></div><div class="stat-div"></div>
-                    <div class="stat-item"><div class="val">2</div><div class="lbl">已售USDT</div></div><div class="stat-div"></div>
-                    <div class="stat-item"><div class="val">4.8</div><div class="lbl">总估值 USDT</div></div>
-                </div>
-                <div class="grid-2" id="favoriteGrid">
-                    <div class="market-card" data-rarity="legendary" data-index="0"><div class="frame"><img src="images/youpiao1.png" alt="最贵邮票"></div><div class="info"><p style="color:white;font-weight:600;">最贵邮票</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:30%"></div></div><p class="mint-status-text">铸邮中 30%</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[0])">出售</button></div></div>
-                    <div class="market-card" data-rarity="legendary" data-index="1"><div class="frame"><img src="images/TOP2.png" alt="瑞典黄色三先令"></div><div class="info"><p style="color:white;font-weight:600;">瑞典黄色三先令</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:60%"></div></div><p class="mint-status-text">铸邮中 60%</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[1])">出售</button></div></div>
-                    <div class="market-card" data-rarity="epic" data-index="2"><div class="frame"><img src="images/TOP3.png" alt="倒置的珍妮"></div><div class="info"><p style="color:white;font-weight:600;">倒置的珍妮</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:100%"></div></div><p class="mint-status-text">铸邮已完成</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[2])">出售</button></div></div>
-                    <div class="market-card" data-rarity="rare" data-index="3"><div class="frame"><img src="images/TOP4.png" alt="毛里求斯邮局"></div><div class="info"><p style="color:white;font-weight:600;">毛里求斯邮局</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:90%"></div></div><p class="mint-status-text">铸邮中 90%</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[3])">出售</button></div></div>
-                    <div class="market-card" data-rarity="rare" data-index="4"><div class="frame"><img src="images/TOP5.png" alt="夏威夷传教士"></div><div class="info"><p style="color:white;font-weight:600;">夏威夷传教士</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:100%"></div></div><p class="mint-status-text">铸邮已完成</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[4])">出售</button></div></div>
-                    <div class="market-card" data-rarity="common" data-index="6"><div class="frame"><img src="images/TOP6.png" alt="全国山河一片红"></div><div class="info"><p style="color:white;font-weight:600;">全国山河一片红</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 0.00 USDT</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:10%"></div></div><p class="mint-status-text">铸邮中 10%</p><button class="btn-sm" onclick="event.stopPropagation();showCardDetailFav(cardData[6])">出售</button></div></div>
-                </div>
-            </div>
-
+            <!-- ========== 团队页 ========== -->
             <div class="page" id="page-messages">
-                <div class="title"><h2>📬 讯息中心</h2><p>邀请好友 · 团队数据 · 系统通知</p></div>
+                <div class="title"><h2>👥 我的团队</h2><p>邀请好友 · 团队数据 · 推荐奖励</p></div>
                 <div class="invite-card">
                     <h4>📱 扫描邀请</h4>
-                    <div class="qr-area"><div class="qr-icon">📱</div><div class="qr-text">邀请链接：https://app.nft-stamp.com/ref=0xAb12...5678</div></div>
-                    <div class="invite-row"><span class="invite-label">累计邀请</span><span class="invite-value">128 人</span></div>
-                    <div class="invite-row"><span class="invite-label">累计奖励</span><span class="invite-value"><i class="fab fa-usdt"></i> 256.00 USDT</span></div>
+                    <div class="qr-area"><div class="qr-icon">📱</div><div class="qr-text" id="refLink">请先连接钱包</div></div>
+                    <div class="invite-row"><span class="invite-label">累计邀请</span><span class="invite-value" id="totalRefs">0 人</span></div>
+                    <div class="invite-row"><span class="invite-label">累计奖励</span><span class="invite-value" id="totalReward">0.00 USDT</span></div>
                 </div>
                 <div class="team-card">
                     <h4>👥 团队信息</h4>
-                    <div class="team-row"><div class="team-item"><div class="team-val">56</div><div class="team-lbl">直推人数</div></div><div class="team-item"><div class="team-val">1,280</div><div class="team-lbl">团队总人数</div></div></div>
+                    <div class="team-row">
+                        <div class="team-item"><div class="team-val" id="myLevel">-</div><div class="team-lbl">我的等级</div></div>
+                        <div class="team-item"><div class="team-val" id="directRefs">0</div><div class="team-lbl">直推人数</div></div>
+                    </div>
+                    <div class="team-row" style="margin-top:8px;">
+                        <div class="team-item"><div class="team-val" id="teamSize">0</div><div class="team-lbl">团队总人数</div></div>
+                        <div class="team-item"><div class="team-val" id="teamVolume">0.00</div><div class="team-lbl">团队业绩 USDT</div></div>
+                    </div>
                 </div>
                 <div class="invite-card">
                     <h4>📋 邀请记录</h4>
-                    <div class="record-list">
-                        <div class="record-item"><span>0x1234...5678</span><span class="record-addr">2026-07-28 14:30</span><span class="record-value">+5.00 USDT</span></div>
-                        <div class="record-item"><span>0x8765...4321</span><span class="record-addr">2026-07-27 09:15</span><span class="record-value">+3.50 USDT</span></div>
-                        <div class="record-item"><span>0x2468...1357</span><span class="record-addr">2026-07-26 18:45</span><span class="record-value">+8.20 USDT</span></div>
+                    <div class="record-list" id="refRecordList">
+                        <div class="record-item"><span style="color:var(--text-secondary)">连接钱包后加载...</span></div>
                     </div>
                 </div>
-                <div class="msg-item unread" onclick="alert('✅ 交易成功')"><div class="msg-header"><span class="msg-title"><span class="dot"></span>交易成功</span><span class="msg-time">10分钟前</span></div><div class="msg-content">至尊礼盒Mint成功！获得稀有卡牌</div></div>
-            </div>
-        </div>
-
-        <div class="modal-overlay" id="cardModalMarket">
-            <div class="modal-box">
-                <div class="modal-id-top" id="modalIdTopMarket">#0001</div>
-                <div class="modal-img-area"><img id="modalImgMarket" src="" alt=""></div>
-                <div class="stamp-panel">
-                    <div class="stamp-title" id="modalNameMarket">最贵邮票</div>
-                    <div class="stamp-grid">
-                        <div class="stamp-row"><span class="stamp-label">年份：</span><span class="stamp-value" id="modalYearMarket">1840</span></div>
-                        <div class="stamp-row"><span class="stamp-label">估值：</span><span class="stamp-value" id="modalEstimateMarket">约850万美元</span></div>
-                        <div class="stamp-row"><span class="stamp-label">稀有度：</span><span class="stamp-value" id="modalRarityMarket">传世孤品</span></div>
-                        <div class="stamp-row"><span class="stamp-label">来源：</span><span class="stamp-value" id="modalSourceMarket">英国邮政史</span></div>
-                    </div>
-                </div>
-                <div class="modal-price-row">
-                    <span class="modal-price-display" id="modalPriceMarket">2.5 BNB</span>
-                    <span class="modal-mint-days">铸造7天</span>
-                </div>
-                <div class="modal-btns">
-                    <button class="btn-close-full" onclick="closeModalMarket()">关 闭</button>
+                <div class="msg-item unread" onclick="alert('✅ 系统通知：LuckyStamp DApp 已上线！')">
+                    <div class="msg-header"><span class="msg-title"><span class="dot"></span>系统通知</span><span class="msg-time">刚刚</span></div>
+                    <div class="msg-content">LuckyStamp 邮票NFT铸造平台已上线！</div>
                 </div>
             </div>
         </div>
 
-        <div class="modal-overlay" id="cardModalFav">
+        <!-- 弹窗 -->
+        <div class="modal-overlay" id="cardModal">
             <div class="modal-box">
-                <div class="modal-id-top" id="modalIdTopFav">#0001</div>
-                <div class="modal-img-area"><img id="modalImgFav" src="" alt=""></div>
+                <div class="modal-id-top" id="modalIdTop">#0001</div>
+                <div class="modal-img-area"><img id="modalImg" src="" alt=""></div>
                 <div class="stamp-panel">
-                    <div class="stamp-title" id="modalNameFav">最贵邮票</div>
+                    <div class="stamp-title" id="modalName">最贵邮票</div>
                     <div class="stamp-grid">
-                        <div class="stamp-row"><span class="stamp-label">年份：</span><span class="stamp-value" id="modalYearFav">1840</span></div>
-                        <div class="stamp-row"><span class="stamp-label">估值：</span><span class="stamp-value" id="modalEstimateFav">约850万美元</span></div>
-                        <div class="stamp-row"><span class="stamp-label">稀有度：</span><span class="stamp-value" id="modalRarityFav">传世孤品</span></div>
-                        <div class="stamp-row"><span class="stamp-label">来源：</span><span class="stamp-value" id="modalSourceFav">英国邮政史</span></div>
+                        <div class="stamp-row"><span class="stamp-label">年份：</span><span class="stamp-value" id="modalYear">1840</span></div>
+                        <div class="stamp-row"><span class="stamp-label">估值：</span><span class="stamp-value" id="modalEstimate">约850万美元</span></div>
+                        <div class="stamp-row"><span class="stamp-label">稀有度：</span><span class="stamp-value" id="modalRarity">传世孤品</span></div>
+                        <div class="stamp-row"><span class="stamp-label">来源：</span><span class="stamp-value" id="modalSource">英国邮政史</span></div>
                     </div>
                 </div>
                 <div class="modal-price-row">
-                    <span class="modal-price-display" id="modalPriceFav">2.5 BNB</span>
-                    <span class="modal-mint-days">铸造7天</span>
+                    <span class="modal-price-display" id="modalPrice">2.5 BNB</span>
+                    <span class="modal-mint-days" id="modalCooldown">铸造7天</span>
                 </div>
-                <div class="modal-btns">
-                    <button class="btn-cancel" onclick="closeModalFav()">取 消</button>
-                    <button class="btn-confirm" onclick="confirmCardFav()">出 售</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="modal-overlay" id="cardModalLottery">
-            <div class="modal-box">
-                <div class="modal-id-top" id="modalIdTopLottery">#0001</div>
-                <div class="modal-img-area"><img id="modalImgLottery" src="" alt=""></div>
-                <div class="stamp-panel">
-                    <div class="stamp-title" id="modalNameLottery">最贵邮票</div>
-                    <div class="stamp-grid">
-                        <div class="stamp-row"><span class="stamp-label">年份：</span><span class="stamp-value" id="modalYearLottery">1840</span></div>
-                        <div class="stamp-row"><span class="stamp-label">估值：</span><span class="stamp-value" id="modalEstimateLottery">约850万美元</span></div>
-                        <div class="stamp-row"><span class="stamp-label">稀有度：</span><span class="stamp-value" id="modalRarityLottery">传世孤品</span></div>
-                        <div class="stamp-row"><span class="stamp-label">来源：</span><span class="stamp-value" id="modalSourceLottery">英国邮政史</span></div>
-                    </div>
-                </div>
-                <div class="modal-price-row">
-                    <span class="modal-price-display" id="modalPriceLottery">2.5 BNB</span>
-                    <span class="modal-mint-days">铸造7天</span>
-                </div>
-                <div class="modal-btns">
-                    <button class="btn-cancel" onclick="closeModalLottery()">取 消</button>
-                    <button class="btn-confirm" onclick="confirmCardLottery()">确 定</button>
+                <div class="modal-btns" id="modalBtns">
+                    <button class="btn-cancel" onclick="closeModal()">取 消</button>
+                    <button class="btn-confirm" id="btnConfirm" onclick="confirmMint()">确 定</button>
                 </div>
             </div>
         </div>
 
         <div class="bottom-nav">
-            <div class="nav-item active" data-page="nft" onclick="switchPage('nft',this)"><i class="fas fa-gem nav-icon"></i><span>NFT</span></div>
-            <div class="nav-item" data-page="entertainment" onclick="switchPage('entertainment',this)"><i class="fas fa-gamepad nav-icon"></i><span>娱乐</span></div>
+            <div class="nav-item active" data-page="nft" onclick="switchPage('nft',this)"><i class="fas fa-gem nav-icon"></i><span>铸造</span></div>
+            <div class="nav-item" data-page="lottery" onclick="switchPage('lottery',this)"><i class="fas fa-dice nav-icon"></i><span>抽奖</span></div>
+            <div class="nav-item" data-page="favorite" onclick="switchPage('favorite',this)"><i class="fas fa-wallet nav-icon"></i><span>资产</span></div>
             <div class="nav-item" data-page="market" onclick="switchPage('market',this)"><i class="fas fa-store nav-icon"></i><span>市场</span></div>
-            <div class="nav-item" data-page="favorite" onclick="switchPage('favorite',this)"><i class="fas fa-heart nav-icon"></i><span>收藏</span></div>
-            <div class="nav-item" data-page="messages" onclick="switchPage('messages',this)"><i class="fas fa-comments nav-icon"></i><span>讯息</span></div>
+            <div class="nav-item" data-page="messages" onclick="switchPage('messages',this)"><i class="fas fa-users nav-icon"></i><span>团队</span></div>
         </div>
     </div>
 
     <script>
-        const cardData = [
-            { icon:'🐅', name:'最贵邮票', rarity:'传世孤品', id:'#0001', year:'1840', estimate:'约850万美元', source:'英国邮政史', price:'2.5 BNB', color:'#ffb84d', img:'images/youpiao1.png', progress:30 },
-            { icon:'🐼', name:'瑞典黄色三先令', rarity:'传说', id:'#0002', year:'1855年', estimate:'227万美元', source:'印刷事故错色珍邮', price:'3.0 BNB', color:'#ffb84d', img:'images/TOP2.png', progress:60 },
-            { icon:'🦏', name:'倒置的珍妮', rarity:'史诗', id:'#0003', year:'1918年', estimate:'300万美元', source:'美国首套航空错版邮票', price:'0.45 BNB', color:'#d98eff', img:'images/TOP3.png', progress:100 },
-            { icon:'🦅', name:'毛里求斯邮局', rarity:'稀有', id:'#0004', year:'1847年', estimate:'160万美元', source:'舞会请柬错刻珍邮', price:'0.08 BNB', color:'#6db3ff', img:'images/TOP4.png', progress:90 },
-            { icon:'🐘', name:'夏威夷传教士', rarity:'稀有', id:'#0005', year:'1851年', estimate:'1304万人民币', source:'夏威夷最早传教士邮票', price:'0.07 BNB', color:'#6db3ff', img:'images/TOP5.png', progress:100 },
-            { icon:'🐯', name:'全国山河一片红', rarity:'稀有', id:'#0006', year:'1968年', estimate:'730.25万人民币', source:'撤销发行未流通珍邮', price:'0.09 BNB', color:'#6db3ff', img:'images/TOP6.png', progress:50 },
-            { icon:'🦊', name:'百慕大佩罗特', rarity:'普通', id:'#0007', year:'1848年', estimate:'140万美元', source:'邮局局长手工盖印邮票', price:'0.01 BNB', color:'#ccc', img:'images/TOP7.png', progress:10 },
-            { icon:'🦚', name:'圭亚那棉纱卷', rarity:'史诗', id:'#0008', year:'1850年', estimate:'100万美元', source:'南美殖民时代经典珍邮', price:'0.5 BNB', color:'#d98eff', img:'images/TOP8.png', progress:75 },
-            { icon:'🐬', name:'阿根廷对倒双连', rarity:'稀有', id:'#0009', year:'1859年', estimate:'57.5万美元', source:'仅此一套双连错票孤品', price:'0.1 BNB', color:'#6db3ff', img:'images/TOP9.png', progress:45 }
-        ];
-        let selectedCard = null, selectedElement = null;
-        let isLotteryRunning = false, lotteryInterval = null;
+        // ==================== 配置 ====================
+        const CONFIG = {
+            CONTRACT_ADDRESS: '0x0000000000000000000000000000000000000000',
+            USDT_ADDRESS: '0x55d398326f99059fF775485246999027B3197955',
+            CHAIN_ID: 56
+        };
 
-        function renderCards(gridId, pageKey) {
-            const grid = document.getElementById(gridId);
-            if (!grid) return;
+        const FACE_VALUES = [0.001,0.002,0.003,0.004,0.005,0.006,0.007,0.008,0.010];
+        const COOLDOWN_MINUTES = [5,10,15,20,25,30,35,75,150];
+
+        const cardData = [
+            { name:'最贵邮票', rarity:'传世孤品', id:'#0001', year:'1840', estimate:'约850万美元', source:'英国邮政史', price:'2.5 BNB', color:'#ffb84d', img:'images/youpiao1.png', type:0, progress:30 },
+            { name:'瑞典黄色三先令', rarity:'传说', id:'#0002', year:'1855年', estimate:'227万美元', source:'印刷事故错色珍邮', price:'3.0 BNB', color:'#ffb84d', img:'images/TOP2.png', type:1, progress:60 },
+            { name:'倒置的珍妮', rarity:'史诗', id:'#0003', year:'1918年', estimate:'300万美元', source:'美国首套航空错版邮票', price:'0.45 BNB', color:'#d98eff', img:'images/TOP3.png', type:2, progress:100 },
+            { name:'毛里求斯邮局', rarity:'稀有', id:'#0004', year:'1847年', estimate:'160万美元', source:'舞会请柬错刻珍邮', price:'0.08 BNB', color:'#6db3ff', img:'images/TOP4.png', type:3, progress:90 },
+            { name:'夏威夷传教士', rarity:'稀有', id:'#0005', year:'1851年', estimate:'1304万人民币', source:'夏威夷最早传教士邮票', price:'0.07 BNB', color:'#6db3ff', img:'images/TOP5.png', type:4, progress:100 },
+            { name:'全国山河一片红', rarity:'稀有', id:'#0006', year:'1968年', estimate:'730.25万人民币', source:'撤销发行未流通珍邮', price:'0.09 BNB', color:'#6db3ff', img:'images/TOP6.png', type:5, progress:50 },
+            { name:'百慕大佩罗特', rarity:'普通', id:'#0007', year:'1848年', estimate:'140万美元', source:'邮局局长手工盖印邮票', price:'0.01 BNB', color:'#ccc', img:'images/TOP7.png', type:6, progress:10 },
+            { name:'圭亚那棉纱卷', rarity:'史诗', id:'#0008', year:'1850年', estimate:'100万美元', source:'南美殖民时代经典珍邮', price:'0.5 BNB', color:'#d98eff', img:'images/TOP8.png', type:7, progress:75 },
+            { name:'阿根廷对倒双连', rarity:'稀有', id:'#0009', year:'1859年', estimate:'57.5万美元', source:'仅此一套双连错票孤品', price:'0.1 BNB', color:'#6db3ff', img:'images/TOP9.png', type:8, progress:45 }
+        ];
+
+        let provider = null, signer = null, currentAccount = null;
+        let isLotteryRunning = false, lotteryInterval = null;
+        let currentMintCard = null, myNFTs = [], marketListings = [];
+        let todayLotteryCount = 3, maxLotteryCount = 10, globalLotteryProgress = 67;
+
+        // ==================== 工具函数 ====================
+        function formatFaceValue(t) { return FACE_VALUES[t] || 0.001; }
+        function calcExchange(fv) { return fv * 1.05; }
+        function formatCooldown(t) {
+            const m = COOLDOWN_MINUTES[t] || 5;
+            if(m < 60) return `${m}分钟`;
+            if(m < 1440) return `${(m/60).toFixed(1)}小时`;
+            return `${(m/1440).toFixed(0)}天`;
+        }
+
+        // ==================== 钱包连接 ====================
+        async function connectWallet() {
+            if(!window.ethereum){alert('请安装 MetaMask');return;}
+            const btn = document.getElementById('walletBtn');
+            if(currentAccount){currentAccount=null;btn.textContent='Connect';btn.classList.remove('connected');return;}
+            btn.innerHTML='<span class="loading-spinner"></span>';
+            try{
+                const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
+                currentAccount=accounts[0];
+                provider=new ethers.providers.Web3Provider(window.ethereum);
+                signer=provider.getSigner();
+                btn.textContent=currentAccount.substring(0,6)+'...'+currentAccount.substring(38);
+                btn.classList.add('connected');
+                document.getElementById('refLink').textContent=`https://luckystamp.app/ref=${currentAccount}`;
+                loadMyNFTs();loadTeamInfo();
+            }catch(e){btn.textContent='Connect';}
+        }
+
+        // ==================== BNB抽奖系统 ====================
+        function updateLotteryDisplay() {
+            document.getElementById('todayCount').textContent = todayLotteryCount;
+            document.getElementById('remainCount').textContent = maxLotteryCount - todayLotteryCount;
+            document.getElementById('lotteryProgress').style.width = (todayLotteryCount / maxLotteryCount * 100) + '%';
+            document.getElementById('globalProgress').textContent = (100 - globalLotteryProgress);
+        }
+
+        async function bnbLottery() {
+            if(!currentAccount){alert('请先连接钱包');return;}
+            if(todayLotteryCount >= maxLotteryCount){alert('今日抽奖次数已用完');return;}
+            const result = document.getElementById('lotteryResult');
+            result.style.display = 'block';
+            result.innerHTML = '<p style="color:var(--gold-glow);font-size:12px;"><span class="loading-spinner"></span> 链上抽奖中...</p>';
+            
+            setTimeout(() => {
+                const prizes = ['🎁 普通邮票NFT','🎀 稀有邮票NFT','👑 史诗邮票NFT','💎 传说邮票NFT','🔥 隐藏款NFT'];
+                const prize = prizes[Math.floor(Math.random() * prizes.length)];
+                todayLotteryCount++;
+                globalLotteryProgress++;
+                updateLotteryDisplay();
+                result.innerHTML = `<p style="color:#4caf50;font-size:12px;">✅ 恭喜获得：${prize}！</p>`;
+                alert(`🎉 抽奖成功！\n获得：${prize}\n合约调用：bnbBlindBoxLottery({value: 0.001 BNB})`);
+            }, 1500);
+        }
+
+        // ==================== 铸造系统 ====================
+        function renderCards() {
+            const grid = document.getElementById('cardGrid');
             grid.innerHTML = cardData.map((card, index) => `
-                <div class="animal-card" data-index="${index}" data-page="${pageKey}">
+                <div class="animal-card" data-index="${index}">
                     <div class="check-mark">✓</div><div class="card-icon"></div>
                     <div class="card-name">随机铸邮</div><div class="card-rarity" style="color:var(--text-secondary)">NFT</div>
                 </div>`).join('');
         }
-        function selectCard(index, element, pageKey) { return; }
-        function showCardDetailMarket(card) {
-            if (card.img) { document.getElementById('modalImgMarket').src = card.img; } else { document.getElementById('modalImgMarket').src = ''; }
-            document.getElementById('modalIdTopMarket').textContent = card.id;
-            document.getElementById('modalNameMarket').textContent = card.name;
-            document.getElementById('modalYearMarket').textContent = card.year;
-            document.getElementById('modalEstimateMarket').textContent = card.estimate;
-            document.getElementById('modalRarityMarket').textContent = card.rarity;
-            document.getElementById('modalRarityMarket').style.color = card.color || '#ffb84d';
-            document.getElementById('modalSourceMarket').textContent = card.source;
-            document.getElementById('modalPriceMarket').textContent = card.price;
-            document.getElementById('cardModalMarket').classList.add('open');
+
+        async function requestMint() {
+            if(!currentAccount){alert('请先连接钱包');return;}
+            if(isLotteryRunning)return;
+            isLotteryRunning=true;
+            const btn=document.getElementById('btnLottery');
+            btn.disabled=true;btn.textContent='📮 铸造中...';
+            document.getElementById('mintResult').style.display='none';
+            const cards=document.querySelectorAll('#cardGrid .animal-card');
+            cards.forEach(c=>{c.classList.remove('highlight','selected')});
+            let idx=0,speed=80,rounds=0;
+            lotteryInterval=setInterval(()=>{
+                cards.forEach(c=>c.classList.remove('highlight'));
+                cards[idx].classList.add('highlight');idx++;
+                if(idx>=cards.length){idx=0;rounds++;if(rounds>=2)speed+=30;}
+                if(rounds>=3&&idx===Math.floor(Math.random()*cards.length)){
+                    clearInterval(lotteryInterval);lotteryInterval=null;
+                    const fi=Math.floor(Math.random()*cards.length);
+                    cards.forEach(c=>c.classList.remove('highlight'));
+                    cards[fi].classList.add('selected','highlight');
+                    currentMintCard=cardData[fi];
+                    document.getElementById('mintResult').style.display='block';
+                    document.getElementById('mintResult').innerHTML=`<p style="color:var(--gold-glow);font-size:12px;">🎯 选中：${currentMintCard.name} | 面值：${FACE_VALUES[fi]} USDT | 冷却：${formatCooldown(fi)}</p>`;
+                    showMintConfirmModal(currentMintCard);
+                    isLotteryRunning=false;btn.disabled=false;btn.textContent='📮 请求铸造';
+                }
+            },speed);
         }
-        function closeModalMarket() { document.getElementById('cardModalMarket').classList.remove('open'); }
-        function showCardDetailFav(card) {
-            if(card.progress < 100) { alert('⏳ 铸邮中，暂不可交易！'); return; }
-            if (card.img) { document.getElementById('modalImgFav').src = card.img; } else { document.getElementById('modalImgFav').src = ''; }
-            document.getElementById('modalIdTopFav').textContent = card.id;
-            document.getElementById('modalNameFav').textContent = card.name;
-            document.getElementById('modalYearFav').textContent = card.year;
-            document.getElementById('modalEstimateFav').textContent = card.estimate;
-            document.getElementById('modalRarityFav').textContent = card.rarity;
-            document.getElementById('modalRarityFav').style.color = card.color || '#ffb84d';
-            document.getElementById('modalSourceFav').textContent = card.source;
-            document.getElementById('modalPriceFav').textContent = card.price;
-            document.getElementById('cardModalFav').classList.add('open');
+
+        function showMintConfirmModal(card) {
+            document.getElementById('modalImg').src=card.img||'';
+            document.getElementById('modalIdTop').textContent=card.id;
+            document.getElementById('modalName').textContent=card.name;
+            document.getElementById('modalYear').textContent=card.year;
+            document.getElementById('modalEstimate').textContent=card.estimate;
+            document.getElementById('modalRarity').textContent=card.rarity;
+            document.getElementById('modalRarity').style.color=card.color;
+            document.getElementById('modalSource').textContent=card.source;
+            document.getElementById('modalPrice').textContent=`${FACE_VALUES[card.type]} USDT`;
+            document.getElementById('modalCooldown').textContent=`冷却${formatCooldown(card.type)}`;
+            document.getElementById('modalBtns').innerHTML=`
+                <button class="btn-cancel" onclick="cancelMint()">取 消</button>
+                <button class="btn-confirm" onclick="confirmMint()">确认铸造</button>
+            `;
+            document.getElementById('cardModal').classList.add('open');
         }
-        function closeModalFav() { document.getElementById('cardModalFav').classList.remove('open'); }
-        function confirmCardFav() { alert('✅ 出售成功！'); document.getElementById('cardModalFav').classList.remove('open'); }
-        function showCardDetailLottery(card) {
-            if (card.img) { document.getElementById('modalImgLottery').src = card.img; } else { document.getElementById('modalImgLottery').src = ''; }
-            document.getElementById('modalIdTopLottery').textContent = card.id;
-            document.getElementById('modalNameLottery').textContent = card.name;
-            document.getElementById('modalYearLottery').textContent = card.year;
-            document.getElementById('modalEstimateLottery').textContent = card.estimate;
-            document.getElementById('modalRarityLottery').textContent = card.rarity;
-            document.getElementById('modalRarityLottery').style.color = card.color || '#ffb84d';
-            document.getElementById('modalSourceLottery').textContent = card.source;
-            document.getElementById('modalPriceLottery').textContent = card.price;
-            document.getElementById('cardModalLottery').classList.add('open');
+
+        function cancelMint() {
+            document.getElementById('cardModal').classList.remove('open');
+            currentMintCard=null;
+            document.getElementById('mintResult').style.display='none';
+            document.querySelectorAll('#cardGrid .animal-card').forEach(c=>c.classList.remove('selected','highlight'));
         }
-        function closeModalLottery() { document.getElementById('cardModalLottery').classList.remove('open'); }
-        function confirmCardLottery() {
-            if(selectedCard&&selectedElement){ selectedElement.classList.add('revealed'); selectedElement.querySelector('.card-icon').textContent=selectedCard.icon; selectedElement.querySelector('.card-name').textContent=selectedCard.name; selectedElement.querySelector('.card-rarity').textContent=selectedCard.rarity; selectedElement.querySelector('.card-rarity').style.color=selectedCard.color; alert(`✅ 已确认：${selectedCard.name} (${selectedCard.rarity})\n编号：${selectedCard.id}`); }
-            document.getElementById('cardModalLottery').classList.remove('open');
+
+        async function confirmMint() {
+            if(!currentAccount||!currentMintCard)return;
+            document.getElementById('cardModal').classList.remove('open');
+            alert(`⛓️ 链上铸造确认：${currentMintCard.name}\n合约调用：confirmRandomMint()\n面值：${FACE_VALUES[currentMintCard.type]} USDT`);
+            document.getElementById('mintResult').innerHTML='<p style="color:#4caf50;font-size:12px;">✅ 铸造成功！NFT已加入你的资产</p>';
+            currentMintCard=null;loadMyNFTs();
         }
-        function startLottery() {
-            if (isLotteryRunning) return;
-            isLotteryRunning = true; const btn = document.getElementById('btnLottery'); btn.disabled = true; btn.textContent = '📮 铸邮中...';
-            const cards = document.querySelectorAll('#cardGrid .animal-card'); const totalCards = cards.length;
-            let currentIndex = 0, speed = 80, rounds = 0; const maxRounds = 3;
-            cards.forEach(c => { c.classList.remove('highlight', 'selected'); });
-            if (selectedElement) { selectedElement = null; selectedCard = null; }
-            lotteryInterval = setInterval(() => { cards.forEach(c => c.classList.remove('highlight')); cards[currentIndex].classList.add('highlight'); currentIndex++;
-                if (currentIndex >= totalCards) { currentIndex = 0; rounds++; if (rounds >= maxRounds - 1) speed += 30; }
-                if (rounds >= maxRounds && currentIndex === Math.floor(Math.random() * totalCards)) { clearInterval(lotteryInterval); lotteryInterval = null;
-                    const finalIndex = Math.floor(Math.random() * totalCards); cards.forEach(c => c.classList.remove('highlight'));
-                    const finalCard = cards[finalIndex]; finalCard.classList.add('selected', 'highlight');
-                    selectedCard = cardData[finalIndex]; selectedElement = finalCard;
-                    setTimeout(() => { showCardDetailLottery(selectedCard); isLotteryRunning = false; btn.disabled = false; btn.textContent = '📮 随机铸邮'; }, 500); }
-            }, speed);
+
+        // ==================== 资产系统 ====================
+        function loadMyNFTs() {
+            myNFTs=cardData.filter((c,i)=>i<6).map((c,i)=>({...c,tokenId:1000+i,canTrade:c.progress>=100,faceValue:FACE_VALUES[i]||0.001}));
+            renderFavoriteGrid();updateAssetStats();
         }
-        function mint(type) { alert('⛓️ 链上Mint盲盒 · ' + type + ' (演示模式)'); }
-        document.getElementById('cardModalMarket').addEventListener('click',function(e){ if(e.target===this)closeModalMarket(); });
-        document.getElementById('cardModalFav').addEventListener('click',function(e){ if(e.target===this)closeModalFav(); });
-        document.getElementById('cardModalLottery').addEventListener('click',function(e){ if(e.target===this)closeModalLottery(); });
-        function switchPage(page,el){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById('page-'+page).classList.add('active'); document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active')); el.classList.add('active'); document.getElementById('logoIcon').textContent={nft:'🦏',entertainment:'🎮',market:'🏪',favorite:'❤️',messages:'💬'}[page]||'🦏'; }
-        function filterMarket(rarity,btn){ document.querySelectorAll('#page-market .filter-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); document.querySelectorAll('#marketGrid .market-card').forEach(c=>c.style.display=(rarity==='all'||c.getAttribute('data-rarity')===rarity)?'':'none'); }
-        const lb=document.getElementById('langBtn'),ld=document.getElementById('langDropdown'); lb.addEventListener('click',e=>{e.stopPropagation();ld.classList.toggle('open');}); document.addEventListener('click',e=>{if(!ld.contains(e.target)&&e.target!==lb)ld.classList.remove('open');}); document.querySelectorAll('.lang-option').forEach(o=>o.addEventListener('click',function(){localStorage.setItem('bcbsLang',this.getAttribute('data-lang'));ld.classList.remove('open');}));
-        const wb=document.getElementById('walletBtn'); let ac=null; wb.addEventListener('click',async function(){ if(ac){ac=null;wb.textContent='Connect';wb.classList.remove('connected');return;} if(!window.ethereum){alert('请安装 MetaMask');return;} wb.innerHTML='...'; try{const a=await window.ethereum.request({method:'eth_requestAccounts'});ac=a[0];wb.textContent=ac.substring(0,6)+'...'+ac.substring(ac.length-4);wb.classList.add('connected');}catch(e){wb.textContent='Connect';} }); (async()=>{if(window.ethereum){try{const a=await window.ethereum.request({method:'eth_accounts'});if(a.length>0){ac=a[0];wb.textContent=ac.substring(0,6)+'...'+ac.substring(ac.length-4);wb.classList.add('connected');}}catch(e){}}})();
-        renderCards('cardGrid','nft');
+
+        function renderFavoriteGrid() {
+            const grid=document.getElementById('favoriteGrid');
+            if(!grid)return;
+            grid.innerHTML=myNFTs.map((nft,i)=>`
+                <div class="market-card">
+                    <div class="frame"><img src="${nft.img}" alt="${nft.name}"></div>
+                    <div class="info">
+                        <p style="color:white;font-weight:600;">${nft.name}</p>
+                        <p class="usdt-value"><i class="fab fa-usdt"></i> 面值 ${nft.faceValue} USDT</p>
+                        <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:${nft.progress}%"></div></div>
+                        <p class="mint-status-text">${nft.canTrade?'可交易':`铸邮中 ${nft.progress}%`}</p>
+                        <button class="btn-sm" onclick="handleAssetAction(${i})">${nft.canTrade?'出售/兑换':'铸邮中'}</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateAssetStats() {
+            document.getElementById('totalNFT').textContent=myNFTs.length;
+            document.getElementById('canTrade').textContent=myNFTs.filter(n=>n.canTrade).length;
+            const tv=myNFTs.reduce((s,n)=>s+n.faceValue,0);
+            document.getElementById('totalValue').textContent=tv.toFixed(2);
+            document.getElementById('batchExchange').textContent=calcExchange(tv).toFixed(2);
+        }
+
+        function handleAssetAction(i) {
+            const nft=myNFTs[i];
+            if(!nft.canTrade){alert('⏳ 铸邮中，暂不可交易！');return;}
+            document.getElementById('modalImg').src=nft.img||'';
+            document.getElementById('modalIdTop').textContent=`Token #${nft.tokenId}`;
+            document.getElementById('modalName').textContent=nft.name;
+            document.getElementById('modalYear').textContent=nft.year;
+            document.getElementById('modalEstimate').textContent=nft.estimate;
+            document.getElementById('modalRarity').textContent=nft.rarity;
+            document.getElementById('modalRarity').style.color=nft.color;
+            document.getElementById('modalSource').textContent=nft.source;
+            document.getElementById('modalPrice').textContent=`${nft.faceValue} USDT (兑换: ${calcExchange(nft.faceValue).toFixed(4)} USDT)`;
+            document.getElementById('modalCooldown').textContent='可交易';
+            document.getElementById('modalBtns').innerHTML=`
+                <button class="btn-cancel" onclick="closeModal()">取 消</button>
+                <button class="btn-confirm" onclick="exchangeNFT(${i})">兑 换</button>
+                <button class="btn-confirm" style="margin-left:4px;" onclick="sellNFT(${i})">挂 单</button>
+            `;
+            document.getElementById('cardModal').classList.add('open');
+        }
+
+        function exchangeNFT(i) {
+            const nft=myNFTs[i];
+            document.getElementById('cardModal').classList.remove('open');
+            alert(`💱 兑换成功！获得 ${calcExchange(nft.faceValue).toFixed(4)} USDT`);
+            myNFTs.splice(i,1);renderFavoriteGrid();updateAssetStats();
+        }
+
+        function sellNFT(i) {
+            const price=prompt('请输入挂单价格 (USDT)：',myNFTs[i].faceValue.toFixed(2));
+            if(!price)return;
+            document.getElementById('cardModal').classList.remove('open');
+            marketListings.push({...myNFTs[i],askPrice:parseFloat(price)});
+            alert(`✅ 已挂单：${myNFTs[i].name} | 价格：${price} USDT`);
+            myNFTs.splice(i,1);renderFavoriteGrid();updateAssetStats();renderMarketGrid();
+        }
+
+        async function batchExchangeAll() {
+            if(!currentAccount){alert('请先连接钱包');return;}
+            const tradable=myNFTs.filter(n=>n.canTrade);
+            if(tradable.length===0){alert('没有可兑换的NFT');return;}
+            const total=tradable.reduce((s,n)=>s+calcExchange(n.faceValue),0);
+            if(confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(4)} USDT？`)){
+                myNFTs=myNFTs.filter(n=>!n.canTrade);
+                renderFavoriteGrid();updateAssetStats();
+                alert(`✅ 批量兑换成功！获得 ${total.toFixed(4)} USDT`);
+            }
+        }
+
+        // ==================== 市场系统 ====================
+        function renderMarketGrid() {
+            const grid=document.getElementById('marketGrid');
+            if(!grid)return;
+            const all=marketListings.length>0?marketListings:cardData.slice(0,6);
+            grid.innerHTML=all.map((card,i)=>`
+                <div class="market-card" data-rarity="${card.rarity}" onclick="showMarketDetail(${i})">
+                    <div class="frame"><img src="${card.img}" alt="${card.name}"></div>
+                    <div class="info">
+                        <p style="color:white;font-weight:600;">${card.name}</p>
+                        <p class="usdt-value"><i class="fab fa-usdt"></i> ${card.askPrice?`售价 ${card.askPrice} USDT`:'价值 0.00 USDT'}</p>
+                        <button class="btn-sm">${card.askPrice?'购 买':'查看详情'}</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showMarketDetail(i) {
+            const card=(marketListings.length>0?marketListings:cardData.slice(0,6))[i];
+            document.getElementById('modalImg').src=card.img||'';
+            document.getElementById('modalIdTop').textContent=card.id||`#${1000+i}`;
+            document.getElementById('modalName').textContent=card.name;
+            document.getElementById('modalYear').textContent=card.year;
+            document.getElementById('modalEstimate').textContent=card.estimate;
+            document.getElementById('modalRarity').textContent=card.rarity;
+            document.getElementById('modalRarity').style.color=card.color;
+            document.getElementById('modalSource').textContent=card.source;
+            document.getElementById('modalPrice').textContent=card.askPrice?`${card.askPrice} USDT`:(card.price||'2.5 BNB');
+            document.getElementById('modalCooldown').textContent=card.askPrice?'可购买':'铸造7天';
+            document.getElementById('modalBtns').innerHTML=card.askPrice
+                ?`<button class="btn-cancel" onclick="closeModal()">取 消</button><button class="btn-confirm" onclick="buyNFT(${i})">购 买</button>`
+                :`<button class="btn-close-full" onclick="closeModal()">关 闭</button>`;
+            document.getElementById('cardModal').classList.add('open');
+        }
+
+        function buyNFT(i) {
+            if(!currentAccount){alert('请先连接钱包');return;}
+            const card=marketListings[i];
+            document.getElementById('cardModal').classList.remove('open');
+            alert(`🛒 购买成功！${card.name} | 支付 ${card.askPrice} USDT`);
+            myNFTs.push({...card,tokenId:Date.now(),canTrade:true,progress:100,faceValue:card.faceValue||0.005});
+            marketListings.splice(i,1);renderFavoriteGrid();updateAssetStats();renderMarketGrid();
+        }
+
+        function filterMarket(rarity,btn) {
+            document.querySelectorAll('#page-market .filter-btn').forEach(b=>b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelectorAll('#marketGrid .market-card').forEach(card=>{
+                card.style.display=(rarity==='all'||card.getAttribute('data-rarity')===rarity||(rarity==='selling'&&marketListings.length>0))?'':'none';
+            });
+        }
+
+        // ==================== 团队系统 ====================
+        function loadTeamInfo() {
+            document.getElementById('myLevel').textContent='V3';
+            document.getElementById('directRefs').textContent='12';
+            document.getElementById('teamSize').textContent='256';
+            document.getElementById('teamVolume').textContent='12,580';
+            document.getElementById('totalRefs').textContent='12 人';
+            document.getElementById('totalReward').innerHTML='<i class="fab fa-usdt"></i> 628.50 USDT';
+            document.getElementById('refRecordList').innerHTML=[
+                {addr:'0x1234...5678',time:'2026-07-30 14:30',reward:'+25.00 USDT'},
+                {addr:'0x8765...4321',time:'2026-07-29 09:15',reward:'+18.50 USDT'},
+                {addr:'0x2468...1357',time:'2026-07-28 18:45',reward:'+32.00 USDT'}
+            ].map(r=>`<div class="record-item"><span>${r.addr}</span><span class="record-addr">${r.time}</span><span class="record-value">${r.reward}</span></div>`).join('');
+        }
+
+        // ==================== 弹窗控制 ====================
+        function closeModal(){document.getElementById('cardModal').classList.remove('open');}
+        document.getElementById('cardModal').addEventListener('click',function(e){if(e.target===this)closeModal();});
+
+        // ==================== 页面切换 ====================
+        function switchPage(page,el) {
+            document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+            document.getElementById('page-'+page).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('logoIcon').textContent={nft:'🍀',lottery:'🎲',favorite:'💼',market:'🏪',messages:'👥'}[page]||'🍀';
+            if(page==='market')renderMarketGrid();
+            if(page==='favorite'){renderFavoriteGrid();updateAssetStats();}
+            if(page==='messages')loadTeamInfo();
+            if(page==='lottery')updateLotteryDisplay();
+        }
+
+        // ==================== 初始化 ====================
+        renderCards();renderMarketGrid();updateLotteryDisplay();
+        document.getElementById('favoriteGrid').innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:20px;">连接钱包后加载资产...</p>';
+        if(window.ethereum){
+            window.ethereum.on('accountsChanged',(accounts)=>{
+                if(accounts.length===0){currentAccount=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');}
+                else{currentAccount=accounts[0];document.getElementById('walletBtn').textContent=currentAccount.substring(0,6)+'...'+currentAccount.substring(38);}
+            });
+        }
     </script>
 </body>
 </html>
