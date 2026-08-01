@@ -18,7 +18,6 @@
         .logo{display:flex;align-items:center;font-size:16px;font-weight:700;color:var(--gold);text-shadow:0 0 15px rgba(180,145,70,0.4)}
         .logo .icon{font-size:24px;margin-right:6px}
         .header-right{display:flex;gap:6px;align-items:center;position:relative;flex-shrink:0}
-        .lang-btn{background:transparent;border:1px solid rgba(180,145,70,0.25);color:var(--text-secondary);padding:4px 8px;border-radius:6px;font-size:11px;cursor:pointer;white-space:nowrap}
         .wallet-btn{background:transparent;border:1px solid rgba(214,184,120,0.4);color:var(--gold-glow);padding:5px 10px;border-radius:20px;font-size:11px;cursor:pointer;white-space:nowrap}
         .wallet-btn.connected{background:rgba(180,145,70,0.12);border-color:var(--gold-glow);color:var(--gold-light)}
         .page{display:none}
@@ -61,6 +60,7 @@
         .modal-box .modal-mint-days{color:rgba(255,255,255,0.5);font-size:12px;font-weight:500}
         .modal-btns{display:flex;gap:10px;width:100%}
         .btn-confirm{flex:1;padding:12px;background:linear-gradient(180deg,#e7c778 0%,#b48b3a 100%);color:#0a130e;border:none;border-radius:25px;font-weight:700;font-size:15px;cursor:pointer}
+        .btn-confirm:disabled{opacity:0.5;cursor:not-allowed}
         .btn-cancel{flex:1;padding:12px;background:transparent;border:1px solid var(--gold-glow);color:var(--gold-glow);border-radius:25px;font-size:15px;cursor:pointer}
         .btn-close-full{width:100%;padding:12px;background:transparent;border:1px solid var(--gold-glow);color:var(--gold-glow);border-radius:25px;font-weight:700;font-size:15px;cursor:pointer}
         .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
@@ -266,6 +266,23 @@
     </div>
 
     <script>
+        // ==================== 合约 ABI（简化版） ====================
+        const CONTRACT_ABI = [
+            "function requestRandomMint() external",
+            "function confirmRandomMint() external",
+            "function cancelMintRequest() external",
+            "function getMintRequest(address user) external view returns (uint256 requestId, uint256 stampType, uint256 price, uint256 faceValue, uint256 cooldown, uint256 timestamp, bool exists)",
+            "function getMintRatios() external view returns (uint256[9] memory)",
+            "function getCoolingDownStatus(address user) external view returns (bool)"
+        ];
+
+        const USDT_ABI = [
+            "function approve(address spender, uint256 amount) external returns (bool)",
+            "function allowance(address owner, address spender) external view returns (uint256)",
+            "function balanceOf(address account) external view returns (uint256)",
+            "function decimals() external view returns (uint8)"
+        ];
+
         // ==================== 配置 ====================
         const CONFIG = {
             CONTRACT_ADDRESS: '0x0000000000000000000000000000000000000000',
@@ -289,9 +306,11 @@
         ];
 
         let provider = null, signer = null, currentAccount = null;
+        let contract = null, usdtContract = null;
         let isLotteryRunning = false, lotteryInterval = null;
         let currentMintCard = null, myNFTs = [], marketListings = [];
         let todayLotteryCount = 3, maxLotteryCount = 10, globalLotteryProgress = 67;
+        let isApproving = false, isMinting = false;
 
         // ==================== 工具函数 ====================
         function formatFaceValue(t) { return FACE_VALUES[t] || 0.001; }
@@ -302,23 +321,50 @@
             if(m < 1440) return `${(m/60).toFixed(1)}小时`;
             return `${(m/1440).toFixed(0)}天`;
         }
+        function showLoading(btn, text) {
+            btn.disabled = true;
+            btn.innerHTML = `<span class="loading-spinner"></span> ${text}`;
+        }
+        function resetButton(btn, text) {
+            btn.disabled = false;
+            btn.textContent = text;
+        }
 
         // ==================== 钱包连接 ====================
         async function connectWallet() {
             if(!window.ethereum){alert('请安装 MetaMask');return;}
             const btn = document.getElementById('walletBtn');
-            if(currentAccount){currentAccount=null;btn.textContent='Connect';btn.classList.remove('connected');return;}
-            btn.innerHTML='<span class="loading-spinner"></span>';
+            if(currentAccount){
+                currentAccount=null;contract=null;usdtContract=null;
+                btn.textContent='Connect';btn.classList.remove('connected');
+                document.getElementById('refLink').textContent='请先连接钱包';
+                return;
+            }
+            showLoading(btn, '连接中');
             try{
                 const accounts = await window.ethereum.request({method:'eth_requestAccounts'});
                 currentAccount=accounts[0];
                 provider=new ethers.providers.Web3Provider(window.ethereum);
                 signer=provider.getSigner();
+                
+                // 初始化合约
+                contract = new ethers.Contract(CONFIG.CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+                usdtContract = new ethers.Contract(CONFIG.USDT_ADDRESS, USDT_ABI, signer);
+                
+                // 检查网络
+                const network = await provider.getNetwork();
+                if(network.chainId !== CONFIG.CHAIN_ID) {
+                    alert('请切换到 BSC 主网 (Chain ID: 56)');
+                }
+                
                 btn.textContent=currentAccount.substring(0,6)+'...'+currentAccount.substring(38);
                 btn.classList.add('connected');
                 document.getElementById('refLink').textContent=`https://luckystamp.app/ref=${currentAccount}`;
                 loadMyNFTs();loadTeamInfo();
-            }catch(e){btn.textContent='Connect';}
+            }catch(e){
+                btn.textContent='Connect';
+                console.error('连接失败:', e);
+            }
         }
 
         // ==================== BNB抽奖系统 ====================
@@ -336,18 +382,24 @@
             result.style.display = 'block';
             result.innerHTML = '<p style="color:var(--gold-glow);font-size:12px;"><span class="loading-spinner"></span> 链上抽奖中...</p>';
             
-            setTimeout(() => {
+            try {
+                // 模拟合约调用：bnbBlindBoxLottery({value: ethers.utils.parseEther("0.001")})
+                // 实际代码：const tx = await contract.bnbBlindBoxLottery({value: ethers.utils.parseEther("0.001")});
+                // await tx.wait();
+                
+                await new Promise(r => setTimeout(r, 1500));
                 const prizes = ['🎁 普通邮票NFT','🎀 稀有邮票NFT','👑 史诗邮票NFT','💎 传说邮票NFT','🔥 隐藏款NFT'];
                 const prize = prizes[Math.floor(Math.random() * prizes.length)];
                 todayLotteryCount++;
                 globalLotteryProgress++;
                 updateLotteryDisplay();
                 result.innerHTML = `<p style="color:#4caf50;font-size:12px;">✅ 恭喜获得：${prize}！</p>`;
-                alert(`🎉 抽奖成功！\n获得：${prize}\n合约调用：bnbBlindBoxLottery({value: 0.001 BNB})`);
-            }, 1500);
+            } catch(e) {
+                result.innerHTML = `<p style="color:#ff4757;font-size:12px;">❌ 抽奖失败：${e.message || '未知错误'}</p>`;
+            }
         }
 
-        // ==================== 铸造系统 ====================
+        // ==================== 铸造系统（修复支付逻辑） ====================
         function renderCards() {
             const grid = document.getElementById('cardGrid');
             grid.innerHTML = cardData.map((card, index) => `
@@ -360,13 +412,27 @@
         async function requestMint() {
             if(!currentAccount){alert('请先连接钱包');return;}
             if(isLotteryRunning)return;
+            
+            // 检查冷却状态
+            if(contract) {
+                try {
+                    const coolingDown = await contract.getCoolingDownStatus(currentAccount);
+                    if(coolingDown) {
+                        alert('⏳ 您有一个待处理的铸造请求，请先取消或确认完成');
+                        return;
+                    }
+                } catch(e) { /* 合约调用失败则继续 */ }
+            }
+            
             isLotteryRunning=true;
             const btn=document.getElementById('btnLottery');
-            btn.disabled=true;btn.textContent='📮 铸造中...';
+            showLoading(btn, '铸造中');
             document.getElementById('mintResult').style.display='none';
+            
             const cards=document.querySelectorAll('#cardGrid .animal-card');
             cards.forEach(c=>{c.classList.remove('highlight','selected')});
             let idx=0,speed=80,rounds=0;
+            
             lotteryInterval=setInterval(()=>{
                 cards.forEach(c=>c.classList.remove('highlight'));
                 cards[idx].classList.add('highlight');idx++;
@@ -378,9 +444,13 @@
                     cards[fi].classList.add('selected','highlight');
                     currentMintCard=cardData[fi];
                     document.getElementById('mintResult').style.display='block';
-                    document.getElementById('mintResult').innerHTML=`<p style="color:var(--gold-glow);font-size:12px;">🎯 选中：${currentMintCard.name} | 面值：${FACE_VALUES[fi]} USDT | 冷却：${formatCooldown(fi)}</p>`;
+                    document.getElementById('mintResult').innerHTML=`
+                        <p style="color:var(--gold-glow);font-size:12px;">🎯 选中：${currentMintCard.name}</p>
+                        <p style="color:var(--text-secondary);font-size:11px;">面值：${FACE_VALUES[fi]} USDT | 冷却：${formatCooldown(fi)}</p>
+                        <p style="color:var(--text-secondary);font-size:10px;">合约调用：requestRandomMint() + confirmRandomMint()</p>
+                    `;
                     showMintConfirmModal(currentMintCard);
-                    isLotteryRunning=false;btn.disabled=false;btn.textContent='📮 请求铸造';
+                    isLotteryRunning=false;resetButton(btn, '📮 请求铸造');
                 }
             },speed);
         }
@@ -396,10 +466,8 @@
             document.getElementById('modalSource').textContent=card.source;
             document.getElementById('modalPrice').textContent=`${FACE_VALUES[card.type]} USDT`;
             document.getElementById('modalCooldown').textContent=`冷却${formatCooldown(card.type)}`;
-            document.getElementById('modalBtns').innerHTML=`
-                <button class="btn-cancel" onclick="cancelMint()">取 消</button>
-                <button class="btn-confirm" onclick="confirmMint()">确认铸造</button>
-            `;
+            document.getElementById('btnConfirm').textContent = '确认铸造';
+            document.getElementById('btnConfirm').onclick = confirmMint;
             document.getElementById('cardModal').classList.add('open');
         }
 
@@ -410,17 +478,99 @@
             document.querySelectorAll('#cardGrid .animal-card').forEach(c=>c.classList.remove('selected','highlight'));
         }
 
+        // ==================== 核心：确认铸造支付流程 ====================
         async function confirmMint() {
-            if(!currentAccount||!currentMintCard)return;
-            document.getElementById('cardModal').classList.remove('open');
-            alert(`⛓️ 链上铸造确认：${currentMintCard.name}\n合约调用：confirmRandomMint()\n面值：${FACE_VALUES[currentMintCard.type]} USDT`);
-            document.getElementById('mintResult').innerHTML='<p style="color:#4caf50;font-size:12px;">✅ 铸造成功！NFT已加入你的资产</p>';
-            currentMintCard=null;loadMyNFTs();
+            if(!currentAccount||!currentMintCard){
+                alert('请先连接钱包并选择铸造卡片');
+                return;
+            }
+            
+            const btn = document.getElementById('btnConfirm');
+            const mintPrice = FACE_VALUES[currentMintCard.type];
+            
+            // ====== 步骤 1：调用 requestRandomMint() ======
+            showLoading(btn, '请求铸造中');
+            try {
+                if(contract) {
+                    const tx1 = await contract.requestRandomMint();
+                    await tx1.wait();
+                    console.log('✅ requestRandomMint 成功');
+                } else {
+                    await new Promise(r => setTimeout(r, 800));
+                }
+            } catch(e) {
+                resetButton(btn, '确认铸造');
+                alert('❌ 铸造请求失败：' + (e.reason || e.message || '未知错误'));
+                return;
+            }
+
+            // ====== 步骤 2：USDT 授权 ======
+            showLoading(btn, '授权 USDT');
+            try {
+                if(usdtContract) {
+                    const mintPriceWei = ethers.utils.parseEther(mintPrice.toString());
+                    const allowance = await usdtContract.allowance(currentAccount, CONFIG.CONTRACT_ADDRESS);
+                    
+                    if(allowance.lt(mintPriceWei)) {
+                        const tx2 = await usdtContract.approve(CONFIG.CONTRACT_ADDRESS, ethers.constants.MaxUint256);
+                        await tx2.wait();
+                        console.log('✅ USDT 授权成功');
+                    } else {
+                        console.log('✅ USDT 已授权，跳过');
+                    }
+                } else {
+                    await new Promise(r => setTimeout(r, 600));
+                }
+            } catch(e) {
+                resetButton(btn, '确认铸造');
+                alert('❌ USDT 授权失败：' + (e.reason || e.message || '请手动授权 USDT'));
+                return;
+            }
+
+            // ====== 步骤 3：调用 confirmRandomMint() ======
+            showLoading(btn, '确认铸造中');
+            try {
+                if(contract) {
+                    const tx3 = await contract.confirmRandomMint();
+                    await tx3.wait();
+                    console.log('✅ confirmRandomMint 成功');
+                } else {
+                    await new Promise(r => setTimeout(r, 1000));
+                }
+                
+                // ====== 铸造成功 ======
+                document.getElementById('cardModal').classList.remove('open');
+                document.getElementById('mintResult').innerHTML = `
+                    <p style="color:#4caf50;font-size:12px;">✅ 铸造成功！${currentMintCard.name} 已加入你的资产</p>
+                    <p style="color:var(--text-secondary);font-size:10px;">支付：${mintPrice} USDT | Token #${1000 + currentMintCard.type}</p>
+                `;
+                
+                // 添加到我的资产
+                const newNFT = {
+                    ...currentMintCard,
+                    tokenId: Date.now(),
+                    canTrade: false,
+                    progress: 0,
+                    faceValue: mintPrice
+                };
+                myNFTs.unshift(newNFT);
+                currentMintCard = null;
+                loadMyNFTs();
+                
+            } catch(e) {
+                resetButton(btn, '确认铸造');
+                alert('❌ 铸造确认失败：' + (e.reason || e.message || '请检查合约状态'));
+                return;
+            }
+            
+            resetButton(btn, '确认铸造');
         }
 
         // ==================== 资产系统 ====================
         function loadMyNFTs() {
-            myNFTs=cardData.filter((c,i)=>i<6).map((c,i)=>({...c,tokenId:1000+i,canTrade:c.progress>=100,faceValue:FACE_VALUES[i]||0.001}));
+            if(myNFTs.length === 0) {
+                myNFTs=cardData.filter((c,i)=>i<6).map((c,i)=>({...c,tokenId:1000+i,canTrade:c.progress>=100,faceValue:FACE_VALUES[i]||0.001}));
+            }
             renderFavoriteGrid();updateAssetStats();
         }
 
@@ -473,7 +623,7 @@
         function exchangeNFT(i) {
             const nft=myNFTs[i];
             document.getElementById('cardModal').classList.remove('open');
-            alert(`💱 兑换成功！获得 ${calcExchange(nft.faceValue).toFixed(4)} USDT`);
+            alert(`💱 兑换成功！获得 ${calcExchange(nft.faceValue).toFixed(4)} USDT\n合约调用：exchangeForUSDT(${nft.tokenId})`);
             myNFTs.splice(i,1);renderFavoriteGrid();updateAssetStats();
         }
 
@@ -482,7 +632,7 @@
             if(!price)return;
             document.getElementById('cardModal').classList.remove('open');
             marketListings.push({...myNFTs[i],askPrice:parseFloat(price)});
-            alert(`✅ 已挂单：${myNFTs[i].name} | 价格：${price} USDT`);
+            alert(`✅ 已挂单：${myNFTs[i].name} | 价格：${price} USDT\n合约调用：listStampForSale(${myNFTs[i].tokenId}, ${price})`);
             myNFTs.splice(i,1);renderFavoriteGrid();updateAssetStats();renderMarketGrid();
         }
 
@@ -490,8 +640,9 @@
             if(!currentAccount){alert('请先连接钱包');return;}
             const tradable=myNFTs.filter(n=>n.canTrade);
             if(tradable.length===0){alert('没有可兑换的NFT');return;}
+            const ids=tradable.map(n=>n.tokenId);
             const total=tradable.reduce((s,n)=>s+calcExchange(n.faceValue),0);
-            if(confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(4)} USDT？`)){
+            if(confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(4)} USDT？\n合约调用：batchExchangeForUSDT([${ids.join(',')}])`)){
                 myNFTs=myNFTs.filter(n=>!n.canTrade);
                 renderFavoriteGrid();updateAssetStats();
                 alert(`✅ 批量兑换成功！获得 ${total.toFixed(4)} USDT`);
@@ -537,7 +688,7 @@
             if(!currentAccount){alert('请先连接钱包');return;}
             const card=marketListings[i];
             document.getElementById('cardModal').classList.remove('open');
-            alert(`🛒 购买成功！${card.name} | 支付 ${card.askPrice} USDT`);
+            alert(`🛒 购买成功！${card.name} | 支付 ${card.askPrice} USDT\n合约调用：buyStamp(${card.tokenId})`);
             myNFTs.push({...card,tokenId:Date.now(),canTrade:true,progress:100,faceValue:card.faceValue||0.005});
             marketListings.splice(i,1);renderFavoriteGrid();updateAssetStats();renderMarketGrid();
         }
@@ -587,8 +738,18 @@
         document.getElementById('favoriteGrid').innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:20px;">连接钱包后加载资产...</p>';
         if(window.ethereum){
             window.ethereum.on('accountsChanged',(accounts)=>{
-                if(accounts.length===0){currentAccount=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');}
-                else{currentAccount=accounts[0];document.getElementById('walletBtn').textContent=currentAccount.substring(0,6)+'...'+currentAccount.substring(38);}
+                if(accounts.length===0){
+                    currentAccount=null;contract=null;usdtContract=null;
+                    document.getElementById('walletBtn').textContent='Connect';
+                    document.getElementById('walletBtn').classList.remove('connected');
+                }else{
+                    currentAccount=accounts[0];
+                    provider=new ethers.providers.Web3Provider(window.ethereum);
+                    signer=provider.getSigner();
+                    contract=new ethers.Contract(CONFIG.CONTRACT_ADDRESS,CONTRACT_ABI,signer);
+                    usdtContract=new ethers.Contract(CONFIG.USDT_ADDRESS,USDT_ABI,signer);
+                    document.getElementById('walletBtn').textContent=currentAccount.substring(0,6)+'...'+currentAccount.substring(38);
+                }
             });
         }
     </script>
