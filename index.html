@@ -6,6 +6,7 @@
     <title>LuckyStamp · NFT集邮 DApp</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
@@ -120,7 +121,10 @@
         .invite-card h4{color:var(--gold-light);font-size:14px;font-weight:600;margin-bottom:8px}
         .invite-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(180,145,70,0.1);font-size:12px}
         .invite-label{color:var(--text-secondary)}.invite-value{color:white;font-weight:600}
-        .qr-area{text-align:center;padding:10px}.qr-icon{font-size:80px;margin-bottom:8px}.qr-text{color:var(--text-secondary);font-size:11px;word-break:break-all}
+        .qr-area{text-align:center;padding:10px;display:flex;flex-direction:column;align-items:center;gap:10px}
+        .qr-container{display:flex;align-items:center;justify-content:center;width:160px;height:160px;background:white;border-radius:12px;padding:8px;margin:0 auto}
+        .qr-container canvas,.qr-container img{width:144px!important;height:144px!important}
+        .qr-text{color:var(--text-secondary);font-size:11px;word-break:break-all;max-width:100%}
         .team-card{background:rgba(19,32,22,0.8);border:1px solid rgba(180,145,70,0.25);border-radius:14px;padding:15px;margin-bottom:10px;backdrop-filter:blur(8px)}
         .team-card h4{color:var(--gold-light);font-size:14px;font-weight:600;margin-bottom:8px}
         .team-row{display:flex;gap:10px}.team-item{flex:1;text-align:center;background:rgba(0,0,0,0.2);border-radius:10px;padding:10px}
@@ -226,7 +230,10 @@
                 <div class="title"><h2>👥 我的团队</h2><p>邀请好友 · 团队数据 · 推荐奖励</p></div>
                 <div class="invite-card">
                     <h4>📱 扫描邀请</h4>
-                    <div class="qr-area"><div class="qr-icon">📱</div><div class="qr-text" id="refLink">请先连接钱包</div></div>
+                    <div class="qr-area">
+                        <div class="qr-container" id="qrCode"></div>
+                        <div class="qr-text" id="refLink">请先连接钱包</div>
+                    </div>
                     <div class="invite-row"><span class="invite-label">累计邀请</span><span class="invite-value" id="totalRefs">0 人</span></div>
                     <div class="invite-row"><span class="invite-label">累计奖励</span><span class="invite-value" id="totalReward">0.00 USDT</span></div>
                 </div>
@@ -302,6 +309,7 @@
         let provider=null,signer=null,currentAccount=null,contract=null,usdtContract=null;
         let isLotteryRunning=false,lotteryInterval=null,currentMintCard=null,myNFTs=[],marketListings=[];
         let todayLotteryCount=3,maxLotteryCount=10,globalLotteryProgress=67,totalEarned=0;
+        let qrCodeInstance=null;
 
         function formatFaceValue(t){return FACE_VALUES[t]||0.001}
         function calcExchange(fv){return fv*1.05}
@@ -310,17 +318,42 @@
         function showLoading(btn,text){btn.disabled=true;btn.innerHTML=`<span class="loading-spinner"></span> ${text}`}
         function resetButton(btn,text){btn.disabled=false;btn.textContent=text}
         function getStampImage(type){const imgs=['images/youpiao1.png','images/TOP2.png','images/TOP3.png','images/TOP4.png','images/TOP5.png','images/TOP6.png','images/TOP7.png','images/TOP8.png','images/TOP9.png'];return imgs[type]||'images/youpiao1.png'}
+        
+        function generateQRCode(url){
+            const qrContainer=document.getElementById('qrCode');
+            if(!url||url==='请先连接钱包'){
+                qrContainer.innerHTML='<div style="color:rgba(255,255,255,0.3);font-size:12px;text-align:center;">📱<br>连接钱包后<br>生成二维码</div>';
+                return;
+            }
+            try{
+                qrContainer.innerHTML='';
+                if(qrCodeInstance){qrCodeInstance.clear();qrCodeInstance=null}
+                qrCodeInstance=new QRCode(qrContainer,{
+                    text:url,
+                    width:144,
+                    height:144,
+                    colorDark:'#0d1a14',
+                    colorLight:'#ffffff',
+                    correctLevel:QRCode.CorrectLevel.M
+                });
+            }catch(e){
+                console.error('生成二维码失败:',e);
+                qrContainer.innerHTML='<div style="color:rgba(255,255,255,0.3);font-size:12px;text-align:center;">❌<br>生成失败</div>';
+            }
+        }
 
         async function initContracts(acc){
             currentAccount=acc;provider=new ethers.providers.Web3Provider(window.ethereum);signer=provider.getSigner();
             contract=new ethers.Contract(CONFIG.CONTRACT_ADDRESS,CONTRACT_ABI,signer);usdtContract=new ethers.Contract(CONFIG.USDT_ADDRESS,USDT_ABI,signer);
             const btn=document.getElementById('walletBtn');btn.textContent=currentAccount.substring(0,6)+'...'+currentAccount.substring(38);btn.classList.add('connected');
-            document.getElementById('refLink').textContent=`https://luckystamp.app/ref=${currentAccount}`;
+            const refUrl=`https://luckystamp.app/ref=${currentAccount}`;
+            document.getElementById('refLink').textContent=refUrl;
+            generateQRCode(refUrl);
             await loadMyNFTs();loadTeamInfo();
         }
         async function autoConnect(){if(!window.ethereum)return;try{const a=await window.ethereum.request({method:'eth_accounts'});if(a&&a.length>0)await initContracts(a[0])}catch(e){}}
         async function handleWalletClick(){
-            if(currentAccount){currentAccount=null;contract=null;usdtContract=null;const btn=document.getElementById('walletBtn');btn.textContent='Connect';btn.classList.remove('connected');document.getElementById('refLink').textContent='请先连接钱包';myNFTs=[];renderFavoriteGrid();updateAssetStats();return}
+            if(currentAccount){currentAccount=null;contract=null;usdtContract=null;const btn=document.getElementById('walletBtn');btn.textContent='Connect';btn.classList.remove('connected');document.getElementById('refLink').textContent='请先连接钱包';generateQRCode('请先连接钱包');myNFTs=[];renderFavoriteGrid();updateAssetStats();return}
             if(!window.ethereum){alert('请安装 MetaMask');return}
             const btn=document.getElementById('walletBtn');showLoading(btn,'连接中');
             try{const a=await window.ethereum.request({method:'eth_requestAccounts'});await initContracts(a[0])}catch(e){resetButton(btn,'Connect');if(e.code!==4001)alert('连接失败: '+(e.message||'未知错误'))}
@@ -427,7 +460,8 @@
         function switchPage(page,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+page).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active');document.getElementById('logoIcon').textContent={nft:'🍀',lottery:'🎲',favorite:'💼',market:'🏪',messages:'👥'}[page]||'🍀';if(page==='market')renderMarketGrid();if(page==='favorite'){if(currentAccount)loadMyNFTs()}if(page==='messages')loadTeamInfo();if(page==='lottery')updateLotteryDisplay()}
 
         renderCards();renderMarketGrid();updateLotteryDisplay();
-        if(window.ethereum){window.ethereum.on('accountsChanged',(a)=>{if(a.length===0){currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');myNFTs=[];renderFavoriteGrid();updateAssetStats()}else{initContracts(a[0])}});window.ethereum.on('chainChanged',()=>{if(currentAccount)initContracts(currentAccount)});setTimeout(()=>autoConnect(),500)}
+        generateQRCode('请先连接钱包');
+        if(window.ethereum){window.ethereum.on('accountsChanged',(a)=>{if(a.length===0){currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');myNFTs=[];renderFavoriteGrid();updateAssetStats();document.getElementById('refLink').textContent='请先连接钱包';generateQRCode('请先连接钱包')}else{initContracts(a[0])}});window.ethereum.on('chainChanged',()=>{if(currentAccount)initContracts(currentAccount)});setTimeout(()=>autoConnect(),500)}
     </script>
 </body>
 </html>
