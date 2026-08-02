@@ -207,7 +207,7 @@
         async function handleWalletClick(){if(currentAccount){currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');document.getElementById('myAddr').textContent='请先连接钱包';generateQRCode('');myNFTs=[];renderFavoriteGrid();updateAssetStats();document.getElementById('bindCard').style.display='block';document.getElementById('refRecordList').innerHTML='<div class="record-item"><span style="color:var(--text-secondary)">连接钱包后加载...</span></div>';return}if(!window.ethereum){alert('请安装 MetaMask');return}const btn=document.getElementById('walletBtn');showLoading(btn,'连接中');try{const a=await window.ethereum.request({method:'eth_requestAccounts'});await initContracts(a[0])}catch(e){resetButton(btn,'Connect')}}
         async function approveUSDT(amount){if(!usdtContract||!currentAccount)return false;try{const d=await usdtContract.decimals();const aw=ethers.utils.parseUnits(amount.toString(),d);const al=await usdtContract.allowance(currentAccount,CONTRACT_ADDRESS);if(al.gte(aw))return true;const tx=await usdtContract.approve(CONTRACT_ADDRESS,ethers.constants.MaxUint256);await tx.wait();return true}catch(e){return false}}
 
-        // ============ 资产加载（修复） ============
+        // ============ 资产加载（修复邮票显示错误） ============
         async function loadMyNFTs(){
             const grid = document.getElementById('favoriteGrid');
             if(!currentAccount||!contract){
@@ -217,25 +217,34 @@
             grid.innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:20px;grid-column:1/-1;"><span class="loading-spinner"></span> 加载链上资产...</p>';
             try{
                 const tids = await contract.getOwnedStamps(currentAccount);
-                console.log('📦 Token IDs:', tids);
+                console.log('📦 原始Token IDs:', tids);
                 if(!tids || tids.length === 0){
                     myNFTs = [];
                     grid.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:40px;grid-column:1/-1;">📭 暂无链上资产<br><span style="font-size:11px;">去铸造页面获取你的第一枚邮票NFT</span></p>';
                     updateAssetStats();return;
                 }
-                const promises = tids.map(async(id) => {
+                // 去重并排序
+                const uniqueIds = [...new Set(tids.map(id => Number(id)))].sort((a,b) => a - b);
+                console.log('🔢 去重排序后:', uniqueIds);
+                
+                const promises = uniqueIds.map(async(id) => {
                     try{
                         const info = await contract.getStampInfo(id);
-                        console.log('📋 Token', id.toString(), 'info:', info);
+                        console.log(`📋 Token #${id} 原始数据:`, info);
                         const sd = info[0];
-                        const st = Number(sd.stampType ?? 0);
-                        const fv = parseFloat(ethers.utils.formatEther(sd.faceValue ?? 0));
-                        const ct = sd.canTrade ?? false;
-                        const mt = Number(sd.mintTime ?? 0);
-                        const ce = Number(sd.coolDownEnd ?? 0);
+                        // 核心修复：stampType 可能在 sd[0] 或 sd.stampType
+                        const rawType = sd[0] ?? sd.stampType ?? 0;
+                        const st = Number(rawType?.toNumber?.() ?? rawType);
+                        console.log(`   stampType: ${st} (raw: ${rawType})`);
+                        
+                        const fv = parseFloat(ethers.utils.formatEther(sd.faceValue ?? sd[1] ?? 0));
+                        const ct = sd.canTrade ?? sd[5] ?? false;
+                        const mt = Number(sd.mintTime ?? sd[3] ?? 0);
+                        const ce = Number(sd.coolDownEnd ?? sd[4] ?? 0);
                         const progress = calcCooldownProgress(mt, ce);
-                        return {
-                            tokenId: Number(id),
+                        
+                        const nft = {
+                            tokenId: id,
                             name: STAMP_NAMES[st] || `邮票 #${st}`,
                             stampType: st,
                             faceValue: fv,
@@ -250,14 +259,16 @@
                             color: STAMP_COLORS[st] || '#ffb84d',
                             progress: progress
                         };
+                        console.log(`   ✅ 解析结果: ${nft.name}, 面值=${nft.faceValue}, 图片=${nft.img}`);
+                        return nft;
                     }catch(e){
-                        console.error('获取Token', id.toString(), '失败:', e);
+                        console.error(`❌ Token #${id} 获取失败:`, e);
                         return null;
                     }
                 });
                 const results = await Promise.all(promises);
                 myNFTs = results.filter(n => n !== null);
-                console.log('✅ 加载完成，NFT数量:', myNFTs.length);
+                console.log(`✅ 加载完成，共 ${myNFTs.length} 枚NFT`);
                 renderFavoriteGrid();
                 updateAssetStats();
             }catch(e){
