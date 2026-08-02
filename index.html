@@ -117,17 +117,25 @@
         .bind-card{background:rgba(19,32,22,0.8);border:1px solid rgba(180,145,70,0.3);border-radius:16px;padding:20px;margin-bottom:14px;text-align:center;backdrop-filter:blur(8px)}
         .bind-card h4{color:var(--gold-light);font-size:16px;margin-bottom:4px}
         .bind-card .bind-desc{color:var(--text-secondary);font-size:11px;margin-bottom:12px}
-        .bind-card input{width:100%;padding:14px;border:2px solid rgba(180,145,70,0.3);border-radius:12px;background:rgba(0,0,0,0.4);color:#fff;font-size:13px;text-align:center;margin-bottom:10px}
-        .bind-card input:focus{outline:none;border-color:var(--gold-glow)}
+        .bind-input-wrap{position:relative;display:flex;align-items:center;margin-bottom:10px}
+        .bind-input-wrap input{flex:1;padding:14px 44px 14px 14px;border:2px solid rgba(180,145,70,0.3);border-radius:12px;background:rgba(0,0,0,0.4);color:#fff;font-size:13px;text-align:center}
+        .bind-input-wrap input:focus{outline:none;border-color:var(--gold-glow)}
+        .bind-input-wrap .scan-icon{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:32px;height:32px;background:rgba(180,145,70,0.2);border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--gold-glow);font-size:16px;transition:all 0.2s}
+        .bind-input-wrap .scan-icon:hover{background:rgba(180,145,70,0.4)}
         .bind-card .bind-status{font-size:11px;margin-top:8px;min-height:18px}
         .copy-btn{background:rgba(180,145,70,0.15);border:1px solid rgba(180,145,70,0.3);color:var(--gold-glow);padding:8px 16px;border-radius:20px;font-size:11px;cursor:pointer;margin:4px}
-        .scan-btn{background:rgba(180,145,70,0.15);border:1px solid rgba(180,145,70,0.3);color:var(--gold-glow);padding:8px 16px;border-radius:20px;font-size:11px;cursor:pointer;margin:4px}
+        .qr-btn{background:rgba(180,145,70,0.15);border:1px solid rgba(180,145,70,0.3);color:var(--gold-glow);padding:8px 16px;border-radius:20px;font-size:11px;cursor:pointer;margin:4px}
         .scanner-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:5000;flex-direction:column;align-items:center;justify-content:center}
         .scanner-overlay.open{display:flex}
         .scanner-box{width:300px;height:300px;border:2px solid var(--gold-glow);border-radius:20px;overflow:hidden;position:relative}
         .scanner-box video{width:100%;height:100%;object-fit:cover}
         .scanner-close{position:absolute;top:20px;right:20px;color:#fff;font-size:24px;cursor:pointer;z-index:10}
         .scanner-hint{color:var(--text-secondary);font-size:12px;margin-top:15px;text-align:center}
+        .qr-modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:4000;justify-content:center;align-items:center}
+        .qr-modal-overlay.open{display:flex}
+        .qr-modal-box{background:radial-gradient(circle at center,#13221e 0%,#09110d 100%);border:2px solid var(--gold-glow);border-radius:20px;padding:25px;text-align:center;position:relative}
+        .qr-modal-box h4{color:var(--gold-light);margin-bottom:15px}
+        .qr-modal-close{position:absolute;top:10px;right:15px;color:#fff;font-size:20px;cursor:pointer}
     </style>
 </head>
 <body>
@@ -191,26 +199,21 @@
                 <!-- 绑定推荐人卡片 -->
                 <div class="bind-card" id="bindCard">
                     <h4>🔗 绑定推荐人</h4>
-                    <p class="bind-desc">扫码或粘贴上级分享的钱包地址</p>
-                    <div style="display:flex;gap:8px;margin-bottom:10px;">
-                        <button class="scan-btn" onclick="openScanner()" style="flex:1;">📷 扫描二维码</button>
-                        <button class="copy-btn" onclick="pasteAddress()" style="flex:1;">📋 粘贴地址</button>
+                    <p class="bind-desc">输入或扫描上级分享的钱包地址</p>
+                    <div class="bind-input-wrap">
+                        <input type="text" id="bindRefInput" placeholder="0x... 输入地址">
+                        <div class="scan-icon" onclick="openScanner()" title="扫描二维码">📷</div>
                     </div>
-                    <input type="text" id="bindRefInput" placeholder="0x... 或扫描二维码自动填入">
                     <button class="btn-mint" onclick="bindReferrer()" style="font-size:14px;">✅ 确认绑定</button>
                     <div class="bind-status" id="bindStatus"></div>
                 </div>
                 <!-- 我的邀请 -->
                 <div class="invite-card">
                     <h4>📋 我的邀请信息</h4>
-                    <div class="qr-area">
-                        <div class="qr-container" id="qrCode"></div>
-                        <div class="qr-text">扫描进入LuckyStamp平台</div>
-                    </div>
                     <div class="invite-row"><span class="invite-label">我的钱包地址</span><span class="invite-value" id="myAddr" style="font-size:10px;word-break:break-all;">请先连接钱包</span></div>
                     <div style="text-align:center;margin-top:10px;">
                         <button class="copy-btn" onclick="copyMyAddress()">📋 复制我的地址发送给好友</button>
-                        <button class="copy-btn" onclick="copyInviteText()">📤 复制邀请文案</button>
+                        <button class="qr-btn" onclick="openAddressQR()">📱 打开地址二维码</button>
                     </div>
                     <div class="invite-row"><span class="invite-label">累计邀请</span><span class="invite-value" id="totalRefs">0 人</span></div>
                     <div class="invite-row"><span class="invite-label">累计奖励</span><span class="invite-value" id="totalReward">0.00 USDT</span></div>
@@ -229,6 +232,16 @@
             <div class="scanner-close" onclick="closeScanner()">✕</div>
             <div class="scanner-box"><video id="scannerVideo" autoplay playsinline></video></div>
             <p class="scanner-hint">将二维码对准框内</p>
+        </div>
+
+        <!-- 地址二维码弹窗 -->
+        <div class="qr-modal-overlay" id="qrModalOverlay">
+            <div class="qr-modal-box">
+                <div class="qr-modal-close" onclick="closeAddressQR()">✕</div>
+                <h4>📱 我的地址二维码</h4>
+                <div class="qr-container" id="addressQR"></div>
+                <p style="color:var(--text-secondary);font-size:10px;margin-top:10px;word-break:break-all;" id="addressQRText"></p>
+            </div>
         </div>
 
         <div class="modal-overlay" id="cardModal">
@@ -296,7 +309,7 @@
         let provider=null,signer=null,currentAccount=null,contract=null,usdtContract=null;
         let isLotteryRunning=false,lotteryInterval=null,currentMintCard=null,myNFTs=[];
         let todayLotteryCount=0,maxLotteryCount=10,globalLotteryProgress=900,totalEarned=0;
-        let qrCodeInstance=null,scannerStream=null,scanningActive=false;
+        let qrCodeInstance=null,addressQRInstance=null,scannerStream=null,scanningActive=false;
 
         function formatFaceValue(t){return FACE_VALUES[t]||0.001}
         function calcExchange(fv){return fv*1.05}
@@ -307,12 +320,21 @@
         function getStampImage(t){const imgs=['images/youpiao1.png','images/TOP2.png','images/TOP3.png','images/TOP4.png','images/TOP5.png','images/TOP6.png','images/TOP7.png','images/TOP8.png','images/TOP9.png'];return imgs[t]||'images/youpiao1.png'}
         function showToast(msg,type){const t=document.createElement('div');t.className=`toast toast-${type}`;t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3000)}
 
-        // ==================== 二维码 ====================
-        function generateQRCode(url){
-            const qr=document.getElementById('qrCode');
-            if(!url){qr.innerHTML='<div style="color:rgba(255,255,255,0.3);font-size:12px;">📱</div>';return}
-            try{qr.innerHTML='';if(qrCodeInstance){qrCodeInstance.clear();qrCodeInstance=null}qrCodeInstance=new QRCode(qr,{text:url,width:144,height:144,colorDark:'#0d1a14',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M})}catch(e){qr.innerHTML='❌'}
+        function generateQRCode(url,containerId){
+            const container=document.getElementById(containerId);
+            if(!url){container.innerHTML='';return}
+            try{container.innerHTML='';new QRCode(container,{text:url,width:144,height:144,colorDark:'#0d1a14',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M})}catch(e){container.innerHTML='❌'}
         }
+
+        // ==================== 地址二维码弹窗 ====================
+        function openAddressQR(){
+            if(!currentAccount){showToast('请先连接钱包','error');return}
+            document.getElementById('addressQRText').textContent=currentAccount;
+            document.getElementById('qrModalOverlay').classList.add('open');
+            setTimeout(()=>generateQRCode(currentAccount,'addressQR'),200);
+        }
+        function closeAddressQR(){document.getElementById('qrModalOverlay').classList.remove('open');document.getElementById('addressQR').innerHTML=''}
+        document.getElementById('qrModalOverlay').addEventListener('click',function(e){if(e.target===this)closeAddressQR()});
 
         // ==================== 二维码扫描器 ====================
         async function openScanner(){
@@ -325,13 +347,11 @@
                 video.onloadedmetadata=()=>{video.play();scanQRCode()};
             }catch(e){closeScanner();showToast('无法访问摄像头','error')}
         }
-
         function closeScanner(){
             scanningActive=false;
             if(scannerStream){scannerStream.getTracks().forEach(t=>t.stop());scannerStream=null}
             document.getElementById('scannerOverlay').classList.remove('open');
         }
-
         function scanQRCode(){
             if(!scanningActive)return;
             const video=document.getElementById('scannerVideo');
@@ -349,27 +369,11 @@
             }catch(e){}
             if(scanningActive)requestAnimationFrame(scanQRCode);
         }
-
         function extractAddressFromQR(data){
-            try{
-                const url=new URL(data);
-                const ref=url.searchParams.get('ref');
-                if(ref&&ethers.utils.isAddress(ref))return ref;
-            }catch(e){}
+            try{const url=new URL(data);const ref=url.searchParams.get('ref');if(ref&&ethers.utils.isAddress(ref))return ref}catch(e){}
             if(ethers.utils.isAddress(data.trim()))return data.trim();
             const match=data.match(/0x[a-fA-F0-9]{40}/);
             return match?match[0]:null;
-        }
-
-        // ==================== 粘贴地址 ====================
-        async function pasteAddress(){
-            try{
-                const text=await navigator.clipboard.readText();
-                if(text&&ethers.utils.isAddress(text.trim())){
-                    document.getElementById('bindRefInput').value=text.trim();
-                    showToast('✅ 地址已粘贴','success');
-                }else{showToast('剪贴板无有效地址','error')}
-            }catch(e){showToast('无法读取剪贴板','error')}
         }
 
         // ==================== 绑定推荐人 ====================
@@ -395,19 +399,13 @@
                 input.value='';showToast('🎉 推荐绑定成功！','success');
                 await loadTeamInfo();
                 setTimeout(()=>{document.getElementById('bindCard').style.display='none'},2000);
-            }catch(e){status.innerHTML=`<span style="color:#e74c3c;">绑定失败</span>`}
+            }catch(e){status.innerHTML='<span style="color:#e74c3c;">绑定失败</span>'}
         }
 
-        // ==================== 复制邀请 ====================
+        // ==================== 复制地址 ====================
         function copyMyAddress(){
             if(!currentAccount){showToast('请先连接钱包','error');return}
             navigator.clipboard.writeText(currentAccount).then(()=>showToast('✅ 地址已复制，发送给好友','success')).catch(()=>prompt('复制此地址：',currentAccount));
-        }
-
-        function copyInviteText(){
-            if(!currentAccount){showToast('请先连接钱包','error');return}
-            const text=`【LuckyStamp 邀请】\n\n请复制我的地址绑定推荐关系：\n\n${currentAccount}\n\n打开 ${PLATFORM_URL} 连接钱包后在团队页面粘贴绑定`;
-            navigator.clipboard.writeText(text).then(()=>showToast('✅ 邀请文案已复制','success')).catch(()=>prompt('复制此文案：',text));
         }
 
         // ==================== 初始化 ====================
@@ -416,7 +414,6 @@
             contract=new ethers.Contract(CONTRACT_ADDRESS,CONTRACT_ABI,signer);usdtContract=new ethers.Contract(USDT_ADDRESS,USDT_ABI,signer);
             document.getElementById('walletBtn').textContent=acc.substring(0,6)+'...'+acc.substring(38);document.getElementById('walletBtn').classList.add('connected');
             document.getElementById('myAddr').textContent=acc;
-            generateQRCode(PLATFORM_URL);
             try{const ref=await contract.getUserReferrer(acc);if(ref!=='0x0000000000000000000000000000000000000000')document.getElementById('bindCard').style.display='none'}catch(e){}
             await loadMyNFTs();loadTeamInfo();
         }
@@ -424,7 +421,7 @@
         async function autoConnect(){if(!window.ethereum)return;try{const a=await window.ethereum.request({method:'eth_accounts'});if(a&&a.length>0)await initContracts(a[0])}catch(e){}}
         
         async function handleWalletClick(){
-            if(currentAccount){currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');document.getElementById('myAddr').textContent='请先连接钱包';generateQRCode('');myNFTs=[];renderFavoriteGrid();updateAssetStats();document.getElementById('bindCard').style.display='block';return}
+            if(currentAccount){currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');document.getElementById('myAddr').textContent='请先连接钱包';myNFTs=[];renderFavoriteGrid();updateAssetStats();document.getElementById('bindCard').style.display='block';return}
             if(!window.ethereum){alert('请安装 MetaMask');return}
             const btn=document.getElementById('walletBtn');showLoading(btn,'连接中');
             try{const a=await window.ethereum.request({method:'eth_requestAccounts'});await initContracts(a[0])}catch(e){resetButton(btn,'Connect')}
@@ -524,8 +521,8 @@
         langBtn.addEventListener('click',(e)=>{e.stopPropagation();langDropdown.classList.toggle('open')});
         document.addEventListener('click',(e)=>{if(!langDropdown.contains(e.target)&&e.target!==langBtn)langDropdown.classList.remove('open')});
 
-        renderCards();renderMarketGrid();updateLotteryDisplay();generateQRCode(PLATFORM_URL);
-        if(window.ethereum){window.ethereum.on('accountsChanged',(a)=>{if(a.length===0){currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');myNFTs=[];renderFavoriteGrid();updateAssetStats();document.getElementById('myAddr').textContent='请先连接钱包';generateQRCode('');document.getElementById('bindCard').style.display='block'}else{initContracts(a[0])}});setTimeout(()=>autoConnect(),500)}
+        renderCards();renderMarketGrid();updateLotteryDisplay();
+        if(window.ethereum){window.ethereum.on('accountsChanged',(a)=>{if(a.length===0){currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');myNFTs=[];renderFavoriteGrid();updateAssetStats();document.getElementById('myAddr').textContent='请先连接钱包';document.getElementById('bindCard').style.display='block'}else{initContracts(a[0])}});setTimeout(()=>autoConnect(),500)}
     </script>
 </body>
 </html>
