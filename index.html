@@ -345,6 +345,7 @@
             "function getGlobalStats() external view returns (uint256 totalMinted,uint256 totalExchanged,uint256 totalDividends,uint256 totalBNBLottery,uint256 totalStampsListed,uint256 totalStampsSold)",
             "function getUserLevelInfo(address user) external view returns (uint256 level,uint256 directCount,uint256 teamCount,uint256 teamVolume,uint256 commissionRate)",
             "function getUserReferrals(address user) external view returns (address[] memory)",
+            "function registerReferral(address referrer) external",
             "function bnbBlindBoxLottery() external payable","function listStampForSale(uint256 tokenId,uint256 price) external",
             "function buyStamp(uint256 tokenId) external","function cancelListing(uint256 tokenId) external",
             "function exchangeForUSDT(uint256 tokenId) external","function batchExchangeForUSDT(uint256[] calldata tokenIds) external"
@@ -396,6 +397,57 @@
             }
         }
 
+        // ==================== 推荐绑定逻辑 ====================
+        function checkAndSaveReferrer() {
+            try {
+                const urlParams = new URLSearchParams(window.location.search);
+                const referrer = urlParams.get('ref');
+                
+                if (referrer && ethers.utils.isAddress(referrer)) {
+                    localStorage.setItem('luckyStampReferrer', referrer);
+                    console.log('✅ 已捕获推荐人:', referrer);
+                }
+            } catch (e) {
+                console.warn('提取推荐人失败:', e);
+            }
+        }
+
+        async function bindReferrerIfNeeded() {
+            if (!contract || !currentAccount) return;
+            
+            const savedReferrer = localStorage.getItem('luckyStampReferrer');
+            if (!savedReferrer) return;
+            
+            // 不能自己推荐自己
+            if (savedReferrer.toLowerCase() === currentAccount.toLowerCase()) {
+                localStorage.removeItem('luckyStampReferrer');
+                console.log('⚠️ 不能推荐自己，已清除');
+                return;
+            }
+            
+            try {
+                // 检查是否已绑定过推荐人
+                const info = await contract.getUserLevelInfo(currentAccount);
+                // 如果已有推荐关系（直推人数>0 或 等级>0），跳过绑定
+                if (info.directCount.toNumber() > 0 || info.level.toNumber() > 0) {
+                    localStorage.removeItem('luckyStampReferrer');
+                    console.log('⚠️ 已有推荐关系，跳过绑定');
+                    return;
+                }
+                
+                // 调用合约绑定推荐人
+                const tx = await contract.registerReferral(savedReferrer);
+                await tx.wait();
+                
+                console.log('✅ 推荐绑定成功:', savedReferrer);
+                localStorage.removeItem('luckyStampReferrer');
+                alert('🎉 推荐绑定成功！');
+            } catch (e) {
+                console.error('推荐绑定失败:', e);
+                // 绑定失败保留推荐人信息，下次连接钱包时再试
+            }
+        }
+
         async function initContracts(acc){
             currentAccount=acc;provider=new ethers.providers.Web3Provider(window.ethereum);signer=provider.getSigner();
             contract=new ethers.Contract(CONFIG.CONTRACT_ADDRESS,CONTRACT_ABI,signer);usdtContract=new ethers.Contract(CONFIG.USDT_ADDRESS,USDT_ABI,signer);
@@ -403,6 +455,10 @@
             const refUrl=`https://luckystamp.app/ref=${currentAccount}`;
             document.getElementById('refLink').textContent=refUrl;
             generateQRCode(refUrl);
+            
+            // 绑定推荐关系
+            await bindReferrerIfNeeded();
+            
             await loadMyNFTs();loadTeamInfo();
         }
         async function autoConnect(){if(!window.ethereum)return;try{const a=await window.ethereum.request({method:'eth_accounts'});if(a&&a.length>0)await initContracts(a[0])}catch(e){}}
@@ -537,6 +593,9 @@
             });
         });
 
+        // 页面加载时检查推荐人
+        checkAndSaveReferrer();
+        
         renderCards();renderMarketGrid();updateLotteryDisplay();
         generateQRCode('请先连接钱包');
         if(window.ethereum){window.ethereum.on('accountsChanged',(a)=>{if(a.length===0){currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');myNFTs=[];renderFavoriteGrid();updateAssetStats();document.getElementById('refLink').textContent='请先连接钱包';generateQRCode('请先连接钱包')}else{initContracts(a[0])}});window.ethereum.on('chainChanged',()=>{if(currentAccount)initContracts(currentAccount)});setTimeout(()=>autoConnect(),500)}
