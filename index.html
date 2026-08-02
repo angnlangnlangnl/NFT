@@ -28,6 +28,54 @@
         .header-right{display:flex;gap:6px;align-items:center;position:relative;flex-shrink:0}
         .wallet-btn{background:transparent;border:1px solid rgba(214,184,120,0.4);color:var(--gold-glow);padding:5px 10px;border-radius:20px;font-size:11px;cursor:pointer;white-space:nowrap}
         .wallet-btn.connected{background:rgba(180,145,70,0.12);border-color:var(--gold-glow);color:var(--gold-light)}
+        .lang-btn {
+            background: transparent;
+            border: 1px solid rgba(180,145,70,0.25);
+            color: var(--text-secondary);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .lang-dropdown {
+            display: none;
+            position: absolute;
+            top: 36px;
+            right: 0;
+            background: rgba(13,26,20,0.97);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(180,145,70,0.25);
+            border-radius: 12px;
+            padding: 10px;
+            width: 160px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.8);
+            z-index: 999;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .lang-dropdown.open {
+            display: flex;
+        }
+        .lang-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 6px 10px;
+            border-radius: 6px;
+            color: #f0e6d2;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .lang-option:hover {
+            background: rgba(197,164,85,0.15);
+            color: var(--gold-light);
+        }
+        .lang-option .code {
+            color: var(--text-secondary);
+            font-size: 10px;
+            margin-left: 6px;
+        }
         .page{display:none}
         .page.active{display:block}
         .title{text-align:center;margin-bottom:15px}
@@ -170,6 +218,12 @@
             <div class="header">
                 <div class="logo"><span class="icon" id="logoIcon">🍀</span><span>LuckyStamp</span></div>
                 <div class="header-right">
+                    <button class="lang-btn" id="langBtn">🇨🇳 CN ⌄</button>
+                    <div class="lang-dropdown" id="langDropdown">
+                        <div class="lang-option" data-lang="cn"><span>🇨🇳 简体中文</span><span class="code">CN</span></div>
+                        <div class="lang-option" data-lang="en"><span>🇺🇸 English</span><span class="code">EN</span></div>
+                        <div class="lang-option" data-lang="zh"><span>🇭🇰 繁體中文</span><span class="code">ZH</span></div>
+                    </div>
                     <button id="walletBtn" class="wallet-btn" onclick="handleWalletClick()">Connect</button>
                 </div>
             </div>
@@ -458,6 +512,30 @@
         function closeModal(){document.getElementById('cardModal').classList.remove('open')}
         document.getElementById('cardModal').addEventListener('click',function(e){if(e.target===this)closeModal()})
         function switchPage(page,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+page).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active');document.getElementById('logoIcon').textContent={nft:'🍀',lottery:'🎲',favorite:'💼',market:'🏪',messages:'👥'}[page]||'🍀';if(page==='market')renderMarketGrid();if(page==='favorite'){if(currentAccount)loadMyNFTs()}if(page==='messages')loadTeamInfo();if(page==='lottery')updateLotteryDisplay()}
+
+        // ==================== 语言切换 ====================
+        const langBtn = document.getElementById('langBtn');
+        const langDropdown = document.getElementById('langDropdown');
+        let currentLang = localStorage.getItem('bcbsLang') || 'cn';
+
+        langBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            langDropdown.classList.toggle('open');
+        });
+        document.addEventListener('click', (e) => {
+            if (!langDropdown.contains(e.target) && e.target !== langBtn) {
+                langDropdown.classList.remove('open');
+            }
+        });
+        document.querySelectorAll('.lang-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const langCode = this.getAttribute('data-lang');
+                localStorage.setItem('bcbsLang', langCode);
+                langDropdown.classList.remove('open');
+                // 这里可以添加实际的语言切换逻辑
+                alert('语言已切换为：' + langCode);
+            });
+        });
 
         renderCards();renderMarketGrid();updateLotteryDisplay();
         generateQRCode('请先连接钱包');
