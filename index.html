@@ -54,9 +54,7 @@
             flex-direction: column;
             gap: 4px;
         }
-        .lang-dropdown.open {
-            display: flex;
-        }
+        .lang-dropdown.open { display: flex; }
         .lang-option {
             display: flex;
             align-items: center;
@@ -67,15 +65,8 @@
             font-size: 12px;
             cursor: pointer;
         }
-        .lang-option:hover {
-            background: rgba(197,164,85,0.15);
-            color: var(--gold-light);
-        }
-        .lang-option .code {
-            color: var(--text-secondary);
-            font-size: 10px;
-            margin-left: 6px;
-        }
+        .lang-option:hover { background: rgba(197,164,85,0.15); color: var(--gold-light); }
+        .lang-option .code { color: var(--text-secondary); font-size: 10px; margin-left: 6px; }
         .page{display:none}
         .page.active{display:block}
         .title{text-align:center;margin-bottom:15px}
@@ -101,29 +92,14 @@
         .animal-card.highlight{border-color:var(--gold-glow);box-shadow:0 0 35px rgba(220,180,70,0.9),0 0 60px rgba(180,145,70,0.5);background:rgba(180,145,70,0.2);animation:highlightPulse 0.3s ease}
         @keyframes highlightPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
         .animal-card .card-icon{
-            width:100%;
-            height:100%;
+            width:100%;height:100%;
             background-image:url('images/Digital Stamp.png');
-            background-size:cover;
-            background-position:center;
-            background-repeat:no-repeat;
-            border:none;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            font-size:50px;
-            position:relative;
-            overflow:hidden;
+            background-size:cover;background-position:center;background-repeat:no-repeat;
+            display:flex;align-items:center;justify-content:center;font-size:50px;position:relative;overflow:hidden;
         }
         .animal-card .card-icon::after{
-            content:'?';
-            position:absolute;
-            font-size:48px;
-            color:rgba(255,255,255,0.12);
-            font-weight:900;
-            top:50%;
-            left:50%;
-            transform:translate(-50%,-50%);
+            content:'?';position:absolute;font-size:48px;color:rgba(255,255,255,0.12);font-weight:900;
+            top:50%;left:50%;transform:translate(-50%,-50%);
         }
         .animal-card.revealed .card-icon::after{display:none}
         .animal-card .check-mark{position:absolute;top:6px;left:6px;width:22px;height:22px;background:var(--gold-glow);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:12px;color:#000;font-weight:700;z-index:2}
@@ -137,24 +113,23 @@
         .modal-box .modal-img-area img{width:100%;height:100%;object-fit:contain}
         .modal-box .stamp-panel{width:100%;background:rgba(20,34,28,0.6);border:1px solid rgba(168,139,68,0.3);border-radius:12px;padding:18px 15px 10px;text-align:center;margin-bottom:8px;position:relative;margin-top:10px}
         .modal-box .stamp-title{display:inline-block;background:linear-gradient(to bottom,#e6c971,#a88b44);color:#1a1a1a;font-size:15px;font-weight:bold;letter-spacing:3px;padding:4px 24px;border-radius:4px;text-shadow:0 1px 1px rgba(255,255,255,0.3);white-space:nowrap;position:absolute;top:-14px;left:50%;transform:translateX(-50%);z-index:5}
-        .modal-box .stamp-title::before,.modal-box .stamp-title::after{content:'●';display:inline-block;color:#1a1a1a;font-size:5px;margin:0 8px;vertical-align:middle;text-shadow:none}
         .modal-box .stamp-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;padding:0 5px;margin-top:4px}
         .modal-box .stamp-row{display:flex;justify-content:center;align-items:baseline;font-size:11px}
-        .modal-box .stamp-label{color:#cbb780;margin-right:4px;font-weight:500;white-space:nowrap}
-        .modal-box .stamp-value{color:#faf6e8;font-weight:500;letter-spacing:0.5px}
-        .modal-box .modal-price-row{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;margin-bottom:12px}
+        .modal-box .stamp-label{color:#cbb780;margin-right:4px;font-weight:500}
+        .modal-box .stamp-value{color:#faf6e8;font-weight:500}
+        .modal-box .modal-price-row{display:flex;flex-direction:column;align-items:center;gap:4px;margin-bottom:12px}
         .modal-box .modal-price-display{color:var(--gold-glow);font-size:16px;font-weight:700}
-        .modal-box .modal-exchange-display{color:var(--text-secondary);font-size:13px;font-weight:500}
-        .modal-box .modal-mint-days{color:rgba(255,255,255,0.5);font-size:12px;font-weight:500}
+        .modal-box .modal-exchange-display{color:var(--text-secondary);font-size:13px}
+        .modal-box .modal-mint-days{color:rgba(255,255,255,0.5);font-size:12px}
         .modal-btns{display:flex;gap:10px;width:100%}
         .btn-confirm{flex:1;padding:12px;background:linear-gradient(180deg,#e7c778 0%,#b48b3a 100%);color:#0a130e;border:none;border-radius:25px;font-weight:700;font-size:15px;cursor:pointer}
         .btn-confirm:disabled{opacity:0.5;cursor:not-allowed}
         .btn-cancel{flex:1;padding:12px;background:transparent;border:1px solid var(--gold-glow);color:var(--gold-glow);border-radius:25px;font-size:15px;cursor:pointer}
         .btn-close-full{width:100%;padding:12px;background:transparent;border:1px solid var(--gold-glow);color:var(--gold-glow);border-radius:25px;font-weight:700;font-size:15px;cursor:pointer}
-        .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
-        .market-card{background:rgba(19,32,22,0.8);border:1px solid rgba(180,145,70,0.25);border-radius:14px;overflow:hidden;backdrop-filter:blur(8px);cursor:pointer;transition:all 0.3s;display:flex;flex-direction:column}
+        .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+        .market-card{background:rgba(19,32,22,0.8);border:1px solid rgba(180,145,70,0.25);border-radius:14px;overflow:hidden;backdrop-filter:blur(8px);cursor:pointer;transition:all 0.3s}
         .market-card:hover{border-color:rgba(220,187,92,0.6);transform:translateY(-3px)}
-        .market-card .frame{width:100%;display:flex;align-items:center;justify-content:center;font-size:50px;overflow:hidden;padding:0;background:linear-gradient(145deg,#1f2e22 0%,#0e1d13 100%)}
+        .market-card .frame{width:100%;display:flex;align-items:center;justify-content:center;font-size:50px;overflow:hidden;background:linear-gradient(145deg,#1f2e22 0%,#0e1d13 100%)}
         .market-card .frame img{width:100%;height:auto;display:block}
         .market-card .info{padding:10px}
         .usdt-value{color:var(--usdt-color);font-size:11px}
@@ -180,29 +155,21 @@
         .record-list{display:flex;flex-direction:column;gap:6px}
         .record-item{display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,0.2);border-radius:8px;padding:8px 10px;font-size:11px}
         .record-addr{color:var(--text-secondary);font-size:10px}.record-value{color:var(--gold-glow);font-weight:600}
-        .msg-item{background:rgba(19,32,22,0.8);border:1px solid rgba(180,145,70,0.2);border-radius:14px;padding:14px;backdrop-filter:blur(8px);cursor:pointer;margin-bottom:8px}
-        .msg-item.unread{border-left:3px solid var(--gold-glow)}
-        .msg-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-        .msg-title{color:white;font-weight:600;font-size:14px}.msg-time{color:rgba(255,255,255,0.4);font-size:11px}.msg-content{color:var(--text-secondary);font-size:12px}
-        .dot{display:inline-block;width:8px;height:8px;background:#ff4757;border-radius:50%;margin-right:6px}
-        .bottom-nav{flex-shrink:0;background:rgba(10,20,13,0.9);backdrop-filter:blur(12px);border:1px solid rgba(180,145,70,0.2);border-radius:20px;box-shadow:0 -4px 30px rgba(0,0,0,0.8);display:flex;justify-content:space-around;padding:10px 0;margin:0 8px 8px;position:relative;z-index:10}
-        .bottom-nav::before{content:'';position:absolute;top:-1px;left:-1px;right:-1px;bottom:-1px;border-radius:20px;padding:1px;background:linear-gradient(135deg,var(--gold-deep),transparent,var(--gold-light));-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;opacity:0.5}
-        .nav-item{display:flex;flex-direction:column;align-items:center;color:var(--text-secondary);font-size:9px;gap:2px;cursor:pointer;padding:4px 6px;transition:all 0.3s;text-decoration:none}
+        .bottom-nav{flex-shrink:0;background:rgba(10,20,13,0.9);backdrop-filter:blur(12px);border:1px solid rgba(180,145,70,0.2);border-radius:20px;display:flex;justify-content:space-around;padding:10px 0;margin:0 8px 8px;position:relative;z-index:10}
+        .nav-item{display:flex;flex-direction:column;align-items:center;color:var(--text-secondary);font-size:9px;gap:2px;cursor:pointer;padding:4px 6px;transition:all 0.3s}
         .nav-item .nav-icon{font-size:15px}
-        .nav-item.active{color:var(--gold-light);position:relative}
-        .nav-item.active::after{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:16px;height:2px;background:linear-gradient(to right,var(--gold-deep),var(--gold-glow));border-radius:5px;box-shadow:0 0 15px var(--gold-glow)}
-        .nav-item:not(.active):hover{color:var(--gold-glow)}
+        .nav-item.active{color:var(--gold-light)}
+        .nav-item.active::after{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:16px;height:2px;background:linear-gradient(to right,var(--gold-deep),var(--gold-glow));border-radius:5px}
         .loading-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(180,145,70,0.2);border-top:2px solid var(--gold-glow);border-radius:50%;animation:spin 0.6s linear infinite;margin-right:4px;vertical-align:middle}
         @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-        .box-card{background:rgba(19,32,22,0.8);border:1px solid rgba(180,145,70,0.3);border-radius:16px;padding:20px 15px;margin-bottom:14px;text-align:center;backdrop-filter:blur(8px);transition:all 0.3s;position:relative;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
-        .box-icon-large{width:100%;height:140px;border-radius:14px;background:linear-gradient(145deg,#1f2e22 0%,#0e1d13 100%);border:1px solid rgba(212,175,85,0.35);display:flex;align-items:center;justify-content:center;font-size:70px;margin-bottom:12px;box-shadow:inset 0 0 25px rgba(0,0,0,0.6),0 0 20px rgba(180,145,70,0.2)}
+        .box-card{background:rgba(19,32,22,0.8);border:1px solid rgba(180,145,70,0.3);border-radius:16px;padding:20px 15px;margin-bottom:14px;text-align:center;backdrop-filter:blur(8px);position:relative}
+        .box-icon-large{width:100%;height:140px;border-radius:14px;background:linear-gradient(145deg,#1f2e22 0%,#0e1d13 100%);border:1px solid rgba(212,175,85,0.35);display:flex;align-items:center;justify-content:center;font-size:70px;margin-bottom:12px}
         .box-card h3{color:var(--gold-light);font-size:18px;font-weight:700;margin-bottom:4px}
         .box-card .desc{color:var(--text-secondary);font-size:12px;margin-bottom:8px}
-        .box-card .price{color:var(--gold-glow);font-size:16px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:4px}
-        .box-card .remain{color:rgba(255,255,255,0.4);font-size:11px;margin-top:8px}
-        .btn-mint{width:100%;padding:12px;background:linear-gradient(180deg,#e7c778 0%,#b48b3a 70%,#7a5822 100%);color:#0a130e;border:1px solid #f5e3b3;border-radius:14px;font-weight:700;font-size:16px;cursor:pointer;box-shadow:0 6px 20px rgba(180,145,70,0.35);transition:all 0.2s}
-        .btn-mint:hover{background:linear-gradient(180deg,#f5da8a 0%,#c79d46 70%,#8f6826 100%);box-shadow:0 10px 25px rgba(220,180,70,0.55)}
-        .filter-bar{display:flex;gap:8px;margin-bottom:15px;flex-wrap:wrap}
+        .box-card .price{color:var(--gold-glow);font-size:16px;font-weight:700;margin-bottom:12px}
+        .btn-mint{width:100%;padding:12px;background:linear-gradient(180deg,#e7c778 0%,#b48b3a 70%,#7a5822 100%);color:#0a130e;border:1px solid #f5e3b3;border-radius:14px;font-weight:700;font-size:16px;cursor:pointer}
+        .btn-mint:hover{background:linear-gradient(180deg,#f5da8a 0%,#c79d46 70%,#8f6826 100%)}
+        .filter-bar{display:flex;gap:8px;margin-bottom:15px}
         .filter-btn{background:rgba(19,32,22,0.8);border:1px solid rgba(180,145,70,0.3);color:var(--gold-glow);padding:6px 14px;border-radius:20px;font-size:12px;cursor:pointer}
         .filter-btn.active{background:rgba(180,145,70,0.2);border-color:var(--gold-glow)}
         .lottery-progress{width:100%;height:8px;background:rgba(255,255,255,0.1);border-radius:4px;margin:10px 0;overflow:hidden}
@@ -210,6 +177,9 @@
         .lottery-info{display:flex;justify-content:space-between;font-size:11px;color:var(--text-secondary);margin-bottom:4px}
         .badge-recommend{position:absolute;top:-10px;right:15px;background:linear-gradient(180deg,#e7c778 0%,#b48b3a 100%);color:#0a130e;padding:5px 14px;border-radius:12px;font-size:11px;font-weight:700;box-shadow:0 4px 15px rgba(180,145,70,0.5);z-index:5;animation:pulse 2s infinite}
         @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+        .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:8px;color:#fff;font-weight:bold;z-index:2000;font-size:14px}
+        .toast-success{background:#27ae60}
+        .toast-error{background:#e74c3c}
     </style>
 </head>
 <body>
@@ -247,7 +217,6 @@
                     <div class="lottery-progress"><div class="lottery-progress-fill" id="lotteryProgress" style="width:0%"></div></div>
                     <p style="font-size:10px;color:var(--text-secondary);margin-bottom:8px;">全网进度：距离下次大奖还需 <span id="globalProgress" style="color:#ffa502;">100</span> 次</p>
                     <button class="btn-mint" onclick="bnbLottery()">🎰 参与抽奖</button>
-                    <p class="remain">剩余 1240/3000</p>
                 </div>
             </div>
 
@@ -260,13 +229,9 @@
                     <div class="stat-item"><div class="val" id="totalEarned">0.00</div><div class="lbl">累计收益</div></div>
                 </div>
                 <div style="text-align:center;margin-bottom:10px;">
-                    <button class="btn-lottery" style="padding:8px 20px;font-size:13px;" id="btnBatchExchange" onclick="batchExchangeAll()">
-                        💱 批量兑换 (<span id="batchExchangeVal">0.0000</span> USDT)
-                    </button>
+                    <button class="btn-lottery" style="padding:8px 20px;font-size:13px;" id="btnBatchExchange" onclick="batchExchangeAll()">💱 批量兑换 (<span id="batchExchangeVal">0.0000</span> USDT)</button>
                 </div>
-                <div class="grid-2" id="favoriteGrid">
-                    <p style="text-align:center;color:var(--text-secondary);padding:20px;grid-column:1/-1;">连接钱包后加载链上资产...</p>
-                </div>
+                <div class="grid-2" id="favoriteGrid"><p style="text-align:center;color:var(--text-secondary);padding:20px;grid-column:1/-1;">连接钱包后加载链上资产...</p></div>
             </div>
 
             <div class="page" id="page-market">
@@ -274,8 +239,6 @@
                 <div class="filter-bar">
                     <span class="filter-btn active" onclick="filterMarket('all',this)">全部</span>
                     <span class="filter-btn" onclick="filterMarket('selling',this)">出售中</span>
-                    <span class="filter-btn" onclick="filterMarket('legendary',this)">传说</span>
-                    <span class="filter-btn" onclick="filterMarket('epic',this)">史诗</span>
                 </div>
                 <div class="grid-2" id="marketGrid"></div>
             </div>
@@ -335,23 +298,25 @@
     </div>
 
     <script>
+        const CONTRACT_ADDRESS = '0xA9Aa21412e953e4B0Fb04b0eF6e3c48832507033';
+        const USDT_ADDRESS = '0x55d398326f99059fF775485246999027B3197955';
         const CONTRACT_ABI = [
             "function requestRandomMint() external","function confirmRandomMint() external","function cancelMintRequest() external",
             "function getCoolingDownStatus(address user) external view returns (bool)",
             "function getOwnedStamps(address user) external view returns (uint256[] memory)",
-            "function getStampInfo(uint256 tokenId) external view returns (tuple(uint256 stampType,uint256 faceValue,uint256 mintTime,uint256 cooldownEnd,address owner) memory,bool isListed,uint256 askPrice)",
+            "function getStampInfo(uint256 tokenId) external view returns (tuple(uint256 stampType,uint256 mintPrice,uint256 coolDownMinutes,uint256 mintTime,uint256 coolDownEnd,bool canTrade,uint256 faceValue,bool isSpecial,bool isGlobalWin,bool isBNBLottery) memory,bool isListed,uint256 listPrice)",
             "function canTrade(uint256 tokenId) external view returns (bool)",
             "function getBatchExchangeAmount(uint256[] calldata tokenIds) external view returns (uint256[] memory amounts,uint256 totalAmount)",
-            "function getGlobalStats() external view returns (uint256 totalMinted,uint256 totalExchanged,uint256 totalDividends,uint256 totalBNBLottery,uint256 totalStampsListed,uint256 totalStampsSold)",
-            "function getUserLevelInfo(address user) external view returns (uint256 level,uint256 directCount,uint256 teamCount,uint256 teamVolume,uint256 commissionRate)",
+            "function getGlobalStats() external view returns (uint256,uint256,uint256,uint256,uint256,uint256)",
+            "function getUserLevelInfo(address user) external view returns (uint256 level,uint256 refCount,uint256 performance,uint256 rewardRate,uint256 earned)",
             "function getUserReferrals(address user) external view returns (address[] memory)",
             "function registerReferral(address referrer) external",
             "function bnbBlindBoxLottery() external payable","function listStampForSale(uint256 tokenId,uint256 price) external",
             "function buyStamp(uint256 tokenId) external","function cancelListing(uint256 tokenId) external",
-            "function exchangeForUSDT(uint256 tokenId) external","function batchExchangeForUSDT(uint256[] calldata tokenIds) external"
+            "function exchangeForUSDT(uint256 tokenId) external","function batchExchangeForUSDT(uint256[] calldata tokenIds) external",
+            "function hasCoolingDownOrder(address) external view returns (bool)"
         ];
         const USDT_ABI = ["function approve(address spender,uint256 amount) external returns (bool)","function allowance(address owner,address spender) external view returns (uint256)","function balanceOf(address account) external view returns (uint256)","function decimals() external view returns (uint8)"];
-        const CONFIG = { CONTRACT_ADDRESS:'0xA9Aa21412e953e4B0Fb04b0eF6e3c48832507033', USDT_ADDRESS:'0x55d398326f99059fF775485246999027B3197955', CHAIN_ID:56 };
         const FACE_VALUES=[0.001,0.002,0.003,0.004,0.005,0.006,0.007,0.008,0.010];
         const COOLDOWN_MINUTES=[5,10,15,20,25,30,35,75,150];
         const STAMP_NAMES=['黑便士','瑞典黄色三先令','倒置的珍妮','毛里求斯邮局','夏威夷传教士','全国山河一片红','百慕大佩罗特','圭亚那棉纱卷','阿根廷对倒双连'];
@@ -360,10 +325,10 @@
         const STAMP_SOURCES=['英国邮政史','印刷事故错色珍邮','美国首套航空错版邮票','舞会请柬错刻珍邮','夏威夷最早传教士邮票','撤销发行未流通珍邮','邮局局长手工盖印邮票','南美殖民时代经典珍邮','仅此一套双连错票孤品'];
         const STAMP_RARITIES=['传世孤品','传说','史诗','稀有','稀有','稀有','普通','史诗','稀有'];
         const STAMP_COLORS=['#ffb84d','#ffb84d','#d98eff','#6db3ff','#6db3ff','#6db3ff','#ccc','#d98eff','#6db3ff'];
-        const cardData=STAMP_NAMES.map((name,i)=>({name,rarity:STAMP_RARITIES[i],id:`#${String(i+1).padStart(4,'0')}`,year:STAMP_YEARS[i],estimate:STAMP_ESTIMATES[i],source:STAMP_SOURCES[i],price:'2.5 BNB',color:STAMP_COLORS[i],img:getStampImage(i),type:i,progress:30}));
+        const cardData=STAMP_NAMES.map((name,i)=>({name,rarity:STAMP_RARITIES[i],id:`#${String(i+1).padStart(4,'0')}`,year:STAMP_YEARS[i],estimate:STAMP_ESTIMATES[i],source:STAMP_SOURCES[i],price:'2.5 BNB',color:STAMP_COLORS[i],img:getStampImage(i),type:i}));
         let provider=null,signer=null,currentAccount=null,contract=null,usdtContract=null;
         let isLotteryRunning=false,lotteryInterval=null,currentMintCard=null,myNFTs=[],marketListings=[];
-        let todayLotteryCount=3,maxLotteryCount=10,globalLotteryProgress=67,totalEarned=0;
+        let todayLotteryCount=0,maxLotteryCount=10,globalLotteryProgress=900,totalEarned=0;
         let qrCodeInstance=null;
 
         function formatFaceValue(t){return FACE_VALUES[t]||0.001}
@@ -373,116 +338,96 @@
         function showLoading(btn,text){btn.disabled=true;btn.innerHTML=`<span class="loading-spinner"></span> ${text}`}
         function resetButton(btn,text){btn.disabled=false;btn.textContent=text}
         function getStampImage(type){const imgs=['images/youpiao1.png','images/TOP2.png','images/TOP3.png','images/TOP4.png','images/TOP5.png','images/TOP6.png','images/TOP7.png','images/TOP8.png','images/TOP9.png'];return imgs[type]||'images/youpiao1.png'}
+        function showToast(msg,type){const t=document.createElement('div');t.className=`toast toast-${type}`;t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3000)}
         
         function generateQRCode(url){
             const qrContainer=document.getElementById('qrCode');
             if(!url||url==='请先连接钱包'){
-                qrContainer.innerHTML='<div style="color:rgba(255,255,255,0.3);font-size:12px;text-align:center;">📱<br>连接钱包后<br>生成二维码</div>';
+                qrContainer.innerHTML='<div style="color:rgba(255,255,255,0.3);font-size:12px;">📱<br>连接后生成</div>';
                 return;
             }
             try{
                 qrContainer.innerHTML='';
                 if(qrCodeInstance){qrCodeInstance.clear();qrCodeInstance=null}
-                qrCodeInstance=new QRCode(qrContainer,{
-                    text:url,
-                    width:144,
-                    height:144,
-                    colorDark:'#0d1a14',
-                    colorLight:'#ffffff',
-                    correctLevel:QRCode.CorrectLevel.M
-                });
-            }catch(e){
-                console.error('生成二维码失败:',e);
-                qrContainer.innerHTML='<div style="color:rgba(255,255,255,0.3);font-size:12px;text-align:center;">❌<br>生成失败</div>';
-            }
+                qrCodeInstance=new QRCode(qrContainer,{text:url,width:144,height:144,colorDark:'#0d1a14',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M});
+            }catch(e){qrContainer.innerHTML='<div style="color:red;font-size:11px;">❌ 生成失败</div>'}
         }
 
-        // ==================== 推荐绑定逻辑 ====================
+        // ==================== 邀请链接核心修复 ====================
         function checkAndSaveReferrer() {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
-                const referrer = urlParams.get('ref');
-                
-                if (referrer && ethers.utils.isAddress(referrer)) {
-                    localStorage.setItem('luckyStampReferrer', referrer);
-                    console.log('✅ 已捕获推荐人:', referrer);
+                const ref = urlParams.get('ref');
+                if (ref && ethers.utils.isAddress(ref)) {
+                    localStorage.setItem('luckyStampReferrer', ref);
+                    console.log('✅ 已保存推荐人:', ref);
                 }
-            } catch (e) {
-                console.warn('提取推荐人失败:', e);
-            }
+            } catch (e) { console.warn('提取推荐人失败:', e); }
         }
 
         async function bindReferrerIfNeeded() {
             if (!contract || !currentAccount) return;
-            
-            const savedReferrer = localStorage.getItem('luckyStampReferrer');
-            if (!savedReferrer) return;
-            
-            // 不能自己推荐自己
-            if (savedReferrer.toLowerCase() === currentAccount.toLowerCase()) {
+            const savedRef = localStorage.getItem('luckyStampReferrer');
+            if (!savedRef) return;
+            if (savedRef.toLowerCase() === currentAccount.toLowerCase()) {
                 localStorage.removeItem('luckyStampReferrer');
-                console.log('⚠️ 不能推荐自己，已清除');
                 return;
             }
-            
             try {
-                // 检查是否已绑定过推荐人
                 const info = await contract.getUserLevelInfo(currentAccount);
-                // 如果已有推荐关系（直推人数>0 或 等级>0），跳过绑定
-                if (info.directCount.toNumber() > 0 || info.level.toNumber() > 0) {
-                    localStorage.removeItem('luckyStampReferrer');
-                    console.log('⚠️ 已有推荐关系，跳过绑定');
-                    return;
-                }
+                const hasReferrer = info.refCount.toNumber() > 0 || info.level.toNumber() > 0;
+                if (hasReferrer) { localStorage.removeItem('luckyStampReferrer'); return; }
                 
-                // 调用合约绑定推荐人
-                const tx = await contract.registerReferral(savedReferrer);
+                // 检查是否已有冷却订单(已铸造过)
+                const hasOrder = await contract.hasCoolingDownOrder(currentAccount);
+                if (hasOrder) { localStorage.removeItem('luckyStampReferrer'); return; }
+                
+                const tx = await contract.registerReferral(savedRef);
                 await tx.wait();
-                
-                console.log('✅ 推荐绑定成功:', savedReferrer);
+                console.log('✅ 推荐绑定成功:', savedRef);
                 localStorage.removeItem('luckyStampReferrer');
-                alert('🎉 推荐绑定成功！');
+                showToast('🎉 推荐绑定成功！', 'success');
+                await loadTeamInfo();
             } catch (e) {
-                console.error('推荐绑定失败:', e);
-                // 绑定失败保留推荐人信息，下次连接钱包时再试
+                console.error('绑定失败，保留推荐人信息重试:', e.message);
             }
         }
 
         async function initContracts(acc){
             currentAccount=acc;provider=new ethers.providers.Web3Provider(window.ethereum);signer=provider.getSigner();
-            contract=new ethers.Contract(CONFIG.CONTRACT_ADDRESS,CONTRACT_ABI,signer);usdtContract=new ethers.Contract(CONFIG.USDT_ADDRESS,USDT_ABI,signer);
-            const btn=document.getElementById('walletBtn');btn.textContent=currentAccount.substring(0,6)+'...'+currentAccount.substring(38);btn.classList.add('connected');
-            const refUrl=`https://luckystamp.app/ref=${currentAccount}`;
+            contract=new ethers.Contract(CONTRACT_ADDRESS,CONTRACT_ABI,signer);usdtContract=new ethers.Contract(USDT_ADDRESS,USDT_ABI,signer);
+            const btn=document.getElementById('walletBtn');btn.textContent=acc.substring(0,6)+'...'+acc.substring(38);btn.classList.add('connected');
+            const refUrl=`https://luckystamp.app/?ref=${acc}`;
             document.getElementById('refLink').textContent=refUrl;
             generateQRCode(refUrl);
-            
-            // 绑定推荐关系
             await bindReferrerIfNeeded();
-            
             await loadMyNFTs();loadTeamInfo();
         }
+
         async function autoConnect(){if(!window.ethereum)return;try{const a=await window.ethereum.request({method:'eth_accounts'});if(a&&a.length>0)await initContracts(a[0])}catch(e){}}
+        
         async function handleWalletClick(){
-            if(currentAccount){currentAccount=null;contract=null;usdtContract=null;const btn=document.getElementById('walletBtn');btn.textContent='Connect';btn.classList.remove('connected');document.getElementById('refLink').textContent='请先连接钱包';generateQRCode('请先连接钱包');myNFTs=[];renderFavoriteGrid();updateAssetStats();return}
+            if(currentAccount){currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');document.getElementById('refLink').textContent='请先连接钱包';generateQRCode('请先连接钱包');myNFTs=[];renderFavoriteGrid();updateAssetStats();return}
             if(!window.ethereum){alert('请安装 MetaMask');return}
             const btn=document.getElementById('walletBtn');showLoading(btn,'连接中');
-            try{const a=await window.ethereum.request({method:'eth_requestAccounts'});await initContracts(a[0])}catch(e){resetButton(btn,'Connect');if(e.code!==4001)alert('连接失败: '+(e.message||'未知错误'))}
+            try{const a=await window.ethereum.request({method:'eth_requestAccounts'});await initContracts(a[0])}catch(e){resetButton(btn,'Connect');if(e.code!==4001)alert('连接失败')}
         }
+
         async function approveUSDT(amount){
-            if(!usdtContract||!currentAccount){alert('❌ 请先连接钱包');return false}
-            try{const d=await usdtContract.decimals();const aw=ethers.utils.parseUnits(amount.toString(),d);const al=await usdtContract.allowance(currentAccount,CONFIG.CONTRACT_ADDRESS);if(al.gte(aw))return true;const tx=await usdtContract.approve(CONFIG.CONTRACT_ADDRESS,ethers.constants.MaxUint256);await tx.wait();return true}catch(e){if(e.code===4001)alert('❌ 您取消了 USDT 授权');else alert('❌ USDT 授权失败：'+(e.reason||e.message));return false}
+            if(!usdtContract||!currentAccount){alert('请先连接钱包');return false}
+            try{const d=await usdtContract.decimals();const aw=ethers.utils.parseUnits(amount.toString(),d);const al=await usdtContract.allowance(currentAccount,CONTRACT_ADDRESS);if(al.gte(aw))return true;const tx=await usdtContract.approve(CONTRACT_ADDRESS,ethers.constants.MaxUint256);await tx.wait();return true}catch(e){alert('❌ USDT授权失败');return false}
         }
-        function updateLotteryDisplay(){document.getElementById('todayCount').textContent=todayLotteryCount;document.getElementById('remainCount').textContent=maxLotteryCount-todayLotteryCount;document.getElementById('lotteryProgress').style.width=(todayLotteryCount/maxLotteryCount*100)+'%';document.getElementById('globalProgress').textContent=(100-globalLotteryProgress)}
-        async function bnbLottery(){if(!currentAccount){alert('请先连接钱包');return}if(todayLotteryCount>=maxLotteryCount){alert('今日抽奖次数已用完');return}try{if(contract){await(await contract.bnbBlindBoxLottery({value:ethers.utils.parseEther("0.001")})).wait()}todayLotteryCount++;globalLotteryProgress++;updateLotteryDisplay();alert('🎉 抽奖成功！')}catch(e){alert('❌ 抽奖失败：'+(e.reason||e.message))}}
+
+        function updateLotteryDisplay(){document.getElementById('todayCount').textContent=todayLotteryCount;document.getElementById('remainCount').textContent=maxLotteryCount-todayLotteryCount;document.getElementById('lotteryProgress').style.width=(todayLotteryCount/maxLotteryCount*100)+'%';document.getElementById('globalProgress').textContent=(1000-globalLotteryProgress)}
+        
+        async function bnbLottery(){if(!currentAccount){alert('请先连接钱包');return}if(todayLotteryCount>=maxLotteryCount){alert('今日抽奖次数已用完');return}try{if(contract){await(await contract.bnbBlindBoxLottery({value:ethers.utils.parseEther("0.001")})).wait()}todayLotteryCount++;globalLotteryProgress++;updateLotteryDisplay();showToast('🎉 抽奖成功！','success')}catch(e){alert('❌ 抽奖失败：'+(e.reason||e.message))}}
 
         function renderCards(){
-            document.getElementById('cardGrid').innerHTML=cardData.map((c,i)=>`
-                <div class="animal-card" data-index="${i}">
-                    <div class="check-mark">✓</div>
-                    <div class="card-icon"></div>
-                </div>`).join('');
+            document.getElementById('cardGrid').innerHTML=cardData.map((c,i)=>`<div class="animal-card" data-index="${i}"><div class="check-mark">✓</div><div class="card-icon"></div></div>`).join('');
         }
-        async function requestMint(){if(!currentAccount){alert('请先连接钱包');return}if(isLotteryRunning)return;if(contract){try{if(await contract.getCoolingDownStatus(currentAccount)){alert('⏳ 您有一个待处理的铸造请求');return}}catch(e){}}isLotteryRunning=true;const btn=document.getElementById('btnLottery');showLoading(btn,'铸造中');document.getElementById('mintResult').style.display='none';const cards=document.querySelectorAll('#cardGrid .animal-card');cards.forEach(c=>{c.classList.remove('highlight','selected')});let idx=0,speed=80,rounds=0;lotteryInterval=setInterval(()=>{cards.forEach(c=>c.classList.remove('highlight'));cards[idx].classList.add('highlight');idx++;if(idx>=cards.length){idx=0;rounds++;if(rounds>=2)speed+=30}if(rounds>=3&&idx===Math.floor(Math.random()*cards.length)){clearInterval(lotteryInterval);lotteryInterval=null;const fi=Math.floor(Math.random()*cards.length);cards.forEach(c=>c.classList.remove('highlight'));cards[fi].classList.add('selected','highlight');currentMintCard=cardData[fi];document.getElementById('mintResult').style.display='block';document.getElementById('mintResult').innerHTML=`<p style="color:var(--gold-glow);font-size:12px;">🎯 选中：${currentMintCard.name}</p><p style="color:var(--text-secondary);font-size:11px;">面值：${FACE_VALUES[fi]} USDT | 冷却：${formatCooldown(fi)}</p>`;showMintConfirmModal(currentMintCard);isLotteryRunning=false;resetButton(btn,'📮 请求铸造')}},speed)}
+
+        async function requestMint(){if(!currentAccount){alert('请先连接钱包');return}if(isLotteryRunning)return;try{if(contract&&await contract.hasCoolingDownOrder(currentAccount)){alert('⏳ 您有冷却中的订单');return}}catch(e){}isLotteryRunning=true;const btn=document.getElementById('btnLottery');showLoading(btn,'铸造中');document.getElementById('mintResult').style.display='none';const cards=document.querySelectorAll('#cardGrid .animal-card');cards.forEach(c=>{c.classList.remove('highlight','selected')});let idx=0,speed=80,rounds=0;lotteryInterval=setInterval(()=>{cards.forEach(c=>c.classList.remove('highlight'));cards[idx].classList.add('highlight');idx++;if(idx>=cards.length){idx=0;rounds++;if(rounds>=2)speed+=30}if(rounds>=3&&idx===Math.floor(Math.random()*cards.length)){clearInterval(lotteryInterval);lotteryInterval=null;const fi=Math.floor(Math.random()*cards.length);cards.forEach(c=>c.classList.remove('highlight'));cards[fi].classList.add('selected','highlight');currentMintCard=cardData[fi];document.getElementById('mintResult').style.display='block';document.getElementById('mintResult').innerHTML=`<p style="color:var(--gold-glow);font-size:12px;">🎯 选中：${currentMintCard.name}</p><p style="color:var(--text-secondary);font-size:11px;">面值：${FACE_VALUES[fi]} USDT | 冷却：${formatCooldown(fi)}</p>`;showMintConfirmModal(currentMintCard);isLotteryRunning=false;resetButton(btn,'📮 请求铸造')}},speed)}
+
         function showMintConfirmModal(card){
             document.getElementById('modalImg').src=card.img||'';
             document.getElementById('modalIdTop').textContent=card.id;
@@ -499,35 +444,28 @@
             document.getElementById('btnConfirm').onclick=confirmMint;
             document.getElementById('cardModal').classList.add('open');
         }
+
         function cancelMint(){document.getElementById('cardModal').classList.remove('open');currentMintCard=null;document.getElementById('mintResult').style.display='none';document.querySelectorAll('#cardGrid .animal-card').forEach(c=>c.classList.remove('selected','highlight'))}
-        async function confirmMint(){if(!currentAccount||!currentMintCard){alert('请先连接钱包并选择铸造卡片');return}const btn=document.getElementById('btnConfirm');const mp=FACE_VALUES[currentMintCard.type];showLoading(btn,'请求铸造中');try{if(contract)await(await contract.requestRandomMint()).wait();else await new Promise(r=>setTimeout(r,800))}catch(e){resetButton(btn,'确认铸造');alert('❌ 铸造请求失败：'+(e.reason||e.message));return}showLoading(btn,'授权 USDT');if(!(await approveUSDT(mp))){resetButton(btn,'确认铸造');return}showLoading(btn,'确认铸造中');try{if(contract)await(await contract.confirmRandomMint()).wait();else await new Promise(r=>setTimeout(r,1000))}catch(e){resetButton(btn,'确认铸造');alert('❌ 铸造确认失败：'+(e.reason||e.message));return}document.getElementById('cardModal').classList.remove('open');document.getElementById('mintResult').innerHTML=`<p style="color:#4caf50;font-size:12px;">✅ 铸造成功！${currentMintCard.name} 已加入你的资产</p>`;currentMintCard=null;await loadMyNFTs();resetButton(btn,'确认铸造')}
+
+        async function confirmMint(){if(!currentAccount||!currentMintCard){alert('请先连接钱包并选择铸造卡片');return}const btn=document.getElementById('btnConfirm');const mp=FACE_VALUES[currentMintCard.type];showLoading(btn,'请求铸造中');try{if(contract)await(await contract.requestRandomMint()).wait()}catch(e){resetButton(btn,'确认铸造');alert('❌ 铸造请求失败');return}showLoading(btn,'授权 USDT');if(!(await approveUSDT(mp))){resetButton(btn,'确认铸造');return}showLoading(btn,'确认铸造中');try{if(contract)await(await contract.confirmRandomMint()).wait()}catch(e){resetButton(btn,'确认铸造');alert('❌ 铸造确认失败');return}document.getElementById('cardModal').classList.remove('open');document.getElementById('mintResult').innerHTML=`<p style="color:#4caf50;font-size:12px;">✅ 铸造成功！${currentMintCard.name} 已加入你的资产</p>`;currentMintCard=null;await loadMyNFTs();resetButton(btn,'确认铸造')}
 
         async function loadMyNFTs(){
-            if(!currentAccount||!contract){document.getElementById('favoriteGrid').innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:20px;grid-column:1/-1;">连接钱包后加载链上资产...</p>';updateAssetStats();return}
-            const grid=document.getElementById('favoriteGrid');grid.innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:20px;grid-column:1/-1;"><span class="loading-spinner"></span> 加载链上资产...</p>';
+            if(!currentAccount||!contract){document.getElementById('favoriteGrid').innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:20px;grid-column:1/-1;">连接钱包后加载...</p>';updateAssetStats();return}
+            const grid=document.getElementById('favoriteGrid');grid.innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:20px;grid-column:1/-1;"><span class="loading-spinner"></span> 加载中...</p>';
             try{
                 const tokenIds=await contract.getOwnedStamps(currentAccount);
-                if(!tokenIds||tokenIds.length===0){myNFTs=[];grid.innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:40px;grid-column:1/-1;">📭 暂无链上资产<br><span style="font-size:11px;">去铸造页面获取你的第一枚邮票NFT</span></p>';updateAssetStats();return}
-                const nftPromises=tokenIds.map(async(id)=>{try{const info=await contract.getStampInfo(id);const st=info[0].stampType.toNumber();const fv=parseFloat(ethers.utils.formatEther(info[0].faceValue));const ct=await contract.canTrade(id);const mintTime=info[0].mintTime.toNumber();const cooldownEnd=info[0].cooldownEnd.toNumber();const progress=calcCooldownProgress(mintTime,cooldownEnd);return{tokenId:id.toNumber(),name:STAMP_NAMES[st]||`邮票 #${st}`,stampType:st,faceValue:fv,canTrade:ct,img:getStampImage(st),isListed:info[1],askPrice:info[1]?parseFloat(ethers.utils.formatEther(info[2])):0,year:STAMP_YEARS[st],estimate:STAMP_ESTIMATES[st],source:STAMP_SOURCES[st],rarity:STAMP_RARITIES[st],color:STAMP_COLORS[st],mintTime:mintTime,cooldownEnd:cooldownEnd,progress:progress}}catch(e){console.error(`获取 Token ${id} 信息失败:`,e);return null}});
+                if(!tokenIds||tokenIds.length===0){myNFTs=[];grid.innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:40px;grid-column:1/-1;">📭 暂无链上资产</p>';updateAssetStats();return}
+                const nftPromises=tokenIds.map(async(id)=>{try{const info=await contract.getStampInfo(id);const st=info[0].stampType;const fv=parseFloat(ethers.utils.formatEther(info[0].faceValue));const ct=info[0].canTrade;const mt=info[0].mintTime.toNumber();const ce=info[0].cooldownEnd.toNumber();const progress=calcCooldownProgress(mt,ce);return{tokenId:id.toNumber(),name:STAMP_NAMES[st]||`邮票 #${st}`,stampType:st,faceValue:fv,canTrade:ct,img:getStampImage(st),isListed:info[1],askPrice:info[1]?parseFloat(ethers.utils.formatEther(info[2])):0,year:STAMP_YEARS[st],estimate:STAMP_ESTIMATES[st],source:STAMP_SOURCES[st],rarity:STAMP_RARITIES[st],color:STAMP_COLORS[st],mintTime:mt,cooldownEnd:ce,progress:progress}}catch(e){return null}});
                 const results=await Promise.all(nftPromises);myNFTs=results.filter(n=>n!==null);renderFavoriteGrid();updateAssetStats()
-            }catch(e){console.error('加载资产失败:',e);grid.innerHTML='<p style="text-align:center;color:#ff4757;padding:20px;grid-column:1/-1;">❌ 加载失败，请刷新重试</p>'}
+            }catch(e){grid.innerHTML='<p style="text-align:center;color:#ff4757;padding:20px;grid-column:1/-1;">❌ 加载失败</p>'}
         }
+
         function renderFavoriteGrid(){
             const grid=document.getElementById('favoriteGrid');if(!grid)return;
             if(myNFTs.length===0){grid.innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:40px;grid-column:1/-1;">📭 暂无链上资产</p>';return}
-            grid.innerHTML=myNFTs.map((nft,i)=>`
-                <div class="market-card" onclick="handleAssetAction(${i})">
-                    <div class="frame"><img src="${nft.img}" alt="${nft.name}" onerror="this.src='images/youpiao1.png'"></div>
-                    <div class="info">
-                        <p style="color:white;font-weight:600;">${nft.name}</p>
-                        <p class="usdt-value"><i class="fab fa-usdt"></i> 面值 ${nft.faceValue.toFixed(4)} USDT</p>
-                        <p style="font-size:10px;color:var(--text-secondary);">Token #${nft.tokenId} | ${nft.rarity}</p>
-                        <div class="mint-progress-bar"><div class="mint-progress-fill" style="width:${nft.progress}%"></div></div>
-                        <p class="mint-status-text">${nft.canTrade?'✅ 可交易':`⏳ 冷却中 ${nft.progress}%`}</p>
-                        <button class="btn-sm" onclick="event.stopPropagation();handleAssetAction(${i})">${nft.canTrade?'出售/兑换':'查看详情'}</button>
-                    </div>
-                </div>`).join('')
+            grid.innerHTML=myNFTs.map((nft,i)=>`<div class="market-card" onclick="handleAssetAction(${i})"><div class="frame"><img src="${nft.img}" alt="${nft.name}" onerror="this.src='images/youpiao1.png'"></div><div class="info"><p style="color:white;font-weight:600;">${nft.name}</p><p class="usdt-value"><i class="fab fa-usdt"></i> 面值 ${nft.faceValue.toFixed(4)} USDT</p><p style="font-size:10px;color:var(--text-secondary);">Token #${nft.tokenId} | ${nft.rarity}</p><div class="mint-progress-bar"><div class="mint-progress-fill" style="width:${nft.progress}%"></div></div><p class="mint-status-text">${nft.canTrade?'✅ 可交易':`⏳ 冷却中 ${nft.progress}%`}</p><button class="btn-sm" onclick="event.stopPropagation();handleAssetAction(${i})">${nft.canTrade?'出售/兑换':'查看详情'}</button></div></div>`).join('')
         }
+
         function updateAssetStats(){
             document.getElementById('totalNFT').textContent=myNFTs.length;
             document.getElementById('canTrade').textContent=myNFTs.filter(n=>n.canTrade).length;
@@ -536,6 +474,7 @@
             document.getElementById('totalEarned').textContent=totalEarned.toFixed(2);
             document.getElementById('batchExchangeVal').textContent=calcExchange(tv).toFixed(4);
         }
+
         function handleAssetAction(i){
             const nft=myNFTs[i];
             document.getElementById('modalImg').src=nft.img||'';
@@ -549,56 +488,44 @@
             document.getElementById('modalPrice').textContent=`铸造 ${nft.faceValue.toFixed(4)} USDT`;
             document.getElementById('modalExchange').textContent=`兑换: ${calcExchange(nft.faceValue).toFixed(6)} USDT`;
             document.getElementById('modalCooldown').textContent=`铸造时长: ${formatCooldown(nft.stampType)}`;
-            document.getElementById('modalBtns').innerHTML=nft.canTrade
-                ?`<button class="btn-cancel" onclick="closeModal()">取 消</button><button class="btn-confirm" onclick="closeModal();exchangeNFT(${i})">兑 换</button><button class="btn-confirm" style="margin-left:4px;" onclick="closeModal();sellNFT(${i})">挂 单</button>`
-                :`<button class="btn-close-full" onclick="closeModal()">关 闭</button>`;
+            document.getElementById('modalBtns').innerHTML=nft.canTrade?`<button class="btn-cancel" onclick="closeModal()">取 消</button><button class="btn-confirm" onclick="closeModal();exchangeNFT(${i})">兑 换</button><button class="btn-confirm" style="margin-left:4px;" onclick="closeModal();sellNFT(${i})">挂 单</button>`:`<button class="btn-close-full" onclick="closeModal()">关 闭</button>`;
             document.getElementById('cardModal').classList.add('open');
         }
-        async function exchangeNFT(i){const nft=myNFTs[i];try{if(contract)await(await contract.exchangeForUSDT(nft.tokenId)).wait();const earned=calcExchange(nft.faceValue);totalEarned+=earned;alert(`💱 兑换成功！获得 ${earned.toFixed(6)} USDT`);await loadMyNFTs()}catch(e){alert('❌ 兑换失败：'+(e.reason||e.message))}}
-        function sellNFT(i){const price=prompt('请输入挂单价格 (USDT)：',myNFTs[i].faceValue.toFixed(4));if(!price)return;(async()=>{try{if(contract){const pw=ethers.utils.parseEther(price);await(await contract.listStampForSale(myNFTs[i].tokenId,pw)).wait()}alert(`✅ 已挂单：${myNFTs[i].name} | 价格：${price} USDT`);await loadMyNFTs()}catch(e){alert('❌ 挂单失败：'+(e.reason||e.message))}})()}
-        async function batchExchangeAll(){if(!currentAccount){alert('请先连接钱包');return}const tradable=myNFTs.filter(n=>n.canTrade);if(tradable.length===0){alert('没有可兑换的NFT');return}try{let total;if(contract){const ids=tradable.map(n=>n.tokenId);const result=await contract.getBatchExchangeAmount(ids);total=parseFloat(ethers.utils.formatEther(result.totalAmount));if(!confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(6)} USDT？`))return;await(await contract.batchExchangeForUSDT(ids)).wait()}else{total=tradable.reduce((s,n)=>s+calcExchange(n.faceValue),0);if(!confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(6)} USDT？`))return}totalEarned+=total;alert('✅ 批量兑换成功！');await loadMyNFTs()}catch(e){alert('❌ 批量兑换失败：'+(e.reason||e.message))}}
 
-        function renderMarketGrid(){const grid=document.getElementById('marketGrid');if(!grid)return;const all=marketListings.length>0?marketListings:cardData.slice(0,6);grid.innerHTML=all.map((c,i)=>`<div class="market-card" data-rarity="${c.rarity}" onclick="showMarketDetail(${i})"><div class="frame"><img src="${c.img}" alt="${c.name}"></div><div class="info"><p style="color:white;font-weight:600;">${c.name}</p><p class="usdt-value"><i class="fab fa-usdt"></i> ${c.askPrice?`售价 ${c.askPrice} USDT`:'价值 0.00 USDT'}</p><button class="btn-sm">${c.askPrice?'购 买':'查看详情'}</button></div></div>`).join('')}
-        function showMarketDetail(i){const c=(marketListings.length>0?marketListings:cardData.slice(0,6))[i];document.getElementById('modalImg').src=c.img||'';document.getElementById('modalIdTop').textContent=c.id||`#${1000+i}`;document.getElementById('modalName').textContent=c.name;document.getElementById('modalYear').textContent=c.year;document.getElementById('modalEstimate').textContent=c.estimate;document.getElementById('modalRarity').textContent=c.rarity;document.getElementById('modalRarity').style.color=c.color;document.getElementById('modalSource').textContent=c.source;document.getElementById('modalPrice').textContent=c.askPrice?`${c.askPrice} USDT`:(c.price||'2.5 BNB');document.getElementById('modalExchange').textContent='';document.getElementById('modalCooldown').textContent='';document.getElementById('modalBtns').innerHTML=c.askPrice?`<button class="btn-cancel" onclick="closeModal()">取 消</button><button class="btn-confirm" onclick="buyNFT(${i})">购 买</button>`:`<button class="btn-close-full" onclick="closeModal()">关 闭</button>`;document.getElementById('cardModal').classList.add('open')}
-        function buyNFT(i){if(!currentAccount){alert('请先连接钱包');return}const c=marketListings[i];document.getElementById('cardModal').classList.remove('open');alert(`🛒 购买成功！${c.name} | 支付 ${c.askPrice} USDT`);myNFTs.push({...c,tokenId:Date.now(),canTrade:true,faceValue:c.faceValue||0.005});marketListings.splice(i,1);renderFavoriteGrid();updateAssetStats();renderMarketGrid()}
-        function filterMarket(rarity,btn){document.querySelectorAll('#page-market .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('#marketGrid .market-card').forEach(c=>{c.style.display=(rarity==='all'||c.getAttribute('data-rarity')===rarity||(rarity==='selling'&&marketListings.length>0))?'':'none'})}
+        async function exchangeNFT(i){const nft=myNFTs[i];try{if(contract)await(await contract.exchangeForUSDT(nft.tokenId)).wait();const earned=calcExchange(nft.faceValue);totalEarned+=earned;showToast(`💱 兑换成功！获得 ${earned.toFixed(6)} USDT`,'success');await loadMyNFTs()}catch(e){alert('❌ 兑换失败：'+(e.reason||e.message))}}
 
-        async function loadTeamInfo(){if(!currentAccount||!contract)return;try{const info=await contract.getUserLevelInfo(currentAccount);document.getElementById('myLevel').textContent='V'+info.level;document.getElementById('directRefs').textContent=info.directCount;document.getElementById('teamSize').textContent=info.teamCount;document.getElementById('teamVolume').textContent=parseFloat(ethers.utils.formatEther(info.teamVolume)).toFixed(2);const refs=await contract.getUserReferrals(currentAccount);document.getElementById('totalRefs').textContent=refs.length+' 人';document.getElementById('refRecordList').innerHTML=refs.length>0?refs.map(r=>`<div class="record-item"><span>${r.substring(0,6)}...${r.substring(38)}</span><span class="record-value">直推</span></div>`).join(''):'<div class="record-item"><span style="color:var(--text-secondary)">暂无邀请记录</span></div>'}catch(e){document.getElementById('myLevel').textContent='-';document.getElementById('directRefs').textContent='0';document.getElementById('teamSize').textContent='0';document.getElementById('teamVolume').textContent='0.00'}}
+        function sellNFT(i){const price=prompt('请输入挂单价格 (USDT)：',myNFTs[i].faceValue.toFixed(4));if(!price)return;(async()=>{try{if(contract){const pw=ethers.utils.parseEther(price);await(await contract.listStampForSale(myNFTs[i].tokenId,pw)).wait()}showToast(`✅ 已挂单：${myNFTs[i].name} | 价格：${price} USDT`,'success');await loadMyNFTs()}catch(e){alert('❌ 挂单失败：'+(e.reason||e.message))}})()}
+
+        async function batchExchangeAll(){if(!currentAccount){alert('请先连接钱包');return}const tradable=myNFTs.filter(n=>n.canTrade);if(tradable.length===0){alert('没有可兑换的NFT');return}try{let total;if(contract){const ids=tradable.map(n=>n.tokenId);const result=await contract.getBatchExchangeAmount(ids);total=parseFloat(ethers.utils.formatEther(result.totalAmount));if(!confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(6)} USDT？`))return;await(await contract.batchExchangeForUSDT(ids)).wait()}else{total=tradable.reduce((s,n)=>s+calcExchange(n.faceValue),0);if(!confirm(`确认批量兑换 ${tradable.length} 枚NFT？`))return}totalEarned+=total;showToast('✅ 批量兑换成功！','success');await loadMyNFTs()}catch(e){alert('❌ 批量兑换失败：'+(e.reason||e.message))}}
+
+        function renderMarketGrid(){const grid=document.getElementById('marketGrid');if(!grid)return;const all=cardData.slice(0,6);grid.innerHTML=all.map((c,i)=>`<div class="market-card" onclick="showMarketDetail(${i})"><div class="frame"><img src="${c.img}" alt="${c.name}"></div><div class="info"><p style="color:white;font-weight:600;">${c.name}</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 ${FACE_VALUES[c.type].toFixed(4)} USDT</p><button class="btn-sm">查看详情</button></div></div>`).join('')}
+
+        function showMarketDetail(i){const c=cardData[i];document.getElementById('modalImg').src=c.img||'';document.getElementById('modalIdTop').textContent=c.id;document.getElementById('modalName').textContent=c.name;document.getElementById('modalYear').textContent=c.year;document.getElementById('modalEstimate').textContent=c.estimate;document.getElementById('modalRarity').textContent=c.rarity;document.getElementById('modalRarity').style.color=c.color;document.getElementById('modalSource').textContent=c.source;document.getElementById('modalPrice').textContent=`面值 ${FACE_VALUES[c.type].toFixed(4)} USDT`;document.getElementById('modalExchange').textContent=`兑换: ${calcExchange(FACE_VALUES[c.type]).toFixed(6)} USDT`;document.getElementById('modalCooldown').textContent=`冷却: ${formatCooldown(c.type)}`;document.getElementById('modalBtns').innerHTML=`<button class="btn-close-full" onclick="closeModal()">关 闭</button>`;document.getElementById('cardModal').classList.add('open')}
+
+        function filterMarket(rarity,btn){document.querySelectorAll('#page-market .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
+
+        async function loadTeamInfo(){if(!currentAccount||!contract)return;try{const info=await contract.getUserLevelInfo(currentAccount);document.getElementById('myLevel').textContent='V'+info.level;document.getElementById('directRefs').textContent=info.refCount.toString();document.getElementById('teamSize').textContent=info.refCount.toString();document.getElementById('teamVolume').textContent=parseFloat(ethers.utils.formatEther(info.performance)).toFixed(2);document.getElementById('totalReward').textContent=parseFloat(ethers.utils.formatEther(info.earned)).toFixed(2)+' USDT';const refs=await contract.getUserReferrals(currentAccount);document.getElementById('totalRefs').textContent=refs.length+' 人';document.getElementById('refRecordList').innerHTML=refs.length>0?refs.map(r=>`<div class="record-item"><span>${r.substring(0,6)}...${r.substring(38)}</span><span class="record-value">直推</span></div>`).join(''):'<div class="record-item"><span style="color:var(--text-secondary)">暂无邀请记录</span></div>'}catch(e){console.error('加载团队失败:',e)}}
 
         function closeModal(){document.getElementById('cardModal').classList.remove('open')}
         document.getElementById('cardModal').addEventListener('click',function(e){if(e.target===this)closeModal()})
-        function switchPage(page,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+page).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active');document.getElementById('logoIcon').textContent={nft:'🍀',lottery:'🎲',favorite:'💼',market:'🏪',messages:'👥'}[page]||'🍀';if(page==='market')renderMarketGrid();if(page==='favorite'){if(currentAccount)loadMyNFTs()}if(page==='messages')loadTeamInfo();if(page==='lottery')updateLotteryDisplay()}
 
-        // ==================== 语言切换 ====================
-        const langBtn = document.getElementById('langBtn');
-        const langDropdown = document.getElementById('langDropdown');
-        let currentLang = localStorage.getItem('bcbsLang') || 'cn';
+        function switchPage(page,el){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+page).classList.add('active');document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active');document.getElementById('logoIcon').textContent={nft:'🍀',lottery:'🎲',favorite:'💼',market:'🏪',messages:'👥'}[page]||'🍀';if(page==='market')renderMarketGrid();if(page==='favorite'&&currentAccount)loadMyNFTs();if(page==='messages')loadTeamInfo();if(page==='lottery')updateLotteryDisplay()}
 
-        langBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            langDropdown.classList.toggle('open');
-        });
-        document.addEventListener('click', (e) => {
-            if (!langDropdown.contains(e.target) && e.target !== langBtn) {
-                langDropdown.classList.remove('open');
-            }
-        });
-        document.querySelectorAll('.lang-option').forEach(option => {
-            option.addEventListener('click', function() {
-                const langCode = this.getAttribute('data-lang');
-                localStorage.setItem('bcbsLang', langCode);
-                langDropdown.classList.remove('open');
-                // 这里可以添加实际的语言切换逻辑
-                alert('语言已切换为：' + langCode);
-            });
-        });
+        const langBtn=document.getElementById('langBtn');
+        const langDropdown=document.getElementById('langDropdown');
+        langBtn.addEventListener('click',(e)=>{e.stopPropagation();langDropdown.classList.toggle('open')});
+        document.addEventListener('click',(e)=>{if(!langDropdown.contains(e.target)&&e.target!==langBtn)langDropdown.classList.remove('open')});
+        document.querySelectorAll('.lang-option').forEach(o=>{o.addEventListener('click',function(){langDropdown.classList.remove('open')})});
 
-        // 页面加载时检查推荐人
+        // 初始化
         checkAndSaveReferrer();
-        
         renderCards();renderMarketGrid();updateLotteryDisplay();
         generateQRCode('请先连接钱包');
-        if(window.ethereum){window.ethereum.on('accountsChanged',(a)=>{if(a.length===0){currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');myNFTs=[];renderFavoriteGrid();updateAssetStats();document.getElementById('refLink').textContent='请先连接钱包';generateQRCode('请先连接钱包')}else{initContracts(a[0])}});window.ethereum.on('chainChanged',()=>{if(currentAccount)initContracts(currentAccount)});setTimeout(()=>autoConnect(),500)}
+        if(window.ethereum){
+            window.ethereum.on('accountsChanged',(a)=>{if(a.length===0){currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');myNFTs=[];renderFavoriteGrid();updateAssetStats();document.getElementById('refLink').textContent='请先连接钱包';generateQRCode('请先连接钱包')}else{initContracts(a[0])}});
+            window.ethereum.on('chainChanged',()=>{if(currentAccount)initContracts(currentAccount)});
+            setTimeout(()=>autoConnect(),500);
+        }
     </script>
 </body>
 </html>
