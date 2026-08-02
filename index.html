@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <script src="https://raw.githubusercontent.com/cozmo/jsQR/master/dist/jsQR.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
@@ -119,7 +120,14 @@
         .bind-card input{width:100%;padding:14px;border:2px solid rgba(180,145,70,0.3);border-radius:12px;background:rgba(0,0,0,0.4);color:#fff;font-size:13px;text-align:center;margin-bottom:10px}
         .bind-card input:focus{outline:none;border-color:var(--gold-glow)}
         .bind-card .bind-status{font-size:11px;margin-top:8px;min-height:18px}
-        .copy-btn{background:rgba(180,145,70,0.15);border:1px solid rgba(180,145,70,0.3);color:var(--gold-glow);padding:8px 16px;border-radius:20px;font-size:11px;cursor:pointer}
+        .copy-btn{background:rgba(180,145,70,0.15);border:1px solid rgba(180,145,70,0.3);color:var(--gold-glow);padding:8px 16px;border-radius:20px;font-size:11px;cursor:pointer;margin:4px}
+        .scan-btn{background:rgba(180,145,70,0.15);border:1px solid rgba(180,145,70,0.3);color:var(--gold-glow);padding:8px 16px;border-radius:20px;font-size:11px;cursor:pointer;margin:4px}
+        .scanner-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);z-index:5000;flex-direction:column;align-items:center;justify-content:center}
+        .scanner-overlay.open{display:flex}
+        .scanner-box{width:300px;height:300px;border:2px solid var(--gold-glow);border-radius:20px;overflow:hidden;position:relative}
+        .scanner-box video{width:100%;height:100%;object-fit:cover}
+        .scanner-close{position:absolute;top:20px;right:20px;color:#fff;font-size:24px;cursor:pointer;z-index:10}
+        .scanner-hint{color:var(--text-secondary);font-size:12px;margin-top:15px;text-align:center}
     </style>
 </head>
 <body>
@@ -183,21 +191,26 @@
                 <!-- 绑定推荐人卡片 -->
                 <div class="bind-card" id="bindCard">
                     <h4>🔗 绑定推荐人</h4>
-                    <p class="bind-desc">复制上级分享的钱包地址粘贴到下方</p>
-                    <input type="text" id="bindRefInput" placeholder="0x... 粘贴推荐人钱包地址">
+                    <p class="bind-desc">扫码或粘贴上级分享的钱包地址</p>
+                    <div style="display:flex;gap:8px;margin-bottom:10px;">
+                        <button class="scan-btn" onclick="openScanner()" style="flex:1;">📷 扫描二维码</button>
+                        <button class="copy-btn" onclick="pasteAddress()" style="flex:1;">📋 粘贴地址</button>
+                    </div>
+                    <input type="text" id="bindRefInput" placeholder="0x... 或扫描二维码自动填入">
                     <button class="btn-mint" onclick="bindReferrer()" style="font-size:14px;">✅ 确认绑定</button>
                     <div class="bind-status" id="bindStatus"></div>
                 </div>
                 <!-- 我的邀请 -->
                 <div class="invite-card">
                     <h4>📋 我的邀请信息</h4>
+                    <div class="qr-area">
+                        <div class="qr-container" id="qrCode"></div>
+                        <div class="qr-text">扫描进入LuckyStamp平台</div>
+                    </div>
                     <div class="invite-row"><span class="invite-label">我的钱包地址</span><span class="invite-value" id="myAddr" style="font-size:10px;word-break:break-all;">请先连接钱包</span></div>
                     <div style="text-align:center;margin-top:10px;">
                         <button class="copy-btn" onclick="copyMyAddress()">📋 复制我的地址发送给好友</button>
-                    </div>
-                    <div class="qr-area" style="margin-top:10px;">
-                        <div class="qr-container" id="qrCode"></div>
-                        <div class="qr-text">扫描进入平台</div>
+                        <button class="copy-btn" onclick="copyInviteText()">📤 复制邀请文案</button>
                     </div>
                     <div class="invite-row"><span class="invite-label">累计邀请</span><span class="invite-value" id="totalRefs">0 人</span></div>
                     <div class="invite-row"><span class="invite-label">累计奖励</span><span class="invite-value" id="totalReward">0.00 USDT</span></div>
@@ -209,6 +222,13 @@
                 </div>
                 <div class="invite-card"><h4>📋 邀请记录</h4><div class="record-list" id="refRecordList"><div class="record-item"><span style="color:var(--text-secondary)">连接钱包后加载...</span></div></div></div>
             </div>
+        </div>
+
+        <!-- 扫码器 -->
+        <div class="scanner-overlay" id="scannerOverlay">
+            <div class="scanner-close" onclick="closeScanner()">✕</div>
+            <div class="scanner-box"><video id="scannerVideo" autoplay playsinline></video></div>
+            <p class="scanner-hint">将二维码对准框内</p>
         </div>
 
         <div class="modal-overlay" id="cardModal">
@@ -248,6 +268,7 @@
     <script>
         const CONTRACT_ADDRESS = '0xA9Aa21412e953e4B0Fb04b0eF6e3c48832507033';
         const USDT_ADDRESS = '0x55d398326f99059fF775485246999027B3197955';
+        const PLATFORM_URL = 'https://angnlangnlangnl.github.io/NFT/';
         const CONTRACT_ABI = [
             "function requestRandomMint() external","function confirmRandomMint() external","function cancelMintRequest() external",
             "function getOwnedStamps(address user) external view returns (uint256[] memory)",
@@ -275,7 +296,7 @@
         let provider=null,signer=null,currentAccount=null,contract=null,usdtContract=null;
         let isLotteryRunning=false,lotteryInterval=null,currentMintCard=null,myNFTs=[];
         let todayLotteryCount=0,maxLotteryCount=10,globalLotteryProgress=900,totalEarned=0;
-        let qrCodeInstance=null;
+        let qrCodeInstance=null,scannerStream=null,scanningActive=false;
 
         function formatFaceValue(t){return FACE_VALUES[t]||0.001}
         function calcExchange(fv){return fv*1.05}
@@ -286,60 +307,107 @@
         function getStampImage(t){const imgs=['images/youpiao1.png','images/TOP2.png','images/TOP3.png','images/TOP4.png','images/TOP5.png','images/TOP6.png','images/TOP7.png','images/TOP8.png','images/TOP9.png'];return imgs[t]||'images/youpiao1.png'}
         function showToast(msg,type){const t=document.createElement('div');t.className=`toast toast-${type}`;t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3000)}
 
+        // ==================== 二维码 ====================
         function generateQRCode(url){
             const qr=document.getElementById('qrCode');
-            if(!url||url==='请先连接钱包'){qr.innerHTML='<div style="color:rgba(255,255,255,0.3);font-size:12px;">📱<br>连接后生成</div>';return}
+            if(!url){qr.innerHTML='<div style="color:rgba(255,255,255,0.3);font-size:12px;">📱</div>';return}
             try{qr.innerHTML='';if(qrCodeInstance){qrCodeInstance.clear();qrCodeInstance=null}qrCodeInstance=new QRCode(qr,{text:url,width:144,height:144,colorDark:'#0d1a14',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.M})}catch(e){qr.innerHTML='❌'}
         }
 
-        // ==================== 手动绑定推荐人 ====================
-        async function bindReferrer(){
-            const input = document.getElementById('bindRefInput');
-            const status = document.getElementById('bindStatus');
-            const refAddr = input.value.trim();
-            
-            if(!currentAccount||!contract){showToast('请先连接钱包','error');return}
-            if(!refAddr){status.innerHTML='<span style="color:#e74c3c;">请输入推荐人地址</span>';return}
-            if(!ethers.utils.isAddress(refAddr)){status.innerHTML='<span style="color:#e74c3c;">无效的钱包地址</span>';return}
-            if(refAddr.toLowerCase()===currentAccount.toLowerCase()){status.innerHTML='<span style="color:#e74c3c;">不能绑定自己</span>';return}
-            
-            // 检查是否已绑定
+        // ==================== 二维码扫描器 ====================
+        async function openScanner(){
+            const overlay=document.getElementById('scannerOverlay');
+            overlay.classList.add('open');scanningActive=true;
             try{
-                const ref = await contract.getUserReferrer(currentAccount);
-                if(ref!=='0x0000000000000000000000000000000000000000'){
-                    status.innerHTML='<span style="color:#f39c12;">已有推荐关系，无法重复绑定</span>';
-                    return;
-                }
-                const info = await contract.getUserLevelInfo(currentAccount);
-                if(info.refCount.toNumber()>0||info.level.toNumber()>0){
-                    status.innerHTML='<span style="color:#f39c12;">已有推荐关系，无法重复绑定</span>';
-                    return;
-                }
-            }catch(e){}
-            
-            status.innerHTML='<span style="color:var(--gold-glow);"><span class="loading-spinner"></span> 绑定中...</span>';
-            try{
-                const tx = await contract.registerReferral(refAddr);
-                await tx.wait();
-                status.innerHTML='<span style="color:#27ae60;">✅ 推荐绑定成功！</span>';
-                input.value='';
-                showToast('🎉 推荐绑定成功！','success');
-                await loadTeamInfo();
-                // 隐藏绑定卡片
-                setTimeout(()=>{document.getElementById('bindCard').style.display='none'},2000);
-            }catch(e){
-                status.innerHTML=`<span style="color:#e74c3c;">绑定失败：${e.reason||e.message}</span>`;
-            }
+                scannerStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+                const video=document.getElementById('scannerVideo');
+                video.srcObject=scannerStream;
+                video.onloadedmetadata=()=>{video.play();scanQRCode()};
+            }catch(e){closeScanner();showToast('无法访问摄像头','error')}
         }
 
-        // ==================== 复制地址 ====================
+        function closeScanner(){
+            scanningActive=false;
+            if(scannerStream){scannerStream.getTracks().forEach(t=>t.stop());scannerStream=null}
+            document.getElementById('scannerOverlay').classList.remove('open');
+        }
+
+        function scanQRCode(){
+            if(!scanningActive)return;
+            const video=document.getElementById('scannerVideo');
+            if(video.readyState!==video.HAVE_ENOUGH_DATA){requestAnimationFrame(scanQRCode);return}
+            const canvas=document.createElement('canvas');
+            canvas.width=video.videoWidth;canvas.height=video.videoHeight;
+            const ctx=canvas.getContext('2d');ctx.drawImage(video,0,0,canvas.width,canvas.height);
+            const imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
+            try{
+                const code=jsQR(imageData.data,canvas.width,canvas.height);
+                if(code&&code.data){
+                    const addr=extractAddressFromQR(code.data);
+                    if(addr){document.getElementById('bindRefInput').value=addr;showToast('✅ 已识别地址','success');closeScanner();return}
+                }
+            }catch(e){}
+            if(scanningActive)requestAnimationFrame(scanQRCode);
+        }
+
+        function extractAddressFromQR(data){
+            try{
+                const url=new URL(data);
+                const ref=url.searchParams.get('ref');
+                if(ref&&ethers.utils.isAddress(ref))return ref;
+            }catch(e){}
+            if(ethers.utils.isAddress(data.trim()))return data.trim();
+            const match=data.match(/0x[a-fA-F0-9]{40}/);
+            return match?match[0]:null;
+        }
+
+        // ==================== 粘贴地址 ====================
+        async function pasteAddress(){
+            try{
+                const text=await navigator.clipboard.readText();
+                if(text&&ethers.utils.isAddress(text.trim())){
+                    document.getElementById('bindRefInput').value=text.trim();
+                    showToast('✅ 地址已粘贴','success');
+                }else{showToast('剪贴板无有效地址','error')}
+            }catch(e){showToast('无法读取剪贴板','error')}
+        }
+
+        // ==================== 绑定推荐人 ====================
+        async function bindReferrer(){
+            const input=document.getElementById('bindRefInput');
+            const status=document.getElementById('bindStatus');
+            const refAddr=input.value.trim();
+            if(!currentAccount||!contract){showToast('请先连接钱包','error');return}
+            if(!refAddr){status.innerHTML='<span style="color:#e74c3c;">请输入或扫描推荐人地址</span>';return}
+            if(!ethers.utils.isAddress(refAddr)){status.innerHTML='<span style="color:#e74c3c;">无效的钱包地址</span>';return}
+            if(refAddr.toLowerCase()===currentAccount.toLowerCase()){status.innerHTML='<span style="color:#e74c3c;">不能绑定自己</span>';return}
+            try{
+                const ref=await contract.getUserReferrer(currentAccount);
+                if(ref!=='0x0000000000000000000000000000000000000000'){status.innerHTML='<span style="color:#f39c12;">已有推荐关系</span>';return}
+                const info=await contract.getUserLevelInfo(currentAccount);
+                if(info.refCount.toNumber()>0||info.level.toNumber()>0){status.innerHTML='<span style="color:#f39c12;">已有推荐关系</span>';return}
+            }catch(e){}
+            status.innerHTML='<span style="color:var(--gold-glow);"><span class="loading-spinner"></span> 绑定中...</span>';
+            try{
+                const tx=await contract.registerReferral(refAddr);
+                await tx.wait();
+                status.innerHTML='<span style="color:#27ae60;">✅ 绑定成功！</span>';
+                input.value='';showToast('🎉 推荐绑定成功！','success');
+                await loadTeamInfo();
+                setTimeout(()=>{document.getElementById('bindCard').style.display='none'},2000);
+            }catch(e){status.innerHTML=`<span style="color:#e74c3c;">绑定失败</span>`}
+        }
+
+        // ==================== 复制邀请 ====================
         function copyMyAddress(){
             if(!currentAccount){showToast('请先连接钱包','error');return}
-            navigator.clipboard.writeText(currentAccount).then(()=>{
-                showToast('✅ 地址已复制，发送给好友','success');
-            }).catch(()=>{
-                prompt('复制此地址发送给好友：',currentAccount);
-            });
+            navigator.clipboard.writeText(currentAccount).then(()=>showToast('✅ 地址已复制，发送给好友','success')).catch(()=>prompt('复制此地址：',currentAccount));
+        }
+
+        function copyInviteText(){
+            if(!currentAccount){showToast('请先连接钱包','error');return}
+            const text=`【LuckyStamp 邀请】\n\n请复制我的地址绑定推荐关系：\n\n${currentAccount}\n\n打开 ${PLATFORM_URL} 连接钱包后在团队页面粘贴绑定`;
+            navigator.clipboard.writeText(text).then(()=>showToast('✅ 邀请文案已复制','success')).catch(()=>prompt('复制此文案：',text));
         }
 
         // ==================== 初始化 ====================
@@ -348,39 +416,31 @@
             contract=new ethers.Contract(CONTRACT_ADDRESS,CONTRACT_ABI,signer);usdtContract=new ethers.Contract(USDT_ADDRESS,USDT_ABI,signer);
             document.getElementById('walletBtn').textContent=acc.substring(0,6)+'...'+acc.substring(38);document.getElementById('walletBtn').classList.add('connected');
             document.getElementById('myAddr').textContent=acc;
-            generateQRCode('https://luckystamp.app');
-            
-            // 检查是否已有推荐人，决定是否显示绑定卡片
-            try{
-                const ref = await contract.getUserReferrer(acc);
-                if(ref!=='0x0000000000000000000000000000000000000000'){
-                    document.getElementById('bindCard').style.display='none';
-                }
-            }catch(e){}
-            
+            generateQRCode(PLATFORM_URL);
+            try{const ref=await contract.getUserReferrer(acc);if(ref!=='0x0000000000000000000000000000000000000000')document.getElementById('bindCard').style.display='none'}catch(e){}
             await loadMyNFTs();loadTeamInfo();
         }
 
         async function autoConnect(){if(!window.ethereum)return;try{const a=await window.ethereum.request({method:'eth_accounts'});if(a&&a.length>0)await initContracts(a[0])}catch(e){}}
         
         async function handleWalletClick(){
-            if(currentAccount){currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');document.getElementById('myAddr').textContent='请先连接钱包';generateQRCode('请先连接钱包');myNFTs=[];renderFavoriteGrid();updateAssetStats();document.getElementById('bindCard').style.display='block';return}
+            if(currentAccount){currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');document.getElementById('myAddr').textContent='请先连接钱包';generateQRCode('');myNFTs=[];renderFavoriteGrid();updateAssetStats();document.getElementById('bindCard').style.display='block';return}
             if(!window.ethereum){alert('请安装 MetaMask');return}
             const btn=document.getElementById('walletBtn');showLoading(btn,'连接中');
             try{const a=await window.ethereum.request({method:'eth_requestAccounts'});await initContracts(a[0])}catch(e){resetButton(btn,'Connect')}
         }
 
         async function approveUSDT(amount){
-            if(!usdtContract||!currentAccount){alert('请先连接钱包');return false}
+            if(!usdtContract||!currentAccount)return false;
             try{const d=await usdtContract.decimals();const aw=ethers.utils.parseUnits(amount.toString(),d);const al=await usdtContract.allowance(currentAccount,CONTRACT_ADDRESS);if(al.gte(aw))return true;const tx=await usdtContract.approve(CONTRACT_ADDRESS,ethers.constants.MaxUint256);await tx.wait();return true}catch(e){return false}
         }
 
         function updateLotteryDisplay(){document.getElementById('todayCount').textContent=todayLotteryCount;document.getElementById('remainCount').textContent=maxLotteryCount-todayLotteryCount;document.getElementById('lotteryProgress').style.width=(todayLotteryCount/maxLotteryCount*100)+'%';document.getElementById('globalProgress').textContent=(1000-globalLotteryProgress)}
-        async function bnbLottery(){if(!currentAccount){alert('请先连接钱包');return}if(todayLotteryCount>=maxLotteryCount){alert('今日抽奖次数已用完');return}try{if(contract)await(await contract.bnbBlindBoxLottery({value:ethers.utils.parseEther("0.001")})).wait();todayLotteryCount++;globalLotteryProgress++;updateLotteryDisplay();showToast('🎉 抽奖成功！','success')}catch(e){alert('❌ 抽奖失败')}}
+        async function bnbLottery(){if(!currentAccount)return;if(todayLotteryCount>=maxLotteryCount){alert('今日抽奖次数已用完');return}try{if(contract)await(await contract.bnbBlindBoxLottery({value:ethers.utils.parseEther("0.001")})).wait();todayLotteryCount++;globalLotteryProgress++;updateLotteryDisplay();showToast('🎉 抽奖成功！','success')}catch(e){alert('❌ 抽奖失败')}}
 
         function renderCards(){document.getElementById('cardGrid').innerHTML=cardData.map((c,i)=>`<div class="animal-card" data-index="${i}"><div class="check-mark">✓</div><div class="card-icon"></div></div>`).join('')}
 
-        async function requestMint(){if(!currentAccount){alert('请先连接钱包');return}if(isLotteryRunning)return;try{if(contract&&await contract.hasCoolingDownOrder(currentAccount)){alert('⏳ 您有冷却中的订单');return}}catch(e){}isLotteryRunning=true;const btn=document.getElementById('btnLottery');showLoading(btn,'铸造中');document.getElementById('mintResult').style.display='none';const cards=document.querySelectorAll('#cardGrid .animal-card');cards.forEach(c=>c.classList.remove('highlight','selected'));let idx=0,speed=80,rounds=0;lotteryInterval=setInterval(()=>{cards.forEach(c=>c.classList.remove('highlight'));cards[idx].classList.add('highlight');idx++;if(idx>=cards.length){idx=0;rounds++;if(rounds>=2)speed+=30}if(rounds>=3&&idx===Math.floor(Math.random()*cards.length)){clearInterval(lotteryInterval);lotteryInterval=null;const fi=Math.floor(Math.random()*cards.length);cards.forEach(c=>c.classList.remove('highlight'));cards[fi].classList.add('selected','highlight');currentMintCard=cardData[fi];document.getElementById('mintResult').style.display='block';document.getElementById('mintResult').innerHTML=`<p style="color:var(--gold-glow);font-size:12px;">🎯 选中：${currentMintCard.name}</p><p style="color:var(--text-secondary);font-size:11px;">面值：${FACE_VALUES[fi]} USDT | 冷却：${formatCooldown(fi)}</p>`;showMintConfirmModal(currentMintCard);isLotteryRunning=false;resetButton(btn,'📮 请求铸造')}},speed)}
+        async function requestMint(){if(!currentAccount)return;if(isLotteryRunning)return;try{if(contract&&await contract.hasCoolingDownOrder(currentAccount)){alert('⏳ 您有冷却中的订单');return}}catch(e){}isLotteryRunning=true;const btn=document.getElementById('btnLottery');showLoading(btn,'铸造中');document.getElementById('mintResult').style.display='none';const cards=document.querySelectorAll('#cardGrid .animal-card');cards.forEach(c=>c.classList.remove('highlight','selected'));let idx=0,speed=80,rounds=0;lotteryInterval=setInterval(()=>{cards.forEach(c=>c.classList.remove('highlight'));cards[idx].classList.add('highlight');idx++;if(idx>=cards.length){idx=0;rounds++;if(rounds>=2)speed+=30}if(rounds>=3&&idx===Math.floor(Math.random()*cards.length)){clearInterval(lotteryInterval);lotteryInterval=null;const fi=Math.floor(Math.random()*cards.length);cards.forEach(c=>c.classList.remove('highlight'));cards[fi].classList.add('selected','highlight');currentMintCard=cardData[fi];document.getElementById('mintResult').style.display='block';document.getElementById('mintResult').innerHTML=`<p style="color:var(--gold-glow);font-size:12px;">🎯 选中：${currentMintCard.name}</p><p style="color:var(--text-secondary);font-size:11px;">面值：${FACE_VALUES[fi]} USDT | 冷却：${formatCooldown(fi)}</p>`;showMintConfirmModal(currentMintCard);isLotteryRunning=false;resetButton(btn,'📮 请求铸造')}},speed)}
 
         function showMintConfirmModal(card){
             document.getElementById('modalImg').src=card.img||'';document.getElementById('modalIdTop').textContent=card.id;
@@ -434,7 +494,7 @@
             document.getElementById('cardModal').classList.add('open');
         }
 
-        async function exchangeNFT(i){const nft=myNFTs[i];try{if(contract)await(await contract.exchangeForUSDT(nft.tokenId)).wait();totalEarned+=calcExchange(nft.faceValue);showToast(`💱 兑换成功！`,'success');await loadMyNFTs()}catch(e){alert('❌ 兑换失败')}}
+        async function exchangeNFT(i){const nft=myNFTs[i];try{if(contract)await(await contract.exchangeForUSDT(nft.tokenId)).wait();totalEarned+=calcExchange(nft.faceValue);showToast('💱 兑换成功！','success');await loadMyNFTs()}catch(e){alert('❌ 兑换失败')}}
         function sellNFT(i){const price=prompt('请输入挂单价格 (USDT)：',myNFTs[i].faceValue.toFixed(4));if(!price)return;(async()=>{try{if(contract){await(await contract.listStampForSale(myNFTs[i].tokenId,ethers.utils.parseEther(price))).wait()}showToast('✅ 已挂单','success');await loadMyNFTs()}catch(e){alert('❌ 挂单失败')}})()}
         async function batchExchangeAll(){if(!currentAccount)return;const tradable=myNFTs.filter(n=>n.canTrade);if(tradable.length===0){alert('没有可兑换的NFT');return}try{let total;if(contract){const ids=tradable.map(n=>n.tokenId);const result=await contract.getBatchExchangeAmount(ids);total=parseFloat(ethers.utils.formatEther(result.totalAmount));if(!confirm(`确认批量兑换 ${tradable.length} 枚，获得约 ${total.toFixed(6)} USDT？`))return;await(await contract.batchExchangeForUSDT(ids)).wait()}totalEarned+=total;showToast('✅ 批量兑换成功！','success');await loadMyNFTs()}catch(e){alert('❌ 批量兑换失败')}}
 
@@ -464,8 +524,8 @@
         langBtn.addEventListener('click',(e)=>{e.stopPropagation();langDropdown.classList.toggle('open')});
         document.addEventListener('click',(e)=>{if(!langDropdown.contains(e.target)&&e.target!==langBtn)langDropdown.classList.remove('open')});
 
-        renderCards();renderMarketGrid();updateLotteryDisplay();generateQRCode('https://luckystamp.app');
-        if(window.ethereum){window.ethereum.on('accountsChanged',(a)=>{if(a.length===0){currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');myNFTs=[];renderFavoriteGrid();updateAssetStats();document.getElementById('myAddr').textContent='请先连接钱包';generateQRCode('请先连接钱包');document.getElementById('bindCard').style.display='block'}else{initContracts(a[0])}});setTimeout(()=>autoConnect(),500)}
+        renderCards();renderMarketGrid();updateLotteryDisplay();generateQRCode(PLATFORM_URL);
+        if(window.ethereum){window.ethereum.on('accountsChanged',(a)=>{if(a.length===0){currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');myNFTs=[];renderFavoriteGrid();updateAssetStats();document.getElementById('myAddr').textContent='请先连接钱包';generateQRCode('');document.getElementById('bindCard').style.display='block'}else{initContracts(a[0])}});setTimeout(()=>autoConnect(),500)}
     </script>
 </body>
 </html>
