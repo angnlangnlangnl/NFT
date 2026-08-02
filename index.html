@@ -217,62 +217,72 @@
             grid.innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:20px;grid-column:1/-1;"><span class="loading-spinner"></span> 加载链上资产...</p>';
             try{
                 const tids = await contract.getOwnedStamps(currentAccount);
-                console.log('📦 原始Token IDs:', tids);
                 if(!tids || tids.length === 0){
                     myNFTs = [];
                     grid.innerHTML = '<p style="text-align:center;color:var(--text-secondary);padding:40px;grid-column:1/-1;">📭 暂无链上资产<br><span style="font-size:11px;">去铸造页面获取你的第一枚邮票NFT</span></p>';
                     updateAssetStats();return;
                 }
-                // 去重并排序
                 const uniqueIds = [...new Set(tids.map(id => Number(id)))].sort((a,b) => a - b);
-                console.log('🔢 去重排序后:', uniqueIds);
                 
                 const promises = uniqueIds.map(async(id) => {
                     try{
                         const info = await contract.getStampInfo(id);
-                        console.log(`📋 Token #${id} 原始数据:`, info);
                         const sd = info[0];
-                        // 核心修复：stampType 可能在 sd[0] 或 sd.stampType
-                        const rawType = sd[0] ?? sd.stampType ?? 0;
-                        const st = Number(rawType?.toNumber?.() ?? rawType);
-                        console.log(`   stampType: ${st} (raw: ${rawType})`);
                         
-                        const fv = parseFloat(ethers.utils.formatEther(sd.faceValue ?? sd[1] ?? 0));
-                        const ct = sd.canTrade ?? sd[5] ?? false;
-                        const mt = Number(sd.mintTime ?? sd[3] ?? 0);
-                        const ce = Number(sd.coolDownEnd ?? sd[4] ?? 0);
+                        // stampType: 优先属性名，再索引0
+                        let rawType = sd.stampType;
+                        if (rawType === undefined || rawType === null) rawType = sd[0];
+                        const st = Number(rawType?.toNumber?.() ?? rawType ?? 0);
+                        
+                        // faceValue: 字段6
+                        let rawFaceValue = sd.faceValue;
+                        if (rawFaceValue === undefined || rawFaceValue === null) rawFaceValue = sd[6];
+                        const fv = parseFloat(ethers.utils.formatEther(rawFaceValue ?? 0));
+                        
+                        // mintTime: 字段3
+                        let rawMintTime = sd.mintTime;
+                        if (rawMintTime === undefined || rawMintTime === null) rawMintTime = sd[3];
+                        const mt = Number(rawMintTime?.toNumber?.() ?? rawMintTime ?? 0);
+                        
+                        // coolDownEnd: 字段4
+                        let rawCooldownEnd = sd.coolDownEnd;
+                        if (rawCooldownEnd === undefined || rawCooldownEnd === null) rawCooldownEnd = sd[4];
+                        const ce = Number(rawCooldownEnd?.toNumber?.() ?? rawCooldownEnd ?? 0);
+                        
+                        // canTrade: 字段5
+                        let canTradeVal = sd.canTrade;
+                        if (canTradeVal === undefined || canTradeVal === null) canTradeVal = sd[5];
+                        const ct = Boolean(canTradeVal);
+                        
                         const progress = calcCooldownProgress(mt, ce);
+                        const isSpecial = st >= 9;
                         
-                        const nft = {
+                        return {
                             tokenId: id,
-                            name: STAMP_NAMES[st] || `邮票 #${st}`,
+                            name: isSpecial ? `特殊邮票 #${st}` : (STAMP_NAMES[st] || `邮票 #${st}`),
                             stampType: st,
                             faceValue: fv,
                             canTrade: ct,
-                            img: STAMP_IMGS[st] || 'images/youpiao1.png',
+                            img: isSpecial ? 'images/youpiao1.png' : (STAMP_IMGS[st] || 'images/youpiao1.png'),
                             isListed: info[1] ?? false,
                             askPrice: info[1] ? parseFloat(ethers.utils.formatEther(info[2] ?? 0)) : 0,
-                            year: STAMP_YEARS[st] || '未知',
-                            estimate: STAMP_ESTIMATES[st] || '',
-                            source: STAMP_SOURCES[st] || '未挂单',
-                            rarity: STAMP_RARITIES[st] || '未知',
-                            color: STAMP_COLORS[st] || '#ffb84d',
+                            year: isSpecial ? '2024年' : (STAMP_YEARS[st] || '未知'),
+                            estimate: isSpecial ? '稀有珍藏' : (STAMP_ESTIMATES[st] || ''),
+                            source: isSpecial ? 'BNB抽奖' : (STAMP_SOURCES[st] || '未挂单'),
+                            rarity: isSpecial ? '特殊' : (STAMP_RARITIES[st] || '未知'),
+                            color: isSpecial ? '#ffd700' : (STAMP_COLORS[st] || '#ffb84d'),
                             progress: progress
                         };
-                        console.log(`   ✅ 解析结果: ${nft.name}, 面值=${nft.faceValue}, 图片=${nft.img}`);
-                        return nft;
                     }catch(e){
-                        console.error(`❌ Token #${id} 获取失败:`, e);
+                        console.error(`Token #${id} 获取失败:`, e);
                         return null;
                     }
                 });
                 const results = await Promise.all(promises);
                 myNFTs = results.filter(n => n !== null);
-                console.log(`✅ 加载完成，共 ${myNFTs.length} 枚NFT`);
                 renderFavoriteGrid();
                 updateAssetStats();
             }catch(e){
-                console.error('❌ 加载资产失败:', e);
                 grid.innerHTML = '<p style="text-align:center;color:#ff4757;padding:20px;grid-column:1/-1;">❌ 加载失败，请刷新重试</p>';
             }
         }
@@ -307,7 +317,6 @@
             document.getElementById('batchExchangeVal').textContent = calcExchange(tv).toFixed(4);
         }
 
-        // ============ 弹窗 ============
         function handleAssetAction(i){
             const nft = myNFTs[i];
             if(!nft) return;
