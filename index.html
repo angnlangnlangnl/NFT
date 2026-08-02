@@ -14,59 +14,24 @@
         body{
             background-color:#0d1a14;
             background-image:url('images/background.png');
-            background-size:cover;
-            background-position:center;
-            background-repeat:no-repeat;
-            background-attachment:fixed;
-            display:flex;justify-content:center;align-items:center;height:100vh;height:100dvh;overflow:hidden;position:fixed;top:0;left:0;right:0;bottom:0;color:#fff
+            background-size:cover;background-position:center;background-repeat:no-repeat;background-attachment:fixed;
+            display:flex;justify-content:center;align-items:center;height:100vh;height:100dvh;overflow:hidden;
+            position:fixed;top:0;left:0;right:0;bottom:0;color:#fff
         }
         .app{width:100%;max-width:420px;height:100%;display:flex;flex-direction:column;position:relative;overflow:hidden}
-        .scroll{flex:1;overflow-y:auto;padding:15px;-webkit-overflow-scrolling:touch;position:relative;z-index:1;background:transparent;backdrop-filter:none}
+        .scroll{flex:1;overflow-y:auto;padding:15px;-webkit-overflow-scrolling:touch;position:relative;z-index:1;background:transparent}
         .header{display:flex;justify-content:space-between;align-items:center;padding-bottom:15px;flex-wrap:wrap}
         .logo{display:flex;align-items:center;font-size:16px;font-weight:700;color:var(--gold);text-shadow:0 0 15px rgba(180,145,70,0.4)}
         .logo .icon{font-size:24px;margin-right:6px}
         .header-right{display:flex;gap:6px;align-items:center;position:relative;flex-shrink:0}
         .wallet-btn{background:transparent;border:1px solid rgba(214,184,120,0.4);color:var(--gold-glow);padding:5px 10px;border-radius:20px;font-size:11px;cursor:pointer;white-space:nowrap}
         .wallet-btn.connected{background:rgba(180,145,70,0.12);border-color:var(--gold-glow);color:var(--gold-light)}
-        .lang-btn {
-            background: transparent;
-            border: 1px solid rgba(180,145,70,0.25);
-            color: var(--text-secondary);
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 11px;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        .lang-dropdown {
-            display: none;
-            position: absolute;
-            top: 36px;
-            right: 0;
-            background: rgba(13,26,20,0.97);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(180,145,70,0.25);
-            border-radius: 12px;
-            padding: 10px;
-            width: 160px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.8);
-            z-index: 999;
-            flex-direction: column;
-            gap: 4px;
-        }
-        .lang-dropdown.open { display: flex; }
-        .lang-option {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 6px 10px;
-            border-radius: 6px;
-            color: #f0e6d2;
-            font-size: 12px;
-            cursor: pointer;
-        }
-        .lang-option:hover { background: rgba(197,164,85,0.15); color: var(--gold-light); }
-        .lang-option .code { color: var(--text-secondary); font-size: 10px; margin-left: 6px; }
+        .lang-btn{background:transparent;border:1px solid rgba(180,145,70,0.25);color:var(--text-secondary);padding:4px 8px;border-radius:6px;font-size:11px;cursor:pointer;white-space:nowrap}
+        .lang-dropdown{display:none;position:absolute;top:36px;right:0;background:rgba(13,26,20,0.97);backdrop-filter:blur(12px);border:1px solid rgba(180,145,70,0.25);border-radius:12px;padding:10px;width:160px;box-shadow:0 8px 32px rgba(0,0,0,0.8);z-index:999;flex-direction:column;gap:4px}
+        .lang-dropdown.open{display:flex}
+        .lang-option{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border-radius:6px;color:#f0e6d2;font-size:12px;cursor:pointer}
+        .lang-option:hover{background:rgba(197,164,85,0.15);color:var(--gold-light)}
+        .lang-option .code{color:var(--text-secondary);font-size:10px;margin-left:6px}
         .page{display:none}
         .page.active{display:block}
         .title{text-align:center;margin-bottom:15px}
@@ -76,32 +41,13 @@
         .btn-lottery:disabled{opacity:0.6;cursor:not-allowed;animation:none}
         @keyframes glowPulse{0%,100%{box-shadow:0 6px 20px rgba(180,145,70,0.35)}50%{box-shadow:0 6px 35px rgba(220,180,70,0.7)}}
         .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-        .animal-card{
-            background:transparent;
-            border:2px solid rgba(180,145,70,0.25);
-            border-radius:14px;
-            text-align:center;
-            cursor:pointer;
-            transition:all 0.3s;
-            position:relative;
-            overflow:hidden;
-            aspect-ratio:3/4;
-        }
+        .animal-card{background:transparent;border:2px solid rgba(180,145,70,0.25);border-radius:14px;text-align:center;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;aspect-ratio:3/4}
         .animal-card:hover{border-color:var(--gold-glow);box-shadow:0 0 20px rgba(180,145,70,0.3);transform:translateY(-3px)}
         .animal-card.selected{border-color:var(--gold-glow);box-shadow:0 0 25px rgba(180,145,70,0.5);background:rgba(180,145,70,0.15)}
         .animal-card.highlight{border-color:var(--gold-glow);box-shadow:0 0 35px rgba(220,180,70,0.9),0 0 60px rgba(180,145,70,0.5);background:rgba(180,145,70,0.2);animation:highlightPulse 0.3s ease}
         @keyframes highlightPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-        .animal-card .card-icon{
-            width:100%;height:100%;
-            background-image:url('images/Digital Stamp.png');
-            background-size:cover;background-position:center;background-repeat:no-repeat;
-            display:flex;align-items:center;justify-content:center;font-size:50px;position:relative;overflow:hidden;
-        }
-        .animal-card .card-icon::after{
-            content:'?';position:absolute;font-size:48px;color:rgba(255,255,255,0.12);font-weight:900;
-            top:50%;left:50%;transform:translate(-50%,-50%);
-        }
-        .animal-card.revealed .card-icon::after{display:none}
+        .animal-card .card-icon{width:100%;height:100%;background-image:url('images/Digital Stamp.png');background-size:cover;background-position:center;background-repeat:no-repeat;display:flex;align-items:center;justify-content:center;font-size:50px;position:relative;overflow:hidden}
+        .animal-card .card-icon::after{content:'?';position:absolute;font-size:48px;color:rgba(255,255,255,0.12);font-weight:900;top:50%;left:50%;transform:translate(-50%,-50%)}
         .animal-card .check-mark{position:absolute;top:6px;left:6px;width:22px;height:22px;background:var(--gold-glow);border-radius:50%;display:none;align-items:center;justify-content:center;font-size:12px;color:#000;font-weight:700;z-index:2}
         .animal-card.selected .check-mark{display:flex}
         .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);z-index:1000;justify-content:center;align-items:center}
@@ -112,7 +58,7 @@
         .modal-box .modal-img-area{width:200px;height:200px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:10px}
         .modal-box .modal-img-area img{width:100%;height:100%;object-fit:contain}
         .modal-box .stamp-panel{width:100%;background:rgba(20,34,28,0.6);border:1px solid rgba(168,139,68,0.3);border-radius:12px;padding:18px 15px 10px;text-align:center;margin-bottom:8px;position:relative;margin-top:10px}
-        .modal-box .stamp-title{display:inline-block;background:linear-gradient(to bottom,#e6c971,#a88b44);color:#1a1a1a;font-size:15px;font-weight:bold;letter-spacing:3px;padding:4px 24px;border-radius:4px;text-shadow:0 1px 1px rgba(255,255,255,0.3);white-space:nowrap;position:absolute;top:-14px;left:50%;transform:translateX(-50%);z-index:5}
+        .modal-box .stamp-title{display:inline-block;background:linear-gradient(to bottom,#e6c971,#a88b44);color:#1a1a1a;font-size:15px;font-weight:bold;letter-spacing:3px;padding:4px 24px;border-radius:4px;position:absolute;top:-14px;left:50%;transform:translateX(-50%);z-index:5}
         .modal-box .stamp-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;padding:0 5px;margin-top:4px}
         .modal-box .stamp-row{display:flex;justify-content:center;align-items:baseline;font-size:11px}
         .modal-box .stamp-label{color:#cbb780;margin-right:4px;font-weight:500}
@@ -123,7 +69,6 @@
         .modal-box .modal-mint-days{color:rgba(255,255,255,0.5);font-size:12px}
         .modal-btns{display:flex;gap:10px;width:100%}
         .btn-confirm{flex:1;padding:12px;background:linear-gradient(180deg,#e7c778 0%,#b48b3a 100%);color:#0a130e;border:none;border-radius:25px;font-weight:700;font-size:15px;cursor:pointer}
-        .btn-confirm:disabled{opacity:0.5;cursor:not-allowed}
         .btn-cancel{flex:1;padding:12px;background:transparent;border:1px solid var(--gold-glow);color:var(--gold-glow);border-radius:25px;font-size:15px;cursor:pointer}
         .btn-close-full{width:100%;padding:12px;background:transparent;border:1px solid var(--gold-glow);color:var(--gold-glow);border-radius:25px;font-weight:700;font-size:15px;cursor:pointer}
         .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -180,6 +125,19 @@
         .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%);padding:12px 24px;border-radius:8px;color:#fff;font-weight:bold;z-index:2000;font-size:14px}
         .toast-success{background:#27ae60}
         .toast-error{background:#e74c3c}
+        /* 绑定弹窗样式 */
+        .bind-modal{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:3000;display:none;justify-content:center;align-items:center}
+        .bind-modal.open{display:flex}
+        .bind-box{background:radial-gradient(circle at center,#13221e 0%,#09110d 100%);border:2px solid var(--gold-glow);border-radius:20px;padding:25px 20px;width:350px;max-width:90vw;text-align:center}
+        .bind-box h3{color:var(--gold-light);font-size:18px;margin-bottom:5px}
+        .bind-box .hint{color:var(--text-secondary);font-size:12px;margin-bottom:15px}
+        .bind-box .input-group{margin-bottom:15px}
+        .bind-box input{width:100%;padding:12px;border:1px solid rgba(180,145,70,0.3);border-radius:10px;background:rgba(0,0,0,0.3);color:#fff;font-size:13px;text-align:center}
+        .bind-box input:focus{outline:none;border-color:var(--gold-glow)}
+        .bind-box .bind-info{background:rgba(180,145,70,0.1);border-radius:8px;padding:10px;margin-bottom:15px;font-size:11px;color:var(--text-secondary);display:none}
+        .bind-box .btn-row{display:flex;gap:10px}
+        .bind-box .btn-bind{flex:1;padding:12px;background:linear-gradient(180deg,#e7c778 0%,#b48b3a 100%);color:#0a130e;border:none;border-radius:25px;font-weight:700;cursor:pointer}
+        .bind-box .btn-skip{flex:1;padding:12px;background:transparent;border:1px solid rgba(180,145,70,0.3);color:var(--text-secondary);border-radius:25px;cursor:pointer}
     </style>
 </head>
 <body>
@@ -231,14 +189,13 @@
                 <div style="text-align:center;margin-bottom:10px;">
                     <button class="btn-lottery" style="padding:8px 20px;font-size:13px;" id="btnBatchExchange" onclick="batchExchangeAll()">💱 批量兑换 (<span id="batchExchangeVal">0.0000</span> USDT)</button>
                 </div>
-                <div class="grid-2" id="favoriteGrid"><p style="text-align:center;color:var(--text-secondary);padding:20px;grid-column:1/-1;">连接钱包后加载链上资产...</p></div>
+                <div class="grid-2" id="favoriteGrid"><p style="text-align:center;color:var(--text-secondary);padding:20px;grid-column:1/-1;">连接钱包后加载...</p></div>
             </div>
 
             <div class="page" id="page-market">
                 <div class="title"><h2>🏪 交易市场</h2><p>探索珍稀邮票NFT · 收藏链上唯一珍品</p></div>
                 <div class="filter-bar">
-                    <span class="filter-btn active" onclick="filterMarket('all',this)">全部</span>
-                    <span class="filter-btn" onclick="filterMarket('selling',this)">出售中</span>
+                    <span class="filter-btn active">全部</span>
                 </div>
                 <div class="grid-2" id="marketGrid"></div>
             </div>
@@ -246,11 +203,12 @@
             <div class="page" id="page-messages">
                 <div class="title"><h2>👥 我的团队</h2><p>邀请好友 · 团队数据 · 推荐奖励</p></div>
                 <div class="invite-card">
-                    <h4>📱 扫描邀请</h4>
+                    <h4>📱 扫码进入平台</h4>
                     <div class="qr-area">
                         <div class="qr-container" id="qrCode"></div>
-                        <div class="qr-text" id="refLink">请先连接钱包</div>
+                        <div class="qr-text">扫码后填入推荐人地址绑定</div>
                     </div>
+                    <div class="invite-row"><span class="invite-label">我的邀请链接</span><span class="invite-value" id="refLink" style="font-size:10px;word-break:break-all;">请先连接钱包</span></div>
                     <div class="invite-row"><span class="invite-label">累计邀请</span><span class="invite-value" id="totalRefs">0 人</span></div>
                     <div class="invite-row"><span class="invite-label">累计奖励</span><span class="invite-value" id="totalReward">0.00 USDT</span></div>
                 </div>
@@ -260,6 +218,22 @@
                     <div class="team-row" style="margin-top:8px;"><div class="team-item"><div class="team-val" id="teamSize">0</div><div class="team-lbl">团队总人数</div></div><div class="team-item"><div class="team-val" id="teamVolume">0.00</div><div class="team-lbl">团队业绩 USDT</div></div></div>
                 </div>
                 <div class="invite-card"><h4>📋 邀请记录</h4><div class="record-list" id="refRecordList"><div class="record-item"><span style="color:var(--text-secondary)">连接钱包后加载...</span></div></div></div>
+            </div>
+        </div>
+
+        <!-- 绑定推荐人弹窗 -->
+        <div class="bind-modal" id="bindModal">
+            <div class="bind-box">
+                <h3>🔗 绑定推荐人</h3>
+                <p class="hint" id="bindHint">请输入推荐人钱包地址</p>
+                <div class="input-group">
+                    <input type="text" id="bindAddress" placeholder="0x..." autocomplete="off">
+                </div>
+                <div class="bind-info" id="bindInfo"></div>
+                <div class="btn-row">
+                    <button class="btn-skip" onclick="skipBind()">跳 过</button>
+                    <button class="btn-bind" onclick="confirmBind()">确 认</button>
+                </div>
             </div>
         </div>
 
@@ -314,7 +288,8 @@
             "function bnbBlindBoxLottery() external payable","function listStampForSale(uint256 tokenId,uint256 price) external",
             "function buyStamp(uint256 tokenId) external","function cancelListing(uint256 tokenId) external",
             "function exchangeForUSDT(uint256 tokenId) external","function batchExchangeForUSDT(uint256[] calldata tokenIds) external",
-            "function hasCoolingDownOrder(address) external view returns (bool)"
+            "function hasCoolingDownOrder(address) external view returns (bool)",
+            "function getUserReferrer(address) external view returns (address)"
         ];
         const USDT_ABI = ["function approve(address spender,uint256 amount) external returns (bool)","function allowance(address owner,address spender) external view returns (uint256)","function balanceOf(address account) external view returns (uint256)","function decimals() external view returns (uint8)"];
         const FACE_VALUES=[0.001,0.002,0.003,0.004,0.005,0.006,0.007,0.008,0.010];
@@ -327,7 +302,7 @@
         const STAMP_COLORS=['#ffb84d','#ffb84d','#d98eff','#6db3ff','#6db3ff','#6db3ff','#ccc','#d98eff','#6db3ff'];
         const cardData=STAMP_NAMES.map((name,i)=>({name,rarity:STAMP_RARITIES[i],id:`#${String(i+1).padStart(4,'0')}`,year:STAMP_YEARS[i],estimate:STAMP_ESTIMATES[i],source:STAMP_SOURCES[i],price:'2.5 BNB',color:STAMP_COLORS[i],img:getStampImage(i),type:i}));
         let provider=null,signer=null,currentAccount=null,contract=null,usdtContract=null;
-        let isLotteryRunning=false,lotteryInterval=null,currentMintCard=null,myNFTs=[],marketListings=[];
+        let isLotteryRunning=false,lotteryInterval=null,currentMintCard=null,myNFTs=[];
         let todayLotteryCount=0,maxLotteryCount=10,globalLotteryProgress=900,totalEarned=0;
         let qrCodeInstance=null;
 
@@ -339,7 +314,7 @@
         function resetButton(btn,text){btn.disabled=false;btn.textContent=text}
         function getStampImage(type){const imgs=['images/youpiao1.png','images/TOP2.png','images/TOP3.png','images/TOP4.png','images/TOP5.png','images/TOP6.png','images/TOP7.png','images/TOP8.png','images/TOP9.png'];return imgs[type]||'images/youpiao1.png'}
         function showToast(msg,type){const t=document.createElement('div');t.className=`toast toast-${type}`;t.textContent=msg;document.body.appendChild(t);setTimeout(()=>t.remove(),3000)}
-        
+
         function generateQRCode(url){
             const qrContainer=document.getElementById('qrCode');
             if(!url||url==='请先连接钱包'){
@@ -353,44 +328,93 @@
             }catch(e){qrContainer.innerHTML='<div style="color:red;font-size:11px;">❌ 生成失败</div>'}
         }
 
-        // ==================== 邀请链接核心修复 ====================
-        function checkAndSaveReferrer() {
+        // ==================== 用户主导绑定推荐人 ====================
+        function getRefFromURL() {
             try {
                 const urlParams = new URLSearchParams(window.location.search);
                 const ref = urlParams.get('ref');
-                if (ref && ethers.utils.isAddress(ref)) {
-                    localStorage.setItem('luckyStampReferrer', ref);
-                    console.log('✅ 已保存推荐人:', ref);
-                }
-            } catch (e) { console.warn('提取推荐人失败:', e); }
+                if (ref && ethers.utils.isAddress(ref)) return ref;
+            } catch (e) {}
+            return null;
         }
 
-        async function bindReferrerIfNeeded() {
-            if (!contract || !currentAccount) return;
-            const savedRef = localStorage.getItem('luckyStampReferrer');
-            if (!savedRef) return;
-            if (savedRef.toLowerCase() === currentAccount.toLowerCase()) {
-                localStorage.removeItem('luckyStampReferrer');
+        async function checkBindStatus() {
+            if (!contract || !currentAccount) return { needBind: false };
+            try {
+                const existingRef = await contract.getUserReferrer(currentAccount);
+                if (existingRef !== '0x0000000000000000000000000000000000000000') {
+                    return { needBind: false, hasRef: true, refAddr: existingRef };
+                }
+                const info = await contract.getUserLevelInfo(currentAccount);
+                if (info.refCount.toNumber() > 0 || info.level.toNumber() > 0) {
+                    return { needBind: false, hasRef: true };
+                }
+                const hasOrder = await contract.hasCoolingDownOrder(currentAccount);
+                if (hasOrder) {
+                    return { needBind: false, hasRef: true };
+                }
+                const urlRef = getRefFromURL();
+                if (urlRef) {
+                    return { needBind: true, urlRef: urlRef };
+                }
+                return { needBind: true, urlRef: null };
+            } catch (e) {
+                return { needBind: true, urlRef: null };
+            }
+        }
+
+        function showBindModal(urlRef) {
+            const addrInput = document.getElementById('bindAddress');
+            const hint = document.getElementById('bindHint');
+            const info = document.getElementById('bindInfo');
+            
+            if (urlRef) {
+                addrInput.value = urlRef;
+                hint.textContent = '已识别推荐人地址，确认或修改';
+                info.style.display = 'block';
+                info.innerHTML = `📋 检测到推荐人地址，点击确认即可绑定`;
+            } else {
+                addrInput.value = '';
+                hint.textContent = '请输入推荐人钱包地址（选填）';
+                info.style.display = 'none';
+            }
+            
+            document.getElementById('bindModal').classList.add('open');
+        }
+
+        function hideBindModal() {
+            document.getElementById('bindModal').classList.remove('open');
+        }
+
+        async function confirmBind() {
+            const addrInput = document.getElementById('bindAddress').value.trim();
+            if (!addrInput) {
+                hideBindModal();
+                return;
+            }
+            if (!ethers.utils.isAddress(addrInput)) {
+                showToast('❌ 无效的钱包地址', 'error');
+                return;
+            }
+            if (addrInput.toLowerCase() === currentAccount.toLowerCase()) {
+                showToast('❌ 不能绑定自己', 'error');
                 return;
             }
             try {
-                const info = await contract.getUserLevelInfo(currentAccount);
-                const hasReferrer = info.refCount.toNumber() > 0 || info.level.toNumber() > 0;
-                if (hasReferrer) { localStorage.removeItem('luckyStampReferrer'); return; }
-                
-                // 检查是否已有冷却订单(已铸造过)
-                const hasOrder = await contract.hasCoolingDownOrder(currentAccount);
-                if (hasOrder) { localStorage.removeItem('luckyStampReferrer'); return; }
-                
-                const tx = await contract.registerReferral(savedRef);
+                showToast('⏳ 绑定中...', 'success');
+                const tx = await contract.registerReferral(addrInput);
                 await tx.wait();
-                console.log('✅ 推荐绑定成功:', savedRef);
-                localStorage.removeItem('luckyStampReferrer');
                 showToast('🎉 推荐绑定成功！', 'success');
+                hideBindModal();
                 await loadTeamInfo();
             } catch (e) {
-                console.error('绑定失败，保留推荐人信息重试:', e.message);
+                showToast('❌ 绑定失败：' + (e.reason || e.message), 'error');
             }
+        }
+
+        function skipBind() {
+            hideBindModal();
+            showToast('已跳过绑定，可在团队页面手动绑定', 'success');
         }
 
         async function initContracts(acc){
@@ -400,7 +424,13 @@
             const refUrl=`https://luckystamp.app/?ref=${acc}`;
             document.getElementById('refLink').textContent=refUrl;
             generateQRCode(refUrl);
-            await bindReferrerIfNeeded();
+            
+            // 检查是否需要绑定
+            const bindStatus = await checkBindStatus();
+            if (bindStatus.needBind) {
+                setTimeout(() => showBindModal(bindStatus.urlRef), 500);
+            }
+            
             await loadMyNFTs();loadTeamInfo();
         }
 
@@ -498,11 +528,9 @@
 
         async function batchExchangeAll(){if(!currentAccount){alert('请先连接钱包');return}const tradable=myNFTs.filter(n=>n.canTrade);if(tradable.length===0){alert('没有可兑换的NFT');return}try{let total;if(contract){const ids=tradable.map(n=>n.tokenId);const result=await contract.getBatchExchangeAmount(ids);total=parseFloat(ethers.utils.formatEther(result.totalAmount));if(!confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(6)} USDT？`))return;await(await contract.batchExchangeForUSDT(ids)).wait()}else{total=tradable.reduce((s,n)=>s+calcExchange(n.faceValue),0);if(!confirm(`确认批量兑换 ${tradable.length} 枚NFT？`))return}totalEarned+=total;showToast('✅ 批量兑换成功！','success');await loadMyNFTs()}catch(e){alert('❌ 批量兑换失败：'+(e.reason||e.message))}}
 
-        function renderMarketGrid(){const grid=document.getElementById('marketGrid');if(!grid)return;const all=cardData.slice(0,6);grid.innerHTML=all.map((c,i)=>`<div class="market-card" onclick="showMarketDetail(${i})"><div class="frame"><img src="${c.img}" alt="${c.name}"></div><div class="info"><p style="color:white;font-weight:600;">${c.name}</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 ${FACE_VALUES[c.type].toFixed(4)} USDT</p><button class="btn-sm">查看详情</button></div></div>`).join('')}
+        function renderMarketGrid(){const grid=document.getElementById('marketGrid');if(!grid)return;grid.innerHTML=cardData.slice(0,6).map((c,i)=>`<div class="market-card" onclick="showMarketDetail(${i})"><div class="frame"><img src="${c.img}" alt="${c.name}"></div><div class="info"><p style="color:white;font-weight:600;">${c.name}</p><p class="usdt-value"><i class="fab fa-usdt"></i> 价值 ${FACE_VALUES[c.type].toFixed(4)} USDT</p><button class="btn-sm">查看详情</button></div></div>`).join('')}
 
         function showMarketDetail(i){const c=cardData[i];document.getElementById('modalImg').src=c.img||'';document.getElementById('modalIdTop').textContent=c.id;document.getElementById('modalName').textContent=c.name;document.getElementById('modalYear').textContent=c.year;document.getElementById('modalEstimate').textContent=c.estimate;document.getElementById('modalRarity').textContent=c.rarity;document.getElementById('modalRarity').style.color=c.color;document.getElementById('modalSource').textContent=c.source;document.getElementById('modalPrice').textContent=`面值 ${FACE_VALUES[c.type].toFixed(4)} USDT`;document.getElementById('modalExchange').textContent=`兑换: ${calcExchange(FACE_VALUES[c.type]).toFixed(6)} USDT`;document.getElementById('modalCooldown').textContent=`冷却: ${formatCooldown(c.type)}`;document.getElementById('modalBtns').innerHTML=`<button class="btn-close-full" onclick="closeModal()">关 闭</button>`;document.getElementById('cardModal').classList.add('open')}
-
-        function filterMarket(rarity,btn){document.querySelectorAll('#page-market .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active')}
 
         async function loadTeamInfo(){if(!currentAccount||!contract)return;try{const info=await contract.getUserLevelInfo(currentAccount);document.getElementById('myLevel').textContent='V'+info.level;document.getElementById('directRefs').textContent=info.refCount.toString();document.getElementById('teamSize').textContent=info.refCount.toString();document.getElementById('teamVolume').textContent=parseFloat(ethers.utils.formatEther(info.performance)).toFixed(2);document.getElementById('totalReward').textContent=parseFloat(ethers.utils.formatEther(info.earned)).toFixed(2)+' USDT';const refs=await contract.getUserReferrals(currentAccount);document.getElementById('totalRefs').textContent=refs.length+' 人';document.getElementById('refRecordList').innerHTML=refs.length>0?refs.map(r=>`<div class="record-item"><span>${r.substring(0,6)}...${r.substring(38)}</span><span class="record-value">直推</span></div>`).join(''):'<div class="record-item"><span style="color:var(--text-secondary)">暂无邀请记录</span></div>'}catch(e){console.error('加载团队失败:',e)}}
 
@@ -517,10 +545,8 @@
         document.addEventListener('click',(e)=>{if(!langDropdown.contains(e.target)&&e.target!==langBtn)langDropdown.classList.remove('open')});
         document.querySelectorAll('.lang-option').forEach(o=>{o.addEventListener('click',function(){langDropdown.classList.remove('open')})});
 
-        // 初始化
-        checkAndSaveReferrer();
         renderCards();renderMarketGrid();updateLotteryDisplay();
-        generateQRCode('请先连接钱包');
+        generateQRCode('https://luckystamp.app');
         if(window.ethereum){
             window.ethereum.on('accountsChanged',(a)=>{if(a.length===0){currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');myNFTs=[];renderFavoriteGrid();updateAssetStats();document.getElementById('refLink').textContent='请先连接钱包';generateQRCode('请先连接钱包')}else{initContracts(a[0])}});
             window.ethereum.on('chainChanged',()=>{if(currentAccount)initContracts(currentAccount)});
