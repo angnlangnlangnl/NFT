@@ -32,22 +32,14 @@
         }
 
         /* ================================ */
-        /* 2. 拉长20%后的图片按钮 */
+        /* 2. 宽度增加 30% 的图片按钮 */
         /* ================================ */
         .btn2-wrapper {
             display: inline-block; 
             cursor: pointer;
             transition: transform 0.15s ease, filter 0.15s ease;
             z-index: 10;
-            
-            /* 间距保持 96px */
-            margin-top: 96px; 
-            
-            /* 【关键修改】容器宽度拉长 20% */
-            /* 数值越大按钮越宽，您可以自由调整这个宽度 */
-            width: 120%; 
-            max-width: 500px; /* 避免在大屏幕上拉得太长 */
-            text-align: center; /* 让图片在容器内居中 */
+            margin-top: 96px; /* 向下间距保持不变 */
         }
 
         .btn2-wrapper:hover {
@@ -59,27 +51,27 @@
             transform: scale(0.95);
         }
 
-        /* 图片按钮本身 */
+        /* ===== 核心修改在这里 ===== */
         .btn2-img {
             display: block;
-            margin: 0 auto; /* 水平居中 */
-            max-height: 64px;   /* 高度保持 64px 不变 */
-            height: auto;
+            max-height: 64px;  /* 【锁定】高度严格不变 */
             
-            /* 【重点】宽度拉长 20%，同时让浏览器等比缩放 */
-            width: 120%; 
-            object-fit: contain;
-            /* 如果原图拉伸变形严重，保留 width: auto; 让它按比例撑满，但不等于120% */
-            /* 这里我使用了 width: 120%; 来实现拉伸，如果变形太大，您可改为 width: 100%; */
+            /* 【核心逻辑】在保持高度锁定的前提下，横向拉伸 1.3 倍（增加30%） */
+            width: auto;
+            object-fit: fill;  /* 使用 fill 模式，强制填满拉伸空间 */
+            transform: scaleX(1.3); /* 单独在 X 轴（横向）放大 30% */
+            
+            /* 避免拉伸时产生锯齿，让边缘保持平滑 */
+            image-rendering: auto; 
         }
 
         /* 适配手机屏幕 */
         @media (max-width: 600px) {
-            .btn2-img { max-height: 48px; } 
-            .btn2-wrapper { 
-                margin-top: 72px; 
-                max-width: 350px; /* 手机上限制最大宽度 */
+            .btn2-img { 
+                max-height: 48px; /* 手机端高度对应缩小 */
+                transform: scaleX(1.3); /* 依然保持横向 30% 拉伸 */
             }
+            .btn2-wrapper { margin-top: 72px; }
         }
     </style>
 </head>
