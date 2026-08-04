@@ -3,69 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>产品选购 - 虚拟收益</title>
+    <title>产品选购</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* --- 基础重置 --- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
             background-image: url('images/产品选购背景.png');
             background-size: cover;
-            background-position: top center; 
+            background-position: center center; 
             background-repeat: no-repeat;
             background-attachment: fixed;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
             color: #ffffff;
             min-height: 100vh;
             padding: 20px 15px 50px;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         /* 顶部导航栏 */
         .header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
+            width: 100%;
             max-width: 500px;
-            margin: 0 auto 10px;
+            margin-top: 10px;
             padding: 0 5px;
         }
         .header i { font-size: 24px; color: #e0d4ff; cursor: pointer; transition: 0.3s; }
         .header i:hover { color: #fff; }
-        .header h1 {
-            font-size: 32px;
+
+        /* --- 主标题 --- */
+        .main-title {
+            font-family: "Times New Roman", "Songti SC", Georgia, serif;
+            font-size: 42px;
             font-weight: 900;
-            background: linear-gradient(180deg, #ffeeba 0%, #ffd700 50%, #e6b800 100%);
+            letter-spacing: 4px;
+            text-align: center;
+            margin-bottom: 5px;
+            margin-top: -10px;
+            background: linear-gradient(180deg, #fffdf5 0%, #ffeaa3 40%, #ffd700 70%, #d4af37 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
-            letter-spacing: 4px;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+            z-index: 2;
         }
 
-        /* 副标题 */
+        /* --- 副标题 --- */
         .subtitle {
-            text-align: center;
-            font-size: 13px;
-            color: #c8b6ff;
-            margin-bottom: 30px;
-            letter-spacing: 2px;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             gap: 15px;
+            font-size: 13px;
+            color: #ccbfff;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            z-index: 2;
         }
         .subtitle::before, .subtitle::after {
             content: "";
             display: inline-block;
             width: 30px;
             height: 1px;
-            background: linear-gradient(90deg, transparent, #c8b6ff);
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.5));
         }
-        .subtitle::after { background: linear-gradient(270deg, transparent, #c8b6ff); }
+        .subtitle::after { background: linear-gradient(270deg, transparent, rgba(255, 215, 0, 0.5)); }
 
         /* --- 商品卡片容器 --- */
         .product-container {
             max-width: 480px;
+            width: 100%;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
@@ -74,269 +87,93 @@
             z-index: 2;
         }
 
-        /* --- 基础卡片布局 --- */
-        .card {
+        /* ====================================================
+           通用卡片：全图铺满、无文字、点击整图触发购买
+           ==================================================== */
+        .card-full-image {
             position: relative;
-            border-radius: 16px;
-            padding: 15px 15px 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); 
-            overflow: hidden; /* 确保背景图不溢出圆角 */
-        }
-
-        /* 左侧插图区域 (聚宝盆、百宝箱使用) */
-        .product-icon {
-            width: 80px;
-            height: 80px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 45px;
-            border-radius: 50%;
-            margin-right: 15px;
-            flex-shrink: 0;
-            position: relative;
-            background-size: cover;
-            background-position: center;
-        }
-
-        /* ============================================
-           金钱树专属样式：整张图片 + 点击卡片全体触发购买
-           ============================================ */
-        .card-money-tree {
             background: transparent; 
             border: none; 
             padding: 0; 
             box-shadow: none !important;
             min-height: 160px; 
-            /* 【修改】整个卡片均为手型指针 */
             cursor: pointer; 
+            border-radius: 16px;
+            overflow: hidden;
         }
         
-        /* 图片背景 */
-        .card-money-tree::before {
+        .card-full-image::before {
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('images/金钱树1.png');
             background-size: contain; 
             background-position: center;
             background-repeat: no-repeat;
-            border-radius: 0;
+            border-radius: 16px;
             z-index: 0;
         }
+        
+        /* --- 图片背景映射 --- */
+        .card-money-tree::before {
+            background-image: url('images/金钱树1.png');
+        }
+        .card-baobao::before {
+            background-image: url('images/聚宝盆1.png');
+        }
+        /* 【新增】百宝箱：按照您的指令，暂时使用聚宝盆的图 */
+        .card-baoxiang::before {
+            background-image: url('images/聚宝盆1.png');
+        }
 
-        /* 隐藏占位元素 */
-        .card-money-tree .product-icon,
-        .card-money-tree .product-info,
-        .card-money-tree .product-action {
+        /* 隐藏内部占位元素 */
+        .card-full-image .product-icon,
+        .card-full-image .product-info,
+        .card-full-image .product-action {
             display: none; 
         }
 
-        /* 【移除】透明按钮代码已完全清理 */
-
-        /* ============================================
-           聚宝盆 & 百宝箱 默认样式
-           ============================================ */
-        .card-dark {
-            background: linear-gradient(145deg, rgba(56, 26, 109, 0.95), rgba(23, 6, 56, 0.95));
-            border: 2px solid transparent;
-            border-image: linear-gradient(to bottom, rgba(255,215,0,0.8), rgba(167,139,250,0.5), rgba(255,215,0,0.8)) 1;
-            border-radius: 10px;
-            box-shadow: 
-                0 0 0 1px rgba(255, 215, 0, 0.3),
-                0 0 0 2px rgba(167, 139, 250, 0.2),
-                0 0 20px rgba(167, 139, 250, 0.15),
-                inset 0 0 30px rgba(167, 139, 250, 0.1);
-        }
-        .card-dark::before {
-            content: "";
-            position: absolute;
-            top: -1px; left: 10%; right: 10%;
-            height: 40%;
-            background: linear-gradient(180deg, rgba(255,255,255,0.15), transparent);
-            border-radius: 50%;
-            filter: blur(10px);
-            pointer-events: none;
-        }
-
-        .icon-bowl { background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%); color: #ffd700; }
-        .icon-bowl::after { content: ""; position: absolute; bottom: -15px; width: 80%; height: 20px; border-radius: 50%; filter: blur(15px); background: rgba(255, 215, 0, 0.6); z-index: -1;}
-        .icon-chest { background: radial-gradient(circle, rgba(168,85,247,0.1) 0%, transparent 70%); color: #a855f7; }
-        .icon-chest::after { content: ""; position: absolute; bottom: -15px; width: 80%; height: 20px; border-radius: 50%; filter: blur(15px); background: rgba(168, 85, 247, 0.5); z-index: -1;}
-
-        .card-dark .product-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            background: transparent; 
-            padding: 0;
-        }
-        .card-dark .product-name {
-            font-size: 18px;
-            font-weight: bold;
-            color: #fff;
-            letter-spacing: 1px;
-        }
-        .card-dark .product-detail {
-            font-size: 13px;
-            color: #d4c4ff;
-            line-height: 1.6;
-        }
-        .card-dark .product-detail strong { color: #fff; font-size: 14px; }
-        
-        .card-dark .product-action {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            justify-content: center;
-            gap: 4px;
-            min-width: 80px;
-        }
-        .card-dark .price-label {
-            font-size: 11px;
-            color: #a890d0;
-        }
-        .card-dark .price-amount {
-            font-size: 20px;
-            font-weight: 900;
-            color: #fff;
-            margin-bottom: 6px;
-            text-shadow: 0 0 10px rgba(255,255,255,0.2);
-        }
-        .card-dark .price-amount span { font-size: 12px; font-weight: normal; color: #d4c4ff; }
-
-
-        /* --- 购买按钮 (仅聚宝盆、百宝箱使用) --- */
-        .buy-btn {
-            background: linear-gradient(180deg, #fef08a, #fde047);
-            color: #3b0764;
-            border: 1px solid #ffffff;
-            border-radius: 20px;
-            padding: 5px 20px;
-            font-size: 13px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 0 15px rgba(253, 224, 71, 0.4);
-            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .buy-btn:hover { transform: scale(1.08); box-shadow: 0 0 25px rgba(253, 224, 71, 0.8); }
-        .buy-btn:active { transform: scale(0.92); }
-
-        /* --- 购买记录区域 --- */
-        .section-divider {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            margin: 45px 0 20px;
-            max-width: 480px;
-            margin-left: auto; margin-right: auto;
-        }
-        .section-divider i { color: #d4c4ff; font-size: 12px; }
-        .section-title { font-size: 18px; font-weight: bold; color: #ffffff; }
-        .section-divider::before, .section-divider::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #d4c4ff, transparent);
-        }
-
-        .record-list {
-            max-width: 480px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .record-item {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            padding: 12px 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: 0.3s;
-        }
-        .record-item:hover { background: rgba(255, 255, 255, 0.08); }
-        .record-info { display: flex; align-items: center; gap: 12px; }
-        .record-info .fa-chevron-right { color: #a855f7; font-size: 10px; }
-        .record-text h4 { font-size: 13px; font-weight: normal; color: #fff; }
-        .record-text p { font-size: 10px; color: #6b6696; margin-top: 2px; }
-        .record-price {
-            font-size: 12px;
-            color: #fff;
-            background: rgba(255,255,255,0.05);
-            padding: 4px 10px;
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.1);
+        /* 移动端适配 - 纯图卡片高度变小 */
+        @media (max-width: 600px) {
+            .main-title { font-size: 32px; }
+            .header { margin-top: 5px; }
+            .subtitle { font-size: 12px; gap: 10px; }
+            .card-full-image { min-height: 120px; } 
         }
     </style>
 </head>
 <body>
     <header class="header">
         <i class="fas fa-chevron-left"></i>
-        <h1>产品选购</h1>
         <i class="fas fa-times"></i>
     </header>
 
-    <div class="subtitle">
-        <span>选择财富道具，开启金币收益</span>
-    </div>
+    <div class="main-title">产品选购</div>
+    <div class="subtitle">选择财富道具，开启金币收益</div>
 
-    <!-- 商品主列表 -->
-    <div class="product-container" id="productContainer">
+    <!-- 商品列表 -->
+    <div class="product-container">
         
-        <!-- ============================================ -->
-        <!-- 卡片 1: 金钱树 (点击卡片任意位置触发 10 USDT) -->
-        <!-- ============================================ -->
-        <div class="card card-money-tree" onclick="handleBuy('金钱树', 10)">
-            <!-- 所有内容已被背景图和隐藏样式覆盖，此处为空 -->
-        </div>
+        <!-- ===================================== -->
+        <!-- 卡片 1: 金钱树 (点击触发 10 USDT) -->
+        <!-- ===================================== -->
+        <div class="card-full-image card-money-tree" onclick="handleBuy('金钱树', 10)"></div>
 
-        <!-- 卡片 2: 聚宝盆 -->
-        <div class="card card-dark">
-            <div class="product-icon icon-bowl"><i class="fas fa-coins"></i></div>
-            <div class="product-info">
-                <div class="product-name">聚宝盆</div>
-                <div class="product-detail">产金币 <strong>120万</strong><br>产金币 <strong>30天</strong></div>
-                <div class="product-detail" style="color:#a890d0; font-size:12px;">可兑总价值 120 USDT</div>
-            </div>
-            <div class="product-action">
-                <div class="price-label">价格</div>
-                <div class="price-amount">100 <span>USDT</span></div>
-                <button class="buy-btn" onclick="handleBuy('聚宝盆', 100)">立即购买</button>
-            </div>
-        </div>
+        <!-- ===================================== -->
+        <!-- 卡片 2: 聚宝盆 (点击触发 100 USDT) -->
+        <!-- ===================================== -->
+        <div class="card-full-image card-baobao" onclick="handleBuy('聚宝盆', 100)"></div>
 
-        <!-- 卡片 3: 百宝箱 -->
-        <div class="card card-dark">
-            <div class="product-icon icon-chest"><i class="fas fa-box-open"></i></div>
-            <div class="product-info">
-                <div class="product-name">百宝箱</div>
-                <div class="product-detail">产金币 <strong>1830万</strong><br>产金币 <strong>100天</strong></div>
-                <div class="product-detail" style="color:#a890d0; font-size:12px;">可兑总价值 1830 USDT</div>
-            </div>
-            <div class="product-action">
-                <div class="price-label">价格</div>
-                <div class="price-amount">1000 <span>USDT</span></div>
-                <button class="buy-btn" onclick="handleBuy('百宝箱', 1000)">立即购买</button>
-            </div>
-        </div>
+        <!-- ================================================ -->
+        <!-- 卡片 3: 百宝箱 (改为全图卡片，点击触发 1000 USDT) -->
+        <!-- ================================================ -->
+        <div class="card-full-image card-baoxiang" onclick="handleBuy('百宝箱', 1000)"></div>
+
     </div>
 
-    <!-- 购买记录区域 -->
+    <!-- 购买记录 -->
     <div class="section-divider">
-        <i class="fas fa-angle-double-left"></i>
         <span class="section-title">购买记录</span>
-        <i class="fas fa-angle-double-right"></i>
     </div>
-
     <div class="record-list" id="recordList">
         <div class="record-item">
             <div class="record-info"><i class="fas fa-chevron-right"></i><div class="record-text"><h4>用户1 金钱树 10 USDT</h4><p>00:23:55 2026.06.02 14:30</p></div></div>
@@ -346,54 +183,27 @@
             <div class="record-info"><i class="fas fa-chevron-right"></i><div class="record-text"><h4>用户2 购买 聚宝盆 100 USDT</h4><p>00:23:55 2026.06.01 12:15</p></div></div>
             <div class="record-price">购买 百宝箱 100 USDT</div>
         </div>
-        <div class="record-item">
-            <div class="record-info"><i class="fas fa-chevron-right"></i><div class="record-text"><h4>用户3 购买百宝箱 1000 USDT</h4><p>00:23:55 2026.06.01 10:45</p></div></div>
-            <div class="record-price">购买 金钱树 100 USDT</div>
-        </div>
-        <div class="record-item">
-            <div class="record-info"><i class="fas fa-chevron-right"></i><div class="record-text"><h4>用户4 购买百宝箱 1000 USDT</h4><p>00:23:55 2026.06.01 18:42</p></div></div>
-            <div class="record-price">购买 金钱树 10 USDT</div>
-        </div>
     </div>
 
     <script>
-        function handleBuy(productName, price) {
-            alert(`💰 正在发起支付...\n商品：${productName}\n金额：${price} USDT`);
+        function handleBuy(name, price) {
+            alert(`💰 正在发起支付...\n商品：${name}\n金额：${price} USDT`);
 
+            const list = document.getElementById('recordList');
+            const item = document.createElement('div');
+            item.className = 'record-item';
             const now = new Date();
-            const timeStr = now.toTimeString().split(' ')[0];
-            const dateStr = now.toLocaleDateString('zh-CN').replace(/\//g, '.');
-
-            const recordList = document.getElementById('recordList');
-            const newItem = document.createElement('div');
-            newItem.className = 'record-item';
+            const time = now.toTimeString().split(' ')[0];
+            const date = now.toLocaleDateString('zh-CN').replace(/\//g, '.');
             
-            newItem.innerHTML = `
-                <div class="record-info">
-                    <i class="fas fa-chevron-right"></i>
-                    <div class="record-text">
-                        <h4>当前用户 购买 ${productName} ${price} USDT</h4>
-                        <p>${timeStr} ${dateStr}</p>
-                    </div>
-                </div>
-                <div class="record-price">购买 ${productName} ${price} USDT</div>
+            item.innerHTML = `
+                <div class="record-info"><i class="fas fa-chevron-right"></i><div class="record-text"><h4>当前用户 购买 ${name} ${price} USDT</h4><p>${time} ${date}</p></div></div>
+                <div class="record-price">购买 ${name} ${price} USDT</div>
             `;
-
-            recordList.insertBefore(newItem, recordList.firstChild);
-            if (recordList.children.length > 8) {
-                recordList.removeChild(recordList.lastChild);
-            }
-            newItem.style.animation = 'fadeSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            
+            list.insertBefore(item, list.firstChild);
+            if(list.children.length > 8) list.removeChild(list.lastChild);
         }
-
-        const style = document.createElement('style');
-        style.innerHTML = `
-            @keyframes fadeSlideIn {
-                from { opacity: 0; transform: translateY(-20px) scale(0.95); }
-                to { opacity: 1; transform: translateY(0) scale(1); }
-            }
-        `;
-        document.head.appendChild(style);
     </script>
 </body>
 </html>
