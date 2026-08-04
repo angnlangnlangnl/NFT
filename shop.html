@@ -12,7 +12,6 @@
             font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
             background-image: url('images/产品选购背景.png');
             background-size: cover;
-            /* 【修复】背景图顶对齐 */
             background-position: top center; 
             background-repeat: no-repeat;
             background-attachment: fixed;
@@ -104,7 +103,7 @@
         }
 
         /* ============================================
-           金钱树专属样式：整张图片 + 右下角隐式热区
+           金钱树专属样式：整张图片 + 点击卡片全体触发购买
            ============================================ */
         .card-money-tree {
             background: transparent; 
@@ -112,7 +111,7 @@
             padding: 0; 
             box-shadow: none !important;
             min-height: 160px; 
-            /* 鼠标悬浮整个卡片改为手型，暗示可交互 */
+            /* 【修改】整个卡片均为手型指针 */
             cursor: pointer; 
         }
         
@@ -136,33 +135,7 @@
             display: none; 
         }
 
-        /* ================================================================
-           【修复】透明的右下角点击热区，向右移动半个身位
-           ================================================================ */
-        .card-money-tree .invisible-buy-btn {
-            position: absolute;
-            bottom: 15%;    /* 距离底部比例不变 */
-            /* 【修复】向右移动：取消原来的 right: 15%，改为靠近边缘 */
-            right: 0;       
-            margin-right: 5px; /* 稍微离开边缘一点点，避免贴着边界 */
-            
-            width: 22%;     /* 稍微缩小宽窄，视觉上相当于右移 */
-            height: 25%;    /* 高度保持不变 */
-            
-            z-index: 1;     /* 位于图片之上 */
-            cursor: pointer;
-            
-            /* 只有一种情况用户会感知到这：鼠标悬停时会有一个细腻的发光边框提示 */
-            border: 1px solid transparent;
-            border-radius: 8px;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        .card-money-tree:hover .invisible-buy-btn {
-            /* 悬停卡片时，显露出隐形的点击区域边框和发光，起到引导作用 */
-            border-color: rgba(255, 215, 0, 0.5);
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-        }
+        /* 【移除】透明按钮代码已完全清理 */
 
         /* ============================================
            聚宝盆 & 百宝箱 默认样式
@@ -319,9 +292,11 @@
     <!-- 商品主列表 -->
     <div class="product-container" id="productContainer">
         
-        <!-- 卡片 1: 金钱树 (隐藏的购买按钮已向右移至边缘) -->
-        <div class="card card-money-tree">
-            <div class="invisible-buy-btn" onclick="handleBuy('金钱树', 10)"></div>
+        <!-- ============================================ -->
+        <!-- 卡片 1: 金钱树 (点击卡片任意位置触发 10 USDT) -->
+        <!-- ============================================ -->
+        <div class="card card-money-tree" onclick="handleBuy('金钱树', 10)">
+            <!-- 所有内容已被背景图和隐藏样式覆盖，此处为空 -->
         </div>
 
         <!-- 卡片 2: 聚宝盆 -->
