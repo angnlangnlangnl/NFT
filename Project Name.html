@@ -31,13 +31,13 @@
             padding-bottom: 5%; 
         }
 
-        /* 2. 图片按钮 */
+        /* 2. 图片按钮（沿用之前的优化尺寸） */
         .btn2-wrapper {
             display: inline-block; 
             cursor: pointer;
             transition: transform 0.15s ease, filter 0.15s ease;
             z-index: 10;
-            margin-top: 96px;
+            margin-top: 96px; /* 保持现有间距 */
         }
 
         .btn2-wrapper:hover {
@@ -49,25 +49,23 @@
             transform: scale(0.95);
         }
 
-        /* ===== 核心修改：高度不变，宽度增加 10% ===== */
         .btn2-img {
             display: block;
-            max-height: 64px;     /* 高度严格锁定，不变 */
-            
+            max-width: 85vw;    
+            max-height: 64px;   /* 保持高度 */
+            height: auto;
             width: auto;
-            object-fit: fill;     /* 确保按比例填满 */
-            
-            /* 从之前的 0.95 增加 0.15，变为 1.10（宽度比原来宽 10%） */
+            object-fit: contain;
+            /* 横向宽度依然是放大15%后的效果 */
             transform: scaleX(1.10); 
-            
             image-rendering: auto; 
         }
 
         /* 适配手机屏幕 */
         @media (max-width: 600px) {
             .btn2-img { 
-                max-height: 48px;          /* 手机端高度缩小 */
-                transform: scaleX(1.10);   /* 手机端同样保持增加10%宽度 */
+                max-height: 48px;          
+                transform: scaleX(1.10);   
             }
             .btn2-wrapper { margin-top: 72px; }
         }
@@ -77,8 +75,14 @@
 
     <div class="hero-container">
         
-        <div class="btn2-wrapper" onclick="alert('使者角色已成功解锁！')">
-            <img src="images/按钮2.png" alt="立即解锁使者角色" class="btn2-img">
+        <!-- ============================================= -->
+        <!-- 点击按钮直接跳转到 shop.html -->
+        <!-- ============================================= -->
+        <div class="btn2-wrapper">
+            <img src="images/按钮2.png" 
+                 alt="立即解锁使者角色" 
+                 class="btn2-img"
+                 onclick="window.location.href='shop.html'">
         </div>
 
     </div>
