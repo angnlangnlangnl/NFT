@@ -26,23 +26,22 @@
             background-repeat: no-repeat;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end; /* 容器整体靠下 */
+            justify-content: flex-end;
             align-items: center;
-            /* 增加底部总留白，给按钮留出往下移的空间 */
             padding-bottom: 5%; 
         }
 
         /* ================================ */
-        /* 2. 替换后的图片按钮（按钮2） */
+        /* 2. 缩小后的图片按钮 */
         /* ================================ */
         .btn2-wrapper {
             display: inline-block; 
             cursor: pointer;
             transition: transform 0.15s ease, filter 0.15s ease;
             z-index: 10;
-            /* 【关键修改】向下移动一个自身高度的大致距离（根据限制高度80px，加40px间距） */
-            /* 如果这个距离不够或太多，您可以直接修改这里的 120px 数值 */
-            margin-top: 120px; 
+            
+            /* 间距也跟着缩小，保持视觉上的下移比例 */
+            margin-top: 80px; 
         }
 
         .btn2-wrapper:hover {
@@ -54,11 +53,11 @@
             transform: scale(0.95);
         }
 
-        /* 图片按钮本身 */
+        /* 图片按钮本身 - 缩小三分之一 */
         .btn2-img {
             display: block;
             max-width: 85vw;    
-            max-height: 80px;   /* 控制高度 */
+            max-height: 53px;   /* 【修改】原来80px，缩小1/3变为 53px */
             height: auto;
             width: auto;
             object-fit: contain;
@@ -66,10 +65,8 @@
 
         /* 适配手机屏幕 */
         @media (max-width: 600px) {
-            .btn2-img { max-height: 60px; } 
-            .btn2-wrapper { 
-                margin-top: 90px; /* 手机上按钮变小了，间距也相应变小 */
-            }
+            .btn2-img { max-height: 40px; } /* 手机端相应缩小 */
+            .btn2-wrapper { margin-top: 60px; }
         }
     </style>
 </head>
@@ -77,7 +74,6 @@
 
     <div class="hero-container">
         
-        <!-- 图片按钮实体（点击触发事件） -->
         <div class="btn2-wrapper" onclick="alert('使者角色已成功解锁！')">
             <img src="images/按钮2.png" alt="立即解锁使者角色" class="btn2-img">
         </div>
