@@ -256,7 +256,6 @@
     </div>
 
     <script>
-        // ==================== 合约ABI（修复：新增冷却相关函数） ====================
         const CONTRACT_ABI = [
             "function requestRandomMint() external","function confirmRandomMint() external","function cancelMintRequest() external",
             "function hasCoolingDownOrder(address user) external view returns (bool)",
@@ -288,6 +287,7 @@
         let provider=null,signer=null,currentAccount=null,contract=null,usdtContract=null;
         let isLotteryRunning=false,lotteryInterval=null,currentMintCard=null,myNFTs=[],marketListings=[];
         let todayLotteryCount=3,maxLotteryCount=10,globalLotteryProgress=67,totalEarned=0;
+        let totalRewardFromChain=0;
         let qrCodeInstance=null;
         let cooldownRefreshInterval=null;
 
@@ -338,7 +338,6 @@
             }catch(e){console.error('推荐绑定失败:',e)}
         }
 
-        // ==================== 冷却状态检查（替代不存在的getCoolingDownStatus） ====================
         async function checkCoolingDown(){
             if(!contract||!currentAccount)return false;
             try{
@@ -559,17 +558,23 @@
         function buyNFT(i){if(!currentAccount){alert('请先连接钱包');return}const c=marketListings[i];document.getElementById('cardModal').classList.remove('open');alert(`🛒 购买成功！${c.name} | 支付 ${c.askPrice} USDT`);myNFTs.push({...c,tokenId:Date.now(),canTrade:true,faceValue:c.faceValue||0.005});marketListings.splice(i,1);renderFavoriteGrid();updateAssetStats();renderMarketGrid()}
         function filterMarket(rarity,btn){document.querySelectorAll('#page-market .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('#marketGrid .market-card').forEach(c=>{c.style.display=(rarity==='all'||c.getAttribute('data-rarity')===rarity||(rarity==='selling'&&marketListings.length>0))?'':'none'})}
 
-        // ==================== 修复：getUserLevelInfo返回值字段映射 ====================
+        // ==================== 修复：getUserLevelInfo + 累计奖励显示 ====================
         async function loadTeamInfo(){
-            if(!currentAccount||!contract)return;
+            if(!currentAccount||!contract){
+                document.getElementById('totalReward').textContent='0.00 USDT';
+                return;
+            }
             try{
                 const info=await contract.getUserLevelInfo(currentAccount);
-                // 合约返回: (level, refCount, performance, rewardRate, earned)
                 document.getElementById('myLevel').textContent='V'+info.level;
                 document.getElementById('directRefs').textContent=info.refCount;
                 document.getElementById('teamSize').textContent=info.refCount;
                 document.getElementById('teamVolume').textContent=parseFloat(ethers.utils.formatEther(info.performance)).toFixed(2);
-                document.getElementById('totalReward').textContent=parseFloat(ethers.utils.formatEther(info.earned)).toFixed(2)+' USDT';
+                
+                // 修复：从合约获取累计奖励
+                totalRewardFromChain=parseFloat(ethers.utils.formatEther(info.earned));
+                document.getElementById('totalReward').textContent=totalRewardFromChain.toFixed(2)+' USDT';
+                
                 const refs=await contract.getUserReferrals(currentAccount);
                 document.getElementById('totalRefs').textContent=refs.length+' 人';
                 document.getElementById('refRecordList').innerHTML=refs.length>0?refs.map(r=>`<div class="record-item"><span>${r.substring(0,6)}...${r.substring(38)}</span><span class="record-value">直推</span></div>`).join(''):'<div class="record-item"><span style="color:var(--text-secondary)">暂无邀请记录</span></div>'
@@ -607,7 +612,7 @@
         checkAndSaveReferrer();
         renderCards();renderMarketGrid();updateLotteryDisplay();
         generateQRCode('请先连接钱包');
-        if(window.ethereum){window.ethereum.on('accountsChanged',(a)=>{if(a.length===0){if(cooldownRefreshInterval)clearInterval(cooldownRefreshInterval);currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');myNFTs=[];renderFavoriteGrid();updateAssetStats();document.getElementById('refLink').textContent='请先连接钱包';generateQRCode('请先连接钱包')}else{initContracts(a[0])}});window.ethereum.on('chainChanged',()=>{if(currentAccount)initContracts(currentAccount)});setTimeout(()=>autoConnect(),500)}
+        if(window.ethereum){window.ethereum.on('accountsChanged',(a)=>{if(a.length===0){if(cooldownRefreshInterval)clearInterval(cooldownRefreshInterval);currentAccount=null;contract=null;usdtContract=null;document.getElementById('walletBtn').textContent='Connect';document.getElementById('walletBtn').classList.remove('connected');myNFTs=[];renderFavoriteGrid();updateAssetStats();document.getElementById('refLink').textContent='请先连接钱包';generateQRCode('请先连接钱包');document.getElementById('totalReward').textContent='0.00 USDT'}else{initContracts(a[0])}});window.ethereum.on('chainChanged',()=>{if(currentAccount)initContracts(currentAccount)});setTimeout(()=>autoConnect(),500)}
     </script>
 </body>
 </html>
