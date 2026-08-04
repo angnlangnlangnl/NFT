@@ -83,9 +83,10 @@
             align-items: center;
             justify-content: space-between;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); 
+            overflow: hidden; /* 确保背景图不溢出圆角 */
         }
 
-        /* 左侧插图区域 (其他卡片使用) */
+        /* 左侧插图区域 (聚宝盆、百宝箱使用) */
         .product-icon {
             width: 80px;
             height: 80px;
@@ -102,27 +103,53 @@
         }
 
         /* ============================================
-           金钱树专属样式：整张卡片铺满背景图
+           金钱树专属样式：整图铺满背景（不透明）
            ============================================ */
         .card-money-tree {
+            /* 移除任何原本的底色和内阴影 */
             background: transparent; 
             border: none; 
-            
-            /* 【核心修改】整张卡片使用金钱树.png作为背景 */
-            background-image: url('images/金钱树.png');
-            background-size: 100% 100%; /* 强制拉伸铺满整张卡片 */
-            background-position: center;
-            background-repeat: no-repeat;
-            
-            /* 保持外围发光阴影效果（避免因为透明丢失立体感） */
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.15), 0 0 40px rgba(167, 139, 250, 0.1);
+            /* 防止外边距把图片划开 */
+            padding: 0; 
         }
         
-        /* 移除金钱树卡片内部的小图标区域 */
-        .card-money-tree .product-icon {
-            display: none; 
+        /* 使用伪元素作为整张不透明的背景图 */
+        .card-money-tree::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('images/金钱树1.png');
+            background-size: cover;      /* 铺满整个卡片 */
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 16px;         /* 跟随卡片圆角 */
+            z-index: 0;
         }
 
+        /* 为了让文字在图片上更清晰，增加一层半透明深色文字遮罩 */
+        .card-money-tree::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.25); /* 深色遮罩 */
+            border-radius: 16px;
+            z-index: 1;
+        }
+
+        /* 将卡片内的所有内容层级提到图片上方 (z-index: 2) */
+        .card-money-tree .product-icon,
+        .card-money-tree .product-info,
+        .card-money-tree .product-action {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 金钱树卡片里的图标区域变成透明占位，因为背景已经是图了 */
+        .card-money-tree .product-icon {
+            background: transparent !important;
+        }
+
+        /* 金钱树文字居中 */
         .card-money-tree .product-info {
             flex: 1;
             display: flex;
@@ -131,7 +158,6 @@
             align-items: center; /* 文字水平居中 */
             text-align: center;  /* 文字居中对齐 */
             gap: 2px;
-            background: transparent; 
             padding: 0;
         }
         
@@ -139,20 +165,22 @@
             font-size: 19px;
             font-weight: 900;
             color: #ffffff;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
             letter-spacing: 1px;
         }
         .card-money-tree .product-detail {
             font-size: 14px;
             line-height: 1.4;
             color: #ffffff;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
         }
         .card-money-tree .product-detail strong { 
             color: #ffd700;
             font-size: 15px; 
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
         }
 
+        /* 价格和按钮居中 */
         .card-money-tree .product-action {
             display: flex;
             flex-direction: column;
@@ -160,20 +188,19 @@
             justify-content: center;
             gap: 2px;
             min-width: 80px;
-            background: transparent; 
             padding: 0;
         }
         .card-money-tree .price-label {
             font-size: 12px;
             color: #ffffff;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
         }
         .card-money-tree .price-amount {
             font-size: 24px;
             font-weight: 900;
             color: #ffffff;
             margin-bottom: 4px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
         }
         .card-money-tree .price-amount span { font-size: 13px; font-weight: normal; color: #e0d4ff; }
 
@@ -333,9 +360,9 @@
     <!-- 商品主列表 -->
     <div class="product-container" id="productContainer">
         
-        <!-- 卡片 1: 金钱树 (整张卡片铺满金钱树.png) -->
+        <!-- 卡片 1: 金钱树 (整图铺满背景，不透明，文字居中) -->
         <div class="card card-money-tree">
-            <!-- 左侧图标区域已被隐藏，因为背景铺满了整张卡片 -->
+            <div class="product-icon"></div>
             <div class="product-info">
                 <div class="product-name">金钱树</div>
                 <div class="product-detail">产金币 <strong>15万</strong></div>
