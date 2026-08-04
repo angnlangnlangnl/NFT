@@ -88,7 +88,7 @@
         }
 
         /* ====================================================
-           通用卡片：全图铺满、无文字、点击整图触发购买
+           通用卡片：全图铺满、无文字、点击整图触发购买（类似金钱树）
            ==================================================== */
         .card-full-image {
             position: relative;
@@ -120,10 +120,6 @@
         .card-baobao::before {
             background-image: url('images/聚宝盆1.png');
         }
-        /* 【新增】百宝箱：按照您的指令，暂时使用聚宝盆的图 */
-        .card-baoxiang::before {
-            background-image: url('images/聚宝盆1.png');
-        }
 
         /* 隐藏内部占位元素 */
         .card-full-image .product-icon,
@@ -132,12 +128,105 @@
             display: none; 
         }
 
-        /* 移动端适配 - 纯图卡片高度变小 */
+        /* ====================================================
+           卡片样式：百宝箱（保留传统样式，因为没用图片替换）
+           ==================================================== */
+        .card-dark {
+            background: linear-gradient(145deg, rgba(56, 26, 109, 0.95), rgba(23, 6, 56, 0.95));
+            border: 2px solid transparent;
+            border-image: linear-gradient(to bottom, rgba(255,215,0,0.8), rgba(167,139,250,0.5), rgba(255,215,0,0.8)) 1;
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3), inset 0 0 30px rgba(167, 139, 250, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 百宝箱内的插图 */
+        .product-icon {
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 45px;
+            margin-right: 15px;
+            flex-shrink: 0;
+            background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            color: #ffd700;
+        }
+        .product-icon.icon-chest { color: #a855f7; }
+
+        .product-info { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+        .product-name { font-size: 18px; font-weight: bold; color: #fff; }
+        .product-detail { font-size: 13px; color: #d4c4ff; line-height: 1.6; }
+        .product-detail strong { color: #fff; }
+
+        .product-action { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; min-width: 80px; }
+        .price-label { font-size: 11px; color: #a890d0; }
+        .price-amount { font-size: 20px; font-weight: 900; color: #fff; }
+        .price-amount span { font-size: 12px; color: #d4c4ff; }
+
+        .buy-btn {
+            background: linear-gradient(180deg, #fef08a, #fde047);
+            color: #3b0764;
+            border: 1px solid #ffffff;
+            border-radius: 20px;
+            padding: 5px 20px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(253, 224, 71, 0.4);
+            transition: 0.3s;
+        }
+        .buy-btn:hover { transform: scale(1.08); }
+
+        /* --- 购买记录 --- */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin: 40px 0 20px;
+            width: 100%;
+            max-width: 480px;
+        }
+        .section-title { font-size: 18px; font-weight: bold; color: #fff; }
+        .section-divider::before, .section-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #d4c4ff, transparent);
+        }
+
+        .record-list { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 12px; }
+        .record-item {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .record-info { display: flex; align-items: center; gap: 12px; }
+        .record-text h4 { font-size: 13px; color: #fff; font-weight: normal; }
+        .record-text p { font-size: 10px; color: #6b6696; margin-top: 2px; }
+        .record-price {
+            font-size: 12px; color: #fff;
+            background: rgba(255,255,255,0.05);
+            padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* 移动端适配 */
         @media (max-width: 600px) {
             .main-title { font-size: 32px; }
             .header { margin-top: 5px; }
             .subtitle { font-size: 12px; gap: 10px; }
-            .card-full-image { min-height: 120px; } 
+            .card-full-image { min-height: 120px; } /* 手机端缩小全图卡片高度 */
         }
     </style>
 </head>
@@ -154,20 +243,31 @@
     <div class="product-container">
         
         <!-- ===================================== -->
-        <!-- 卡片 1: 金钱树 (点击触发 10 USDT) -->
+        <!-- 卡片 1: 金钱树 (点击整图触发 10 USDT) -->
         <!-- ===================================== -->
         <div class="card-full-image card-money-tree" onclick="handleBuy('金钱树', 10)"></div>
 
         <!-- ===================================== -->
-        <!-- 卡片 2: 聚宝盆 (点击触发 100 USDT) -->
+        <!-- 卡片 2: 聚宝盆 (点击整图触发 100 USDT) -->
         <!-- ===================================== -->
         <div class="card-full-image card-baobao" onclick="handleBuy('聚宝盆', 100)"></div>
 
-        <!-- ================================================ -->
-        <!-- 卡片 3: 百宝箱 (改为全图卡片，点击触发 1000 USDT) -->
-        <!-- ================================================ -->
-        <div class="card-full-image card-baoxiang" onclick="handleBuy('百宝箱', 1000)"></div>
-
+        <!-- ===================================== -->
+        <!-- 卡片 3: 百宝箱 (传统按钮触发 1000 USDT) -->
+        <!-- ===================================== -->
+        <div class="card-dark">
+            <div class="product-icon icon-chest"><i class="fas fa-box-open"></i></div>
+            <div class="product-info">
+                <div class="product-name">百宝箱</div>
+                <div class="product-detail">产金币 <strong>1830万</strong><br>产金币 <strong>100天</strong></div>
+                <div class="product-detail" style="color:#a890d0; font-size:12px;">可兑总价值 1830 USDT</div>
+            </div>
+            <div class="product-action">
+                <div class="price-label">价格</div>
+                <div class="price-amount">1000 <span>USDT</span></div>
+                <button class="buy-btn" onclick="handleBuy('百宝箱', 1000)">立即购买</button>
+            </div>
+        </div>
     </div>
 
     <!-- 购买记录 -->
