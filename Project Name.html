@@ -12,69 +12,102 @@
             height: 100%;
             font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
             overflow: hidden; /* 防止滚动 */
-            /* 【修改】不再使用金库背景图，改为深紫色纯色背景 */
-            background-color: #0c031a; 
+            background-color: #120a2e;
         }
 
-        /* 容器居中 */
+        /* 1. 全屏背景图设置 - 直接设为使者2.png */
         .hero-container {
             position: relative;
             width: 100vw;
             height: 100vh;
+            /* 直接固定为使者2.png */
+            background-image: url('images/使者2.png'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             display: flex;
-            justify-content: center;
-            align-items: flex-start; /* 内容靠上对齐 */
+            justify-content: center; /* 让按钮水平居中 */
+            align-items: flex-start; /* 让按钮靠近顶部对齐 */
+            padding-top: 40px; /* 设置距离屏幕顶部的间距 */
         }
 
         /* ========================== */
-        /* 按钮2 (图片按钮)  */
+        /* 2. 顶部紫色尖角按钮 */
         /* ========================== */
-        .btn2-wrapper {
-            position: relative; 
-            display: inline-block; 
+        .game-btn-wrapper {
+            position: relative;
+            display: inline-block;
+            clip-path: polygon(
+                10% 0, 90% 0, 
+                100% 50%, 
+                90% 100%, 10% 100%, 
+                0% 50%
+            );
+            padding: 2px;
+            background: linear-gradient(90deg, #b184f0, #fff9cc, #b184f0);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(180, 100, 255, 0.3);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
             cursor: pointer;
-            /* 【修改】将按钮整体向下移动 70 像素 */
-            margin-top: 70px; 
-            
-            transition: transform 0.15s ease, filter 0.15s ease;
             z-index: 10;
         }
 
-        .btn2-wrapper:hover {
-            transform: scale(1.08);
-            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.7));
+        .game-btn-wrapper:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.9), 0 0 60px rgba(180, 100, 255, 0.5);
         }
-
-        .btn2-wrapper:active {
+        .game-btn-wrapper:active {
             transform: scale(0.95);
         }
 
-        /* 按钮图片本身 */
-        .btn2-img {
+        .game-btn {
             display: block;
-            max-width: 80vw;    /* 最大宽度不超过屏幕的80% */
-            max-height: 70px;   /* 控制一下图片按钮的高度 */
-            height: auto;
-            width: auto;
-            object-fit: contain;
+            border: none;
+            outline: none;
+            padding: 12px 48px;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 2px 4px rgba(0,0,0,0.6);
+            white-space: nowrap;
+            background: linear-gradient(135deg, #9535eb 0%, #b44df5 40%, #7321bc 80%, #4a107b 100%);
+            
+            clip-path: polygon(
+                10% 0, 90% 0, 
+                100% 50%, 
+                90% 100%, 10% 100%, 
+                0% 50%
+            );
+
+            box-shadow: 
+                inset 0 0 0 2px rgba(255, 255, 255, 0.7), 
+                inset 0 8px 12px rgba(255, 255, 255, 0.5), 
+                inset 0 -6px 10px rgba(0, 0, 0, 0.5);
+                
+            cursor: pointer;
         }
 
         /* 适配手机屏幕 */
         @media (max-width: 600px) {
-            .btn2-img { max-height: 50px; } /* 手机端限制高度 */
-            .btn2-wrapper { margin-top: 50px; } /* 手机端可以稍微调小70px的距离 */
+            .game-btn { font-size: 16px; padding: 10px 30px; }
+            .hero-container { padding-top: 20px; }
         }
     </style>
 </head>
 <body>
 
     <div class="hero-container">
+        
         <!-- ================== -->
-        <!-- 唯一的图片按钮 2 -->
+        <!-- 顶部紫色按钮 -->
         <!-- ================== -->
-        <div class="btn2-wrapper" onclick="alert('您点击了按钮2！')">
-            <img src="images/按钮2.png" alt="按钮2" class="btn2-img">
+        <div class="game-btn-wrapper">
+            <!-- 因为现在不需要切换背景了，点击事件改为弹窗或者自定义逻辑 -->
+            <button class="game-btn" onclick="alert('恭喜！您已成功解锁皇家金库管家角色！')">
+                立即解锁管家角色
+            </button>
         </div>
+
     </div>
 
 </body>
