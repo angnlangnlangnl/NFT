@@ -373,17 +373,17 @@
             },3000);
         }
 
-        // ==================== 修复：从链上USDT余额获取累计奖励 ====================
+        // ==================== 修复：从合约获取准确的累计推荐奖励 ====================
         async function loadTotalReward(){
-            if(!usdtContract||!currentAccount){
+            if(!contract||!currentAccount){
                 document.getElementById('totalReward').textContent='0.00 USDT';
                 return;
             }
             try{
-                const balance=await usdtContract.balanceOf(currentAccount);
-                const decimals=await usdtContract.decimals();
-                const reward=parseFloat(ethers.utils.formatUnits(balance,decimals));
-                document.getElementById('totalReward').textContent=reward.toFixed(2)+' USDT';
+                // 从合约getUserLevelInfo获取准确累计推荐奖励(earned字段)
+                const info=await contract.getUserLevelInfo(currentAccount);
+                const earned=parseFloat(ethers.utils.formatEther(info.earned));
+                document.getElementById('totalReward').textContent=earned.toFixed(2)+' USDT';
             }catch(e){
                 console.error('加载累计奖励失败:',e);
                 document.getElementById('totalReward').textContent='0.00 USDT';
@@ -566,9 +566,9 @@
             }
             document.getElementById('cardModal').classList.add('open');
         }
-        async function exchangeNFT(i){const nft=myNFTs[i];try{if(contract)await(await contract.exchangeForUSDT(nft.tokenId)).wait();const earned=calcExchange(nft.faceValue);totalEarned+=earned;alert(`💱 兑换成功！获得 ${earned.toFixed(6)} USDT`);await loadMyNFTs();await loadTotalReward()}catch(e){alert('❌ 兑换失败：'+(e.reason||e.message))}}
+        async function exchangeNFT(i){const nft=myNFTs[i];try{if(contract)await(await contract.exchangeForUSDT(nft.tokenId)).wait();const earned=calcExchange(nft.faceValue);totalEarned+=earned;alert(`💱 兑换成功！获得 ${earned.toFixed(6)} USDT`);await loadMyNFTs()}catch(e){alert('❌ 兑换失败：'+(e.reason||e.message))}}
         function sellNFT(i){const price=prompt('请输入挂单价格 (USDT)：',myNFTs[i].faceValue.toFixed(4));if(!price)return;(async()=>{try{if(contract){const pw=ethers.utils.parseEther(price);await(await contract.listStampForSale(myNFTs[i].tokenId,pw)).wait()}alert(`✅ 已挂单：${myNFTs[i].name} | 价格：${price} USDT`);await loadMyNFTs()}catch(e){alert('❌ 挂单失败：'+(e.reason||e.message))}})()}
-        async function batchExchangeAll(){if(!currentAccount){alert('请先连接钱包');return}const tradable=myNFTs.filter(n=>n.canTrade);if(tradable.length===0){alert('没有可兑换的NFT');return}try{let total;if(contract){const ids=tradable.map(n=>n.tokenId);const result=await contract.getBatchExchangeAmount(ids);total=parseFloat(ethers.utils.formatEther(result.totalAmount));if(!confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(6)} USDT？`))return;await(await contract.batchExchangeForUSDT(ids)).wait()}else{total=tradable.reduce((s,n)=>s+calcExchange(n.faceValue),0);if(!confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(6)} USDT？`))return}totalEarned+=total;alert('✅ 批量兑换成功！');await loadMyNFTs();await loadTotalReward()}catch(e){alert('❌ 批量兑换失败：'+(e.reason||e.message))}}
+        async function batchExchangeAll(){if(!currentAccount){alert('请先连接钱包');return}const tradable=myNFTs.filter(n=>n.canTrade);if(tradable.length===0){alert('没有可兑换的NFT');return}try{let total;if(contract){const ids=tradable.map(n=>n.tokenId);const result=await contract.getBatchExchangeAmount(ids);total=parseFloat(ethers.utils.formatEther(result.totalAmount));if(!confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(6)} USDT？`))return;await(await contract.batchExchangeForUSDT(ids)).wait()}else{total=tradable.reduce((s,n)=>s+calcExchange(n.faceValue),0);if(!confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(6)} USDT？`))return}totalEarned+=total;alert('✅ 批量兑换成功！');await loadMyNFTs()}catch(e){alert('❌ 批量兑换失败：'+(e.reason||e.message))}}
 
         function renderMarketGrid(){const grid=document.getElementById('marketGrid');if(!grid)return;const all=marketListings.length>0?marketListings:cardData.slice(0,6);grid.innerHTML=all.map((c,i)=>`<div class="market-card" data-rarity="${c.rarity}" onclick="showMarketDetail(${i})"><div class="frame"><img src="${c.img}" alt="${c.name}"></div><div class="info"><p style="color:white;font-weight:600;">${c.name}</p><p class="usdt-value"><i class="fab fa-usdt"></i> ${c.askPrice?`售价 ${c.askPrice} USDT`:'价值 0.00 USDT'}</p><button class="btn-sm">${c.askPrice?'购 买':'查看详情'}</button></div></div>`).join('')}
         function showMarketDetail(i){const c=(marketListings.length>0?marketListings:cardData.slice(0,6))[i];document.getElementById('modalImg').src=c.img||'';document.getElementById('modalIdTop').textContent=c.id||`#${1000+i}`;document.getElementById('modalName').textContent=c.name;document.getElementById('modalYear').textContent=c.year;document.getElementById('modalEstimate').textContent=c.estimate;document.getElementById('modalRarity').textContent=c.rarity;document.getElementById('modalRarity').style.color=c.color;document.getElementById('modalSource').textContent=c.source;document.getElementById('modalPrice').textContent=c.askPrice?`${c.askPrice} USDT`:(c.price||'2.5 BNB');document.getElementById('modalExchange').textContent='';document.getElementById('modalCooldown').textContent='';document.getElementById('modalBtns').innerHTML=c.askPrice?`<button class="btn-cancel" onclick="closeModal()">取 消</button><button class="btn-confirm" onclick="buyNFT(${i})">购 买</button>`:`<button class="btn-close-full" onclick="closeModal()">关 闭</button>`;document.getElementById('cardModal').classList.add('open')}
