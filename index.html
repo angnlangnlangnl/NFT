@@ -256,15 +256,17 @@
     </div>
 
     <script>
+        // ==================== 合约ABI（修复：新增冷却相关函数） ====================
         const CONTRACT_ABI = [
             "function requestRandomMint() external","function confirmRandomMint() external","function cancelMintRequest() external",
-            "function getCoolingDownStatus(address user) external view returns (bool)",
+            "function hasCoolingDownOrder(address user) external view returns (bool)",
+            "function coolingDownTokenId(address user) external view returns (uint256)",
             "function getOwnedStamps(address user) external view returns (uint256[] memory)",
-            "function getStampInfo(uint256 tokenId) external view returns (tuple(uint256 stampType,uint256 faceValue,uint256 mintTime,uint256 cooldownEnd,address owner) memory,bool isListed,uint256 askPrice)",
+            "function getStampInfo(uint256 tokenId) external view returns (tuple(uint256 stampType,uint256 mintPrice,uint256 coolDownMinutes,uint256 mintTime,uint256 coolDownEnd,bool canTrade,uint256 faceValue,bool isSpecial,bool isGlobalWin,bool isBNBLottery) memory,bool isListed,uint256 askPrice)",
             "function canTrade(uint256 tokenId) external view returns (bool)",
             "function getBatchExchangeAmount(uint256[] calldata tokenIds) external view returns (uint256[] memory amounts,uint256 totalAmount)",
-            "function getGlobalStats() external view returns (uint256 totalMinted,uint256 totalExchanged,uint256 totalDividends,uint256 totalBNBLottery,uint256 totalStampsListed,uint256 totalStampsSold)",
-            "function getUserLevelInfo(address user) external view returns (uint256 level,uint256 directCount,uint256 teamCount,uint256 teamVolume,uint256 commissionRate)",
+            "function getGlobalStats() external view returns (uint256 totalMinted,uint256 totalMintAmount,uint256 totalExchanged,uint256 totalExchangeAmount,uint256 totalDividendsDistributed,uint256 paymentReceiverChangeCount)",
+            "function getUserLevelInfo(address user) external view returns (uint256 level,uint256 refCount,uint256 performance,uint256 rewardRate,uint256 earned)",
             "function getUserReferrals(address user) external view returns (address[] memory)",
             "function registerReferral(address referrer) external",
             "function bnbBlindBoxLottery() external payable","function listStampForSale(uint256 tokenId,uint256 price) external",
@@ -281,6 +283,7 @@
         const STAMP_SOURCES=['英国邮政史','印刷事故错色珍邮','美国首套航空错版邮票','舞会请柬错刻珍邮','夏威夷最早传教士邮票','撤销发行未流通珍邮','邮局局长手工盖印邮票','南美殖民时代经典珍邮','仅此一套双连错票孤品'];
         const STAMP_RARITIES=['传世孤品','传说','史诗','稀有','稀有','稀有','普通','史诗','稀有'];
         const STAMP_COLORS=['#ffb84d','#ffb84d','#d98eff','#6db3ff','#6db3ff','#6db3ff','#ccc','#d98eff','#6db3ff'];
+        const SPECIAL_STAMP_NAMES={9:'特殊邮票·100U',10:'特殊邮票·200U',11:'特殊邮票·300U',12:'特殊邮票·500U',13:'特殊邮票·0.1U'};
         const cardData=STAMP_NAMES.map((name,i)=>({name,rarity:STAMP_RARITIES[i],id:`#${String(i+1).padStart(4,'0')}`,year:STAMP_YEARS[i],estimate:STAMP_ESTIMATES[i],source:STAMP_SOURCES[i],price:'2.5 BNB',color:STAMP_COLORS[i],img:getStampImage(i),type:i,progress:30}));
         let provider=null,signer=null,currentAccount=null,contract=null,usdtContract=null;
         let isLotteryRunning=false,lotteryInterval=null,currentMintCard=null,myNFTs=[],marketListings=[];
@@ -295,7 +298,9 @@
         function showLoading(btn,text){btn.disabled=true;btn.innerHTML=`<span class="loading-spinner"></span> ${text}`}
         function resetButton(btn,text){btn.disabled=false;btn.textContent=text}
         function getStampImage(type){const imgs=['images/youpiao1.png','images/TOP2.png','images/TOP3.png','images/TOP4.png','images/TOP5.png','images/TOP6.png','images/TOP7.png','images/TOP8.png','images/TOP9.png'];return imgs[type]||'images/youpiao1.png'}
-        
+        function getSpecialStampName(type){if(type>=0&&type<=8)return STAMP_NAMES[type]||`邮票 #${type}`;return SPECIAL_STAMP_NAMES[type]||`特殊邮票 #${type}`}
+        function getSpecialStampImage(type){if(type>=0&&type<=8)return getStampImage(type);return `images/special_${type}.png`}
+
         function generateQRCode(url){
             const qrContainer=document.getElementById('qrCode');
             if(!url||url==='请先连接钱包'){
@@ -327,21 +332,33 @@
             if(savedReferrer.toLowerCase()===currentAccount.toLowerCase()){localStorage.removeItem('luckyStampReferrer');return}
             try{
                 const info=await contract.getUserLevelInfo(currentAccount);
-                if(info.directCount.toNumber()>0||info.level.toNumber()>0){localStorage.removeItem('luckyStampReferrer');return}
+                if(info.refCount.toNumber()>0||info.level.toNumber()>0){localStorage.removeItem('luckyStampReferrer');return}
                 const tx=await contract.registerReferral(savedReferrer);await tx.wait();
                 console.log('✅ 推荐绑定成功:',savedReferrer);localStorage.removeItem('luckyStampReferrer');alert('🎉 推荐绑定成功！')
             }catch(e){console.error('推荐绑定失败:',e)}
         }
 
-        // ==================== 冷却状态实时刷新 ====================
+        // ==================== 冷却状态检查（替代不存在的getCoolingDownStatus） ====================
+        async function checkCoolingDown(){
+            if(!contract||!currentAccount)return false;
+            try{
+                const hasOrder=await contract.hasCoolingDownOrder(currentAccount);
+                if(!hasOrder)return false;
+                const tokenId=await contract.coolingDownTokenId(currentAccount);
+                const canTradeResult=await contract.canTrade(tokenId);
+                return !canTradeResult;
+            }catch(e){
+                console.error('检查冷却状态失败:',e);
+                return false;
+            }
+        }
+
         function startCooldownRefresh(){
             if(cooldownRefreshInterval)clearInterval(cooldownRefreshInterval);
             cooldownRefreshInterval=setInterval(()=>{
                 if(myNFTs.length>0){
                     let needUpdate=false;
-                    const now=Math.floor(Date.now()/1000);
                     myNFTs.forEach(nft=>{
-                        const oldProgress=nft.progress;
                         if(nft.cooldownEnd&&nft.mintTime){
                             nft.progress=calcCooldownProgress(nft.mintTime,nft.cooldownEnd);
                         }
@@ -350,8 +367,7 @@
                             needUpdate=true;
                         }
                     });
-                    if(needUpdate||myNFTs.some(n=>n.progress!==n._oldProgress)){
-                        myNFTs.forEach(n=>n._oldProgress=n.progress);
+                    if(needUpdate){
                         renderFavoriteGrid();
                         updateAssetStats();
                     }
@@ -397,24 +413,16 @@
                 </div>`).join('');
         }
 
-        // ==================== 修复：铸造前检查合约冷却状态 ====================
         async function requestMint(){
             if(!currentAccount){alert('请先连接钱包');return}
             if(isLotteryRunning)return;
-            
-            // 从合约获取准确的冷却状态
             if(contract){
-                try{
-                    const hasCooldown=await contract.getCoolingDownStatus(currentAccount);
-                    if(hasCooldown){
-                        alert('⏳ 您有一个待处理的铸造请求，请等待冷却结束');
-                        return;
-                    }
-                }catch(e){
-                    console.error('检查冷却状态失败:',e);
+                const isCooling=await checkCoolingDown();
+                if(isCooling){
+                    alert('⏳ 您有一个待处理的铸造请求，请等待冷却结束');
+                    return;
                 }
             }
-            
             isLotteryRunning=true;
             const btn=document.getElementById('btnLottery');
             showLoading(btn,'铸造中');
@@ -469,23 +477,22 @@
                 const nftPromises=tokenIds.map(async(id)=>{
                     try{
                         const info=await contract.getStampInfo(id);
-                        const st=info[0].stampType.toNumber();
+                        const st=info[0].stampType;
                         const fv=parseFloat(ethers.utils.formatEther(info[0].faceValue));
                         const mintTime=info[0].mintTime.toNumber();
-                        const cooldownEnd=info[0].cooldownEnd.toNumber();
+                        const cooldownEnd=info[0].coolDownEnd.toNumber();
                         const progress=calcCooldownProgress(mintTime,cooldownEnd);
-                        // 冷却进度>=100或合约canTrade返回true时，标记为可交易
                         let canTradeResult=progress>=100;
                         if(!canTradeResult){
                             try{canTradeResult=await contract.canTrade(id)}catch(e){}
                         }
                         return{
-                            tokenId:id.toNumber(),name:STAMP_NAMES[st]||`邮票 #${st}`,stampType:st,
-                            faceValue:fv,canTrade:canTradeResult,img:getStampImage(st),
+                            tokenId:id.toNumber(),name:getSpecialStampName(st),stampType:st,
+                            faceValue:fv,canTrade:canTradeResult,img:getSpecialStampImage(st),
                             isListed:info[1],askPrice:info[1]?parseFloat(ethers.utils.formatEther(info[2])):0,
-                            year:STAMP_YEARS[st],estimate:STAMP_ESTIMATES[st],source:STAMP_SOURCES[st],
-                            rarity:STAMP_RARITIES[st],color:STAMP_COLORS[st],
-                            mintTime:mintTime,cooldownEnd:cooldownEnd,progress:progress,_oldProgress:progress
+                            year:st<=8?STAMP_YEARS[st]:'特殊',estimate:st<=8?STAMP_ESTIMATES[st]:'BNB抽奖获得',
+                            source:st<=8?STAMP_SOURCES[st]:'BNB盲盒抽奖',rarity:st<=8?STAMP_RARITIES[st]:'特殊',
+                            color:st<=8?STAMP_COLORS[st]:'#ffa502',mintTime:mintTime,cooldownEnd:cooldownEnd,progress:progress
                         }
                     }catch(e){console.error(`获取 Token ${id} 信息失败:`,e);return null}
                 });
@@ -517,7 +524,6 @@
             document.getElementById('batchExchangeVal').textContent=calcExchange(tv).toFixed(4);
         }
 
-        // ==================== 修复：资产弹窗 - 来源文字不换行 + 按钮逻辑 ====================
         function handleAssetAction(i){
             const nft=myNFTs[i];
             document.getElementById('modalImg').src=nft.img||'';
@@ -527,13 +533,10 @@
             document.getElementById('modalEstimate').textContent=nft.estimate||'约850万美元';
             document.getElementById('modalRarity').textContent=nft.rarity||'未知';
             document.getElementById('modalRarity').style.color=nft.color||'#ffb84d';
-            // 来源文字 - 使用完整文字，CSS已设置white-space:nowrap
             document.getElementById('modalSource').textContent=nft.isListed?`挂单中：${nft.askPrice} USDT`:(nft.source||'未挂单');
             document.getElementById('modalPrice').textContent=`铸造 ${nft.faceValue.toFixed(4)} USDT`;
             document.getElementById('modalExchange').textContent=`兑换: ${calcExchange(nft.faceValue).toFixed(6)} USDT`;
             document.getElementById('modalCooldown').textContent=`铸造时长: ${formatCooldown(nft.stampType)}`;
-            
-            // 修复：根据canTrade状态显示不同按钮
             if(nft.canTrade){
                 document.getElementById('modalBtns').innerHTML=`
                     <button class="btn-cancel" onclick="closeModal()">取 消</button>
@@ -556,7 +559,29 @@
         function buyNFT(i){if(!currentAccount){alert('请先连接钱包');return}const c=marketListings[i];document.getElementById('cardModal').classList.remove('open');alert(`🛒 购买成功！${c.name} | 支付 ${c.askPrice} USDT`);myNFTs.push({...c,tokenId:Date.now(),canTrade:true,faceValue:c.faceValue||0.005});marketListings.splice(i,1);renderFavoriteGrid();updateAssetStats();renderMarketGrid()}
         function filterMarket(rarity,btn){document.querySelectorAll('#page-market .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('#marketGrid .market-card').forEach(c=>{c.style.display=(rarity==='all'||c.getAttribute('data-rarity')===rarity||(rarity==='selling'&&marketListings.length>0))?'':'none'})}
 
-        async function loadTeamInfo(){if(!currentAccount||!contract)return;try{const info=await contract.getUserLevelInfo(currentAccount);document.getElementById('myLevel').textContent='V'+info.level;document.getElementById('directRefs').textContent=info.directCount;document.getElementById('teamSize').textContent=info.teamCount;document.getElementById('teamVolume').textContent=parseFloat(ethers.utils.formatEther(info.teamVolume)).toFixed(2);const refs=await contract.getUserReferrals(currentAccount);document.getElementById('totalRefs').textContent=refs.length+' 人';document.getElementById('refRecordList').innerHTML=refs.length>0?refs.map(r=>`<div class="record-item"><span>${r.substring(0,6)}...${r.substring(38)}</span><span class="record-value">直推</span></div>`).join(''):'<div class="record-item"><span style="color:var(--text-secondary)">暂无邀请记录</span></div>'}catch(e){document.getElementById('myLevel').textContent='-';document.getElementById('directRefs').textContent='0';document.getElementById('teamSize').textContent='0';document.getElementById('teamVolume').textContent='0.00'}}
+        // ==================== 修复：getUserLevelInfo返回值字段映射 ====================
+        async function loadTeamInfo(){
+            if(!currentAccount||!contract)return;
+            try{
+                const info=await contract.getUserLevelInfo(currentAccount);
+                // 合约返回: (level, refCount, performance, rewardRate, earned)
+                document.getElementById('myLevel').textContent='V'+info.level;
+                document.getElementById('directRefs').textContent=info.refCount;
+                document.getElementById('teamSize').textContent=info.refCount;
+                document.getElementById('teamVolume').textContent=parseFloat(ethers.utils.formatEther(info.performance)).toFixed(2);
+                document.getElementById('totalReward').textContent=parseFloat(ethers.utils.formatEther(info.earned)).toFixed(2)+' USDT';
+                const refs=await contract.getUserReferrals(currentAccount);
+                document.getElementById('totalRefs').textContent=refs.length+' 人';
+                document.getElementById('refRecordList').innerHTML=refs.length>0?refs.map(r=>`<div class="record-item"><span>${r.substring(0,6)}...${r.substring(38)}</span><span class="record-value">直推</span></div>`).join(''):'<div class="record-item"><span style="color:var(--text-secondary)">暂无邀请记录</span></div>'
+            }catch(e){
+                console.error('加载团队信息失败:',e);
+                document.getElementById('myLevel').textContent='-';
+                document.getElementById('directRefs').textContent='0';
+                document.getElementById('teamSize').textContent='0';
+                document.getElementById('teamVolume').textContent='0.00';
+                document.getElementById('totalReward').textContent='0.00 USDT';
+            }
+        }
 
         function closeModal(){document.getElementById('cardModal').classList.remove('open')}
         document.getElementById('cardModal').addEventListener('click',function(e){if(e.target===this)closeModal()})
@@ -572,7 +597,6 @@
             if(page==='lottery')updateLotteryDisplay();
         }
 
-        // ==================== 语言切换 ====================
         const langBtn=document.getElementById('langBtn');
         const langDropdown=document.getElementById('langDropdown');
         let currentLang=localStorage.getItem('bcbsLang')||'cn';
