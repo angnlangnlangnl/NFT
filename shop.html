@@ -103,18 +103,18 @@
         }
 
         /* ============================================
-           金钱树专属样式：仅保留图片的自带效果
+           金钱树专属样式：仅留图片，无文字、无按钮
            ============================================ */
         .card-money-tree {
             background: transparent; 
             border: none; 
-            padding: 0; /* 移除内边距，让图片紧贴 */
+            padding: 0; /* 移除内边距 */
             
             /* 移除人为添加的投影 */
             box-shadow: none !important;
             
-            /* 【关键】高度由图片原比例决定，确保完整显示 */
-            min-height: 180px; 
+            /* 【关键】高度由图片原比例决定 */
+            min-height: 160px; 
         }
         
         /* 伪元素作为整张不透明的背景图 */
@@ -128,88 +128,16 @@
             background-size: contain; 
             background-position: center;
             background-repeat: no-repeat;
-            border-radius: 0; /* 取消圆角，让图片自身的边框完整 */
+            border-radius: 0; /* 取消圆角 */
             z-index: 0;
         }
 
-        /* 【关键】移除文字遮罩层，让图片完全透明显现 */
-        .card-money-tree::after {
-            display: none; 
-        }
-
-        /* 提升文字层级 */
+        /* 金钱树卡片不需要任何文字层级 */
         .card-money-tree .product-icon,
         .card-money-tree .product-info,
         .card-money-tree .product-action {
-            position: relative;
-            z-index: 2;
+            display: none; /* 全部隐藏 */
         }
-
-        .card-money-tree .product-icon {
-            background: transparent !important;
-            /* 隐藏这个占位符，因为背景图已经在全屏铺开了 */
-            display: none; 
-        }
-
-        /* 文字居中 */
-        .card-money-tree .product-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center; 
-            text-align: center;  
-            gap: 2px;
-            padding: 15px 10px; /* 让文字有点余地 */
-            
-            /* 移除可能存在的背景 */
-            background: transparent;
-        }
-        
-        .card-money-tree .product-name {
-            font-size: 19px;
-            font-weight: 900;
-            color: #ffffff;
-            /* 文字阴影更柔和，避免影响图片 */
-            text-shadow: 0 2px 8px rgba(0,0,0,0.8), 0 0 4px rgba(0,0,0,0.6);
-            letter-spacing: 1px;
-        }
-        .card-money-tree .product-detail {
-            font-size: 14px;
-            line-height: 1.4;
-            color: #ffffff;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.8), 0 0 4px rgba(0,0,0,0.6);
-        }
-        .card-money-tree .product-detail strong { 
-            color: #ffd700;
-            font-size: 15px; 
-            text-shadow: 0 2px 8px rgba(0,0,0,0.8), 0 0 4px rgba(0,0,0,0.6);
-        }
-
-        .card-money-tree .product-action {
-            display: flex;
-            flex-direction: column;
-            align-items: center; 
-            justify-content: center;
-            gap: 2px;
-            min-width: 80px;
-            padding: 5px 15px 15px 0;
-            
-            background: transparent;
-        }
-        .card-money-tree .price-label {
-            font-size: 12px;
-            color: #ffffff;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-        }
-        .card-money-tree .price-amount {
-            font-size: 24px;
-            font-weight: 900;
-            color: #ffffff;
-            margin-bottom: 4px;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
-        }
-        .card-money-tree .price-amount span { font-size: 13px; font-weight: normal; color: #e0d4ff; }
 
 
         /* ============================================
@@ -285,7 +213,7 @@
         .card-dark .price-amount span { font-size: 12px; font-weight: normal; color: #d4c4ff; }
 
 
-        /* --- 购买按钮 (共用) --- */
+        /* --- 购买按钮 (仅聚宝盆、百宝箱使用) --- */
         .buy-btn {
             background: linear-gradient(180deg, #fef08a, #fde047);
             color: #3b0764;
@@ -367,21 +295,11 @@
     <!-- 商品主列表 -->
     <div class="product-container" id="productContainer">
         
-        <!-- 卡片 1: 金钱树 (完全透明无遮挡，自带边框包裹) -->
+        <!-- ============================================ -->
+        <!-- 卡片 1: 金钱树 (已移除所有文字、按钮和交互) -->
+        <!-- ============================================ -->
         <div class="card card-money-tree">
-            <!-- 隐藏此图标，因为背景已经是完整的图了 -->
-            <div class="product-icon"></div>
-            <div class="product-info">
-                <div class="product-name">金钱树</div>
-                <div class="product-detail">产金币 <strong>15万</strong></div>
-                <div class="product-detail">产金币 <strong>7天</strong></div>
-                <div class="product-detail" style="color:#e0d4ff; font-size:12px;">可兑总价值 10.5 USDT</div>
-            </div>
-            <div class="product-action">
-                <div class="price-label">价格</div>
-                <div class="price-amount">10 <span>USDT</span></div>
-                <button class="buy-btn" onclick="handleBuy('金钱树', 10)">立即购买</button>
-            </div>
+            <!-- 图标、文字、按钮区域已全部隐藏，卡片仅显示图片 -->
         </div>
 
         <!-- 卡片 2: 聚宝盆 -->
