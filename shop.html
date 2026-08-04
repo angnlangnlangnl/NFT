@@ -103,42 +103,62 @@
         }
 
         /* ============================================
-           金钱树专属样式：仅留图片，无文字、无按钮
+           金钱树专属样式：整张图片 + 右下角隐式热区
            ============================================ */
         .card-money-tree {
             background: transparent; 
             border: none; 
-            padding: 0; /* 移除内边距 */
-            
-            /* 移除人为添加的投影 */
+            padding: 0; 
             box-shadow: none !important;
-            
-            /* 【关键】高度由图片原比例决定 */
             min-height: 160px; 
+            /* 鼠标悬浮整个卡片改为手型，暗示可交互 */
+            cursor: pointer; 
         }
         
-        /* 伪元素作为整张不透明的背景图 */
+        /* 图片背景 */
         .card-money-tree::before {
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             background-image: url('images/金钱树1.png');
-            
-            /* 保持比例完整、居中且不拉伸 */
             background-size: contain; 
             background-position: center;
             background-repeat: no-repeat;
-            border-radius: 0; /* 取消圆角 */
+            border-radius: 0;
             z-index: 0;
         }
 
-        /* 金钱树卡片不需要任何文字层级 */
+        /* 隐藏占位元素 */
         .card-money-tree .product-icon,
         .card-money-tree .product-info,
         .card-money-tree .product-action {
-            display: none; /* 全部隐藏 */
+            display: none; 
         }
 
+        /* ================================================================
+           【关键】透明的右下角点击热区（不可见，但可点击触发购买）
+           ================================================================ */
+        .card-money-tree .invisible-buy-btn {
+            position: absolute;
+            bottom: 15%;    /* 距离底部比例 */
+            right: 15%;     /* 距离右侧比例 */
+            width: 25%;     /* 占卡片宽度的 1/4 */
+            height: 25%;    /* 占卡片高度的 1/4 */
+            
+            z-index: 1;     /* 位于图片之上 */
+            cursor: pointer;
+            
+            /* 只有一种情况用户会感知到这：鼠标悬停时会有一个细腻的发光边框提示 */
+            border: 1px solid transparent;
+            border-radius: 8px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card-money-tree:hover .invisible-buy-btn {
+            /* 悬停卡片时，显露出隐形的点击区域边框和发光，起到引导作用 */
+            border-color: rgba(255, 215, 0, 0.5);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
 
         /* ============================================
            聚宝盆 & 百宝箱 默认样式
@@ -295,11 +315,12 @@
     <!-- 商品主列表 -->
     <div class="product-container" id="productContainer">
         
-        <!-- ============================================ -->
-        <!-- 卡片 1: 金钱树 (已移除所有文字、按钮和交互) -->
-        <!-- ============================================ -->
+        <!-- ============================================================== -->
+        <!-- 卡片 1: 金钱树 (点击右下角隐式区域，触发 10 USDT 支付) -->
+        <!-- ============================================================== -->
         <div class="card card-money-tree">
-            <!-- 图标、文字、按钮区域已全部隐藏，卡片仅显示图片 -->
+            <!-- 透明点击热区：直接绑定 handleBuy 函数，金额固定为 10 -->
+            <div class="invisible-buy-btn" onclick="handleBuy('金钱树', 10)"></div>
         </div>
 
         <!-- 卡片 2: 聚宝盆 -->
