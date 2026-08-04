@@ -75,8 +75,7 @@
         }
 
         /* ============================================
-           纯图片卡片模板 (金钱树、聚宝盆、百宝箱 共用)
-           透明背景、无边框、点击整张卡片触发购买
+           纯图片卡片模板 (金钱树、聚宝盆、百宝箱)
            ============================================ */
         .card-image-template {
             background: transparent; 
@@ -90,7 +89,6 @@
             position: relative;
         }
         
-        /* 纯图片卡片背景图设置 */
         .card-image-template::before {
             content: "";
             position: absolute;
@@ -102,26 +100,88 @@
             z-index: 0;
         }
 
-        /* 强制隐藏卡片内的所有内容元素 */
         .card-image-template .product-icon,
         .card-image-template .product-info,
         .card-image-template .product-action {
             display: none; 
         }
 
-        /* --- 金钱树 (使用金钱树1.png) --- */
-        .card-money-tree::before {
-            background-image: url('images/金钱树1.png');
+        .card-money-tree::before { background-image: url('images/金钱树1.png'); }
+        .card-bowl::before { background-image: url('images/聚宝盆1.png'); }
+        .card-chest::before { background-image: url('images/百宝箱1.png'); }
+
+
+        /* ============================================
+           购买记录区域（原图亮紫水晶玻璃方案）
+           ============================================ */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 45px 0 20px;
+            max-width: 480px;
+            margin-left: auto; margin-right: auto;
+        }
+        .section-divider i { color: #d4c4ff; font-size: 12px; }
+        .section-title { font-size: 18px; font-weight: bold; color: #ffffff; }
+        .section-divider::before, .section-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #d4c4ff, transparent);
         }
 
-        /* --- 聚宝盆 (使用聚宝盆1.png) --- */
-        .card-bowl::before {
-            background-image: url('images/聚宝盆1.png');
+        .record-list {
+            max-width: 480px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        /* --- 百宝箱 (使用百宝箱1.png) --- */
-        .card-chest::before {
-            background-image: url('images/百宝箱1.png');
+        /* 【应用原图亮紫玻璃方案】 */
+        .record-item {
+            /* 1. 中紫色底色 */
+            background: linear-gradient(180deg, #7b46c2 0%, #6536a8 100%);
+            
+            /* 2. 顶部横向高光反光（模拟玻璃质感） */
+            background-image: 
+                linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 30%),
+                linear-gradient(180deg, #7b46c2 0%, #6536a8 100%);
+            
+            /* 3. 极细的白金色内发光边框 + 顶部玻璃反光 */
+            box-shadow: 
+                inset 0 0 0 1px rgba(255, 255, 255, 0.8),
+                inset 0 4px 10px rgba(255, 255, 255, 0.4);
+            
+            border: none;
+            border-radius: 10px;
+            
+            padding: 12px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #fff;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .record-item:hover { 
+            transform: scale(1.02);
+            box-shadow: 
+                inset 0 0 0 1px rgba(255, 255, 255, 0.9),
+                inset 0 4px 10px rgba(255, 255, 255, 0.6),
+                0 0 15px rgba(200, 150, 255, 0.3); /* 添加外部微光 */
+        }
+        .record-info { display: flex; align-items: center; gap: 12px; }
+        .record-info .fa-chevron-right { color: #e0d4ff; font-size: 10px; }
+        .record-text h4 { font-size: 13px; font-weight: normal; color: #fff; }
+        .record-text p { font-size: 10px; color: #ccc; margin-top: 2px; }
+        .record-price {
+            font-size: 12px;
+            color: #fff;
+            background: rgba(255,255,255,0.15); /* 价格背景稍微亮一点 */
+            padding: 4px 10px;
+            border-radius: 12px;
         }
     </style>
 </head>
@@ -139,20 +199,14 @@
     <!-- 商品主列表 -->
     <div class="product-container" id="productContainer">
         
-        <!-- 卡片 1: 金钱树 (纯图卡片，点击触发 10 USDT) -->
-        <div class="card-image-template card-money-tree" onclick="handleBuy('金钱树', 10)">
-            <!-- 此处为空 -->
-        </div>
+        <!-- 卡片 1: 金钱树 -->
+        <div class="card-image-template card-money-tree" onclick="handleBuy('金钱树', 10)"></div>
 
-        <!-- 卡片 2: 聚宝盆 (纯图卡片，点击触发 100 USDT) -->
-        <div class="card-image-template card-bowl" onclick="handleBuy('聚宝盆', 100)">
-            <!-- 此处为空 -->
-        </div>
+        <!-- 卡片 2: 聚宝盆 -->
+        <div class="card-image-template card-bowl" onclick="handleBuy('聚宝盆', 100)"></div>
 
-        <!-- 卡片 3: 百宝箱 (纯图卡片，点击触发 1000 USDT) -->
-        <div class="card-image-template card-chest" onclick="handleBuy('百宝箱', 1000)">
-            <!-- 此处为空 -->
-        </div>
+        <!-- 卡片 3: 百宝箱 -->
+        <div class="card-image-template card-chest" onclick="handleBuy('百宝箱', 1000)"></div>
     </div>
 
     <!-- 购买记录区域 -->
