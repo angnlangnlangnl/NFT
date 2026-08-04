@@ -12,7 +12,8 @@
             font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
             background-image: url('images/产品选购背景.png');
             background-size: cover;
-            background-position: center;
+            /* 【修复】背景图顶对齐 */
+            background-position: top center; 
             background-repeat: no-repeat;
             background-attachment: fixed;
             color: #ffffff;
@@ -136,14 +137,17 @@
         }
 
         /* ================================================================
-           【关键】透明的右下角点击热区（不可见，但可点击触发购买）
+           【修复】透明的右下角点击热区，向右移动半个身位
            ================================================================ */
         .card-money-tree .invisible-buy-btn {
             position: absolute;
-            bottom: 15%;    /* 距离底部比例 */
-            right: 15%;     /* 距离右侧比例 */
-            width: 25%;     /* 占卡片宽度的 1/4 */
-            height: 25%;    /* 占卡片高度的 1/4 */
+            bottom: 15%;    /* 距离底部比例不变 */
+            /* 【修复】向右移动：取消原来的 right: 15%，改为靠近边缘 */
+            right: 0;       
+            margin-right: 5px; /* 稍微离开边缘一点点，避免贴着边界 */
+            
+            width: 22%;     /* 稍微缩小宽窄，视觉上相当于右移 */
+            height: 25%;    /* 高度保持不变 */
             
             z-index: 1;     /* 位于图片之上 */
             cursor: pointer;
@@ -315,11 +319,8 @@
     <!-- 商品主列表 -->
     <div class="product-container" id="productContainer">
         
-        <!-- ============================================================== -->
-        <!-- 卡片 1: 金钱树 (点击右下角隐式区域，触发 10 USDT 支付) -->
-        <!-- ============================================================== -->
+        <!-- 卡片 1: 金钱树 (隐藏的购买按钮已向右移至边缘) -->
         <div class="card card-money-tree">
-            <!-- 透明点击热区：直接绑定 handleBuy 函数，金额固定为 10 -->
             <div class="invisible-buy-btn" onclick="handleBuy('金钱树', 10)"></div>
         </div>
 
