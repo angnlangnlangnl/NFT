@@ -331,7 +331,7 @@
             if(savedReferrer.toLowerCase()===currentAccount.toLowerCase()){localStorage.removeItem('luckyStampReferrer');return}
             try{
                 const info=await contract.getUserLevelInfo(currentAccount);
-                if(info.refCount.toNumber()>0||info.level.toNumber()>0){localStorage.removeItem('luckyStampReferrer');return}
+                if(info.refCount>0||info.level>0){localStorage.removeItem('luckyStampReferrer');return}
                 const tx=await contract.registerReferral(savedReferrer);await tx.wait();
                 console.log('✅ 推荐绑定成功:',savedReferrer);localStorage.removeItem('luckyStampReferrer');alert('🎉 推荐绑定成功！')
             }catch(e){console.error('推荐绑定失败:',e)}
@@ -373,17 +373,16 @@
             },3000);
         }
 
-        // ==================== 修复：从合约获取准确的累计推荐奖励 ====================
         async function loadTotalReward(){
             if(!contract||!currentAccount){
                 document.getElementById('totalReward').textContent='0.00 USDT';
                 return;
             }
             try{
-                // 从合约getUserLevelInfo获取准确累计推荐奖励(earned字段)
                 const info=await contract.getUserLevelInfo(currentAccount);
                 const earned=parseFloat(ethers.utils.formatEther(info.earned));
                 document.getElementById('totalReward').textContent=earned.toFixed(2)+' USDT';
+                console.log('累计推荐奖励(earned):',earned,'USDT');
             }catch(e){
                 console.error('加载累计奖励失败:',e);
                 document.getElementById('totalReward').textContent='0.00 USDT';
