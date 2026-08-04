@@ -1,80 +1,109 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-<style>
-    /* 模拟深色背景 */
-    body {
-        background-color: #0c031a; 
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>皇家虚拟钱庄</title>
+    <style>
+        /* 基础重置 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body, html {
+            width: 100%;
+            height: 100%;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            overflow: hidden; /* 防止滚动 */
+            background-color: #120a2e; /* 备用底色 */
+        }
 
-    /* --- 1. 外层包裹：负责形状和尖端圆润 --- */
-    .game-btn-wrapper {
-        position: relative;
-        display: inline-block;
-        /* 保留最纯正的两端尖三角主形状 */
-        clip-path: polygon(
-            10% 0, 90% 0, 
-            100% 50%, 
-            90% 100%, 10% 100%, 
-            0% 50%
-        );
-        padding: 2px; /* 这里的2px就是那圈外发光边框 */
-        background: linear-gradient(90deg, #9b6ed6, #fff6c2, #9b6ed6);
-        box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-        transition: transform 0.15s ease;
-        cursor: pointer;
-    }
+        /* 1. 全屏背景图设置 */
+        .hero-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            /* 加载您指定的背景图片路径 */
+            background-image: url('images/金库.png'); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* 按钮靠下对齐 */
+            align-items: center;
+            padding-bottom: 8%;
+        }
 
-    .game-btn-wrapper:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
-    }
-    .game-btn-wrapper:active {
-        transform: scale(0.95);
-    }
+        /* 2. 按钮外层：渐变发光线框与形状 */
+        .game-btn-wrapper {
+            position: relative;
+            display: inline-block;
+            /* 保留最纯正的两端尖三角主形状 */
+            clip-path: polygon(
+                10% 0, 90% 0, 
+                100% 50%, 
+                90% 100%, 10% 100%, 
+                0% 50%
+            );
+            padding: 2px; /* 外层厚度的发光边框 */
+            background: linear-gradient(90deg, #9b6ed6, #fff6c2, #9b6ed6);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            cursor: pointer;
+            /* 让按钮在深色背景下清晰 */
+            z-index: 10;
+        }
 
-    /* --- 2. 按钮实体：内部紫底 --- */
-    .game-btn {
-        display: block;
-        border: none;
-        outline: none;
-        padding: 12px 48px;
-        color: #ffffff;
-        font-size: 20px;
-        font-weight: 900;
-        letter-spacing: 2px;
-        text-shadow: 0 1px 4px rgba(0,0,0,0.6);
-        white-space: nowrap;
-        background: linear-gradient(180deg, #8c3bd4 0%, #4e1085 100%);
-        
-        /* 形状裁剪（与外框完美重叠） */
-        clip-path: polygon(
-            10% 0, 90% 0, 
-            100% 50%, 
-            90% 100%, 10% 100%, 
-            0% 50%
-        );
+        .game-btn-wrapper:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+        }
+        .game-btn-wrapper:active {
+            transform: scale(0.95);
+        }
 
-        /* ===== 核心技巧：利用内阴影修圆尖端 ===== */
-        /* 在内部加一个略微缩小的白色半透明内发光，它会像橡皮擦一样吃掉尖端的硬角 */
-        box-shadow: 
-            inset 0 0 0 2px rgba(255, 255, 255, 0.5), /* 极细白边，让尖端被磨圆 */
-            inset 0 6px 10px rgba(255, 255, 255, 0.3), /* 顶部高光 */
-            inset 0 -6px 10px rgba(0, 0, 0, 0.5);      /* 底部立体厚度 */
-    }
-</style>
+        /* 3. 按钮实体：紫色立体渐变为核心 */
+        .game-btn {
+            display: block;
+            border: none;
+            outline: none;
+            padding: 12px 48px;
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+            white-space: nowrap;
+            background: linear-gradient(180deg, #8c3bd4 0%, #4e1085 100%);
+            
+            clip-path: polygon(
+                10% 0, 90% 0, 
+                100% 50%, 
+                90% 100%, 10% 100%, 
+                0% 50%
+            );
+
+            /* 内嵌发光细线，将尖端磨圆润 */
+            box-shadow: 
+                inset 0 0 0 2px rgba(255, 255, 255, 0.5), /* 极细白边让尖端磨圆 */
+                inset 0 6px 10px rgba(255, 255, 255, 0.3), /* 顶部高光 */
+                inset 0 -6px 10px rgba(0, 0, 0, 0.5);      /* 底部立体厚度 */
+        }
+
+        /* 适配手机屏幕 */
+        @media (max-width: 600px) {
+            .game-btn { font-size: 16px; padding: 10px 30px; }
+            .hero-container { padding-bottom: 15%; }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- 按钮实体 -->
-    <div class="game-btn-wrapper">
-        <button class="game-btn">立即解锁管家角色</button>
+    <div class="hero-container">
+        <!-- 按钮实体 -->
+        <div class="game-btn-wrapper">
+            <button class="game-btn" onclick="alert('正在为您解锁皇家金库管家角色！')">
+                立即解锁管家角色
+            </button>
+        </div>
     </div>
 
 </body>
