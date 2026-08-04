@@ -109,9 +109,17 @@
             border: none; 
         }
         
+        /* 【关键修改】金钱树图标改用金钱树.png并强制铺满 */
         .card-money-tree .product-icon {
-            background-image: url('images/金钱树1.png');
+            /* 替换为新的图片名称 */
+            background-image: url('images/金钱树.png');
             background-color: transparent; 
+            
+            /* 【核心】强制覆盖宽高，并让图片拉伸完全填满 */
+            width: 80px;
+            height: 80px;
+            background-size: 100% 100%; 
+            background-repeat: no-repeat;
         }
 
         .card-money-tree .product-info {
@@ -324,7 +332,7 @@
     <!-- 商品主列表 -->
     <div class="product-container" id="productContainer">
         
-        <!-- 卡片 1: 金钱树 (透明、文字完全居中) -->
+        <!-- 卡片 1: 金钱树 (使用金钱树.png，强制铺满80x80) -->
         <div class="card card-money-tree">
             <div class="product-icon"></div>
             <div class="product-info">
@@ -340,7 +348,7 @@
             </div>
         </div>
 
-        <!-- 卡片 2: 聚宝盆 (左对齐、深色背景) -->
+        <!-- 卡片 2: 聚宝盆 -->
         <div class="card card-dark">
             <div class="product-icon icon-bowl"><i class="fas fa-coins"></i></div>
             <div class="product-info">
@@ -355,7 +363,7 @@
             </div>
         </div>
 
-        <!-- 卡片 3: 百宝箱 (左对齐、深色背景) -->
+        <!-- 卡片 3: 百宝箱 -->
         <div class="card card-dark">
             <div class="product-icon icon-chest"><i class="fas fa-box-open"></i></div>
             <div class="product-info">
