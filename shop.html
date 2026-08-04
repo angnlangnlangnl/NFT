@@ -85,7 +85,7 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); 
         }
 
-        /* 左侧插图区域 */
+        /* 左侧插图区域 (其他卡片使用) */
         .product-icon {
             width: 80px;
             height: 80px;
@@ -102,22 +102,25 @@
         }
 
         /* ============================================
-           金钱树专属样式：透明、文字居中
+           金钱树专属样式：整张卡片铺满背景图
            ============================================ */
         .card-money-tree {
             background: transparent; 
             border: none; 
+            
+            /* 【核心修改】整张卡片使用金钱树.png作为背景 */
+            background-image: url('images/金钱树.png');
+            background-size: 100% 100%; /* 强制拉伸铺满整张卡片 */
+            background-position: center;
+            background-repeat: no-repeat;
+            
+            /* 保持外围发光阴影效果（避免因为透明丢失立体感） */
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.15), 0 0 40px rgba(167, 139, 250, 0.1);
         }
         
-        /* 【改回原文件名】金钱树图标改用金钱树1.png并强制铺满 */
+        /* 移除金钱树卡片内部的小图标区域 */
         .card-money-tree .product-icon {
-            background-image: url('images/金钱树1.png');
-            background-color: transparent; 
-            
-            width: 80px;
-            height: 80px;
-            background-size: 100% 100%; 
-            background-repeat: no-repeat;
+            display: none; 
         }
 
         .card-money-tree .product-info {
@@ -330,9 +333,9 @@
     <!-- 商品主列表 -->
     <div class="product-container" id="productContainer">
         
-        <!-- 卡片 1: 金钱树 (使用金钱树1.png，强制铺满80x80) -->
+        <!-- 卡片 1: 金钱树 (整张卡片铺满金钱树.png) -->
         <div class="card card-money-tree">
-            <div class="product-icon"></div>
+            <!-- 左侧图标区域已被隐藏，因为背景铺满了整张卡片 -->
             <div class="product-info">
                 <div class="product-name">金钱树</div>
                 <div class="product-detail">产金币 <strong>15万</strong></div>
