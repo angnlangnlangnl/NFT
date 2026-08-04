@@ -85,7 +85,7 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); 
         }
 
-        /* 左侧插图区域 */
+        /* --- 左侧图标区域 (仅用于聚宝盆、百宝箱) --- */
         .product-icon {
             width: 80px;
             height: 80px;
@@ -101,51 +101,56 @@
             background-position: center;
         }
 
-        /* ============================================
-           金钱树专属样式：透明、文字居中
-           ============================================ */
+        /* ==========================================
+           金钱树专属样式：整张卡片背景铺满图片
+           ========================================== */
         .card-money-tree {
-            background: transparent; 
-            border: none; 
-        }
-        
-        /* 【关键修改】金钱树图标改用金钱树.png并强制铺满 */
-        .card-money-tree .product-icon {
-            /* 替换为新的图片名称 */
+            /* 把图片设定为整张卡片的背景，并铺满 */
             background-image: url('images/金钱树.png');
-            background-color: transparent; 
-            
-            /* 【核心】强制覆盖宽高，并让图片拉伸完全填满 */
-            width: 80px;
-            height: 80px;
-            background-size: 100% 100%; 
+            background-size: 100% 100%; /* 强制拉伸充满整个卡片 */
+            background-position: center;
             background-repeat: no-repeat;
+            /* 移除前面所有的深色背景 */
+            background-color: transparent; 
+            border: none; 
+            /* 增加高度保证图片完整展示 */
+            min-height: 130px; 
+            /* 调整内边距，让文字居中 */
+            padding: 15px 20px;
         }
 
+        /* 因为卡片背景铺满了，左侧图标不再需要，隐藏它 */
+        .card-money-tree .product-icon {
+            display: none;
+        }
+
+        /* 文字部分：设置为列方向，居中 */
         .card-money-tree .product-info {
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center; /* 关键：水平居中 */
-            text-align: center;  /* 关键：文字居中对齐 */
+            align-items: center; 
+            text-align: center;  
             gap: 2px;
             background: transparent; 
             padding: 0;
+            /* 让文字中心正好占据卡片中间位置 */
+            width: 100%;
         }
         
         .card-money-tree .product-name {
             font-size: 19px;
             font-weight: 900;
             color: #ffffff;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
-            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            letter-spacing: 2px;
         }
         .card-money-tree .product-detail {
             font-size: 14px;
-            line-height: 1.4;
+            line-height: 1.5;
             color: #ffffff;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
         .card-money-tree .product-detail strong { 
             color: #ffd700;
@@ -155,7 +160,7 @@
         .card-money-tree .product-action {
             display: flex;
             flex-direction: column;
-            align-items: center; /* 关键：价格和按钮水平居中 */
+            align-items: center; 
             justify-content: center;
             gap: 2px;
             min-width: 80px;
@@ -165,20 +170,20 @@
         .card-money-tree .price-label {
             font-size: 12px;
             color: #ffffff;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
         .card-money-tree .price-amount {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 900;
             color: #ffffff;
             margin-bottom: 4px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            text-shadow: 0 2px 6px rgba(0,0,0,0.9);
         }
         .card-money-tree .price-amount span { font-size: 13px; font-weight: normal; color: #e0d4ff; }
 
 
         /* ============================================
-           聚宝盆 & 百宝箱 默认样式（深色背景、左对齐）
+           聚宝盆 & 百宝箱 默认样式
            ============================================ */
         .card-dark {
             background: linear-gradient(145deg, rgba(56, 26, 109, 0.95), rgba(23, 6, 56, 0.95));
@@ -332,9 +337,9 @@
     <!-- 商品主列表 -->
     <div class="product-container" id="productContainer">
         
-        <!-- 卡片 1: 金钱树 (使用金钱树.png，强制铺满80x80) -->
+        <!-- 卡片 1: 金钱树 (整张卡片铺满背景图) -->
         <div class="card card-money-tree">
-            <div class="product-icon"></div>
+            <!-- 注意：去掉了左侧 product-icon，因为图片已经是背景了 -->
             <div class="product-info">
                 <div class="product-name">金钱树</div>
                 <div class="product-detail">产金币 <strong>15万</strong></div>
