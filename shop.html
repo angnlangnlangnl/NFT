@@ -74,53 +74,27 @@
             z-index: 2;
         }
 
-        /* --- 基础卡片布局 --- */
-        .card {
-            position: relative;
-            border-radius: 16px;
-            padding: 15px 15px 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3); 
-            overflow: hidden; /* 确保背景图不溢出圆角 */
-        }
-
-        /* 左侧插图区域 (聚宝盆、百宝箱使用) */
-        .product-icon {
-            width: 80px;
-            height: 80px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 45px;
-            border-radius: 50%;
-            margin-right: 15px;
-            flex-shrink: 0;
-            position: relative;
-            background-size: cover;
-            background-position: center;
-        }
-
         /* ============================================
-           金钱树专属样式：整张图片 + 点击卡片全体触发购买
+           纯图片卡片模板 (金钱树 & 聚宝盆 共用)
+           透明背景、无边框、点击整张卡片触发购买
            ============================================ */
-        .card-money-tree {
+        .card-image-template {
             background: transparent; 
             border: none; 
             padding: 0; 
             box-shadow: none !important;
             min-height: 160px; 
-            /* 【修改】整个卡片均为手型指针 */
             cursor: pointer; 
+            overflow: hidden;
+            border-radius: 16px;
+            position: relative;
         }
         
-        /* 图片背景 */
-        .card-money-tree::before {
+        /* 纯图片卡片背景图设置 */
+        .card-image-template::before {
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('images/金钱树1.png');
             background-size: contain; 
             background-position: center;
             background-repeat: no-repeat;
@@ -128,17 +102,26 @@
             z-index: 0;
         }
 
-        /* 隐藏占位元素 */
-        .card-money-tree .product-icon,
-        .card-money-tree .product-info,
-        .card-money-tree .product-action {
+        /* 强制隐藏卡片内的所有内容元素 */
+        .card-image-template .product-icon,
+        .card-image-template .product-info,
+        .card-image-template .product-action {
             display: none; 
         }
 
-        /* 【移除】透明按钮代码已完全清理 */
+        /* --- 金钱树专属 (使用金钱树1.png) --- */
+        .card-money-tree::before {
+            background-image: url('images/金钱树1.png');
+        }
+
+        /* --- 聚宝盆专属 (使用聚宝盆.png) --- */
+        .card-bowl::before {
+            background-image: url('images/聚宝盆.png');
+        }
+
 
         /* ============================================
-           聚宝盆 & 百宝箱 默认样式
+           百宝箱 (保留原有深色卡片样式，不变)
            ============================================ */
         .card-dark {
             background: linear-gradient(145deg, rgba(56, 26, 109, 0.95), rgba(23, 6, 56, 0.95));
@@ -162,8 +145,6 @@
             pointer-events: none;
         }
 
-        .icon-bowl { background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 70%); color: #ffd700; }
-        .icon-bowl::after { content: ""; position: absolute; bottom: -15px; width: 80%; height: 20px; border-radius: 50%; filter: blur(15px); background: rgba(255, 215, 0, 0.6); z-index: -1;}
         .icon-chest { background: radial-gradient(circle, rgba(168,85,247,0.1) 0%, transparent 70%); color: #a855f7; }
         .icon-chest::after { content: ""; position: absolute; bottom: -15px; width: 80%; height: 20px; border-radius: 50%; filter: blur(15px); background: rgba(168, 85, 247, 0.5); z-index: -1;}
 
@@ -209,8 +190,7 @@
         }
         .card-dark .price-amount span { font-size: 12px; font-weight: normal; color: #d4c4ff; }
 
-
-        /* --- 购买按钮 (仅聚宝盆、百宝箱使用) --- */
+        /* --- 百宝箱购买按钮 --- */
         .buy-btn {
             background: linear-gradient(180deg, #fef08a, #fde047);
             color: #3b0764;
@@ -292,29 +272,17 @@
     <!-- 商品主列表 -->
     <div class="product-container" id="productContainer">
         
-        <!-- ============================================ -->
-        <!-- 卡片 1: 金钱树 (点击卡片任意位置触发 10 USDT) -->
-        <!-- ============================================ -->
-        <div class="card card-money-tree" onclick="handleBuy('金钱树', 10)">
+        <!-- 卡片 1: 金钱树 (纯图卡片，点击触发 10 USDT) -->
+        <div class="card-image-template card-money-tree" onclick="handleBuy('金钱树', 10)">
             <!-- 所有内容已被背景图和隐藏样式覆盖，此处为空 -->
         </div>
 
-        <!-- 卡片 2: 聚宝盆 -->
-        <div class="card card-dark">
-            <div class="product-icon icon-bowl"><i class="fas fa-coins"></i></div>
-            <div class="product-info">
-                <div class="product-name">聚宝盆</div>
-                <div class="product-detail">产金币 <strong>120万</strong><br>产金币 <strong>30天</strong></div>
-                <div class="product-detail" style="color:#a890d0; font-size:12px;">可兑总价值 120 USDT</div>
-            </div>
-            <div class="product-action">
-                <div class="price-label">价格</div>
-                <div class="price-amount">100 <span>USDT</span></div>
-                <button class="buy-btn" onclick="handleBuy('聚宝盆', 100)">立即购买</button>
-            </div>
+        <!-- 卡片 2: 聚宝盆 (纯图卡片，点击触发 100 USDT) -->
+        <div class="card-image-template card-bowl" onclick="handleBuy('聚宝盆', 100)">
+            <!-- 所有内容已被背景图和隐藏样式覆盖，此处为空 -->
         </div>
 
-        <!-- 卡片 3: 百宝箱 -->
+        <!-- 卡片 3: 百宝箱 (保留原有文字和按钮) -->
         <div class="card card-dark">
             <div class="product-icon icon-chest"><i class="fas fa-box-open"></i></div>
             <div class="product-info">
