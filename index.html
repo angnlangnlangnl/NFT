@@ -287,7 +287,6 @@
         let provider=null,signer=null,currentAccount=null,contract=null,usdtContract=null;
         let isLotteryRunning=false,lotteryInterval=null,currentMintCard=null,myNFTs=[],marketListings=[];
         let todayLotteryCount=3,maxLotteryCount=10,globalLotteryProgress=67,totalEarned=0;
-        let totalRewardFromChain=0;
         let qrCodeInstance=null;
         let cooldownRefreshInterval=null;
 
@@ -374,6 +373,23 @@
             },3000);
         }
 
+        // ==================== 修复：从链上USDT余额获取累计奖励 ====================
+        async function loadTotalReward(){
+            if(!usdtContract||!currentAccount){
+                document.getElementById('totalReward').textContent='0.00 USDT';
+                return;
+            }
+            try{
+                const balance=await usdtContract.balanceOf(currentAccount);
+                const decimals=await usdtContract.decimals();
+                const reward=parseFloat(ethers.utils.formatUnits(balance,decimals));
+                document.getElementById('totalReward').textContent=reward.toFixed(2)+' USDT';
+            }catch(e){
+                console.error('加载累计奖励失败:',e);
+                document.getElementById('totalReward').textContent='0.00 USDT';
+            }
+        }
+
         async function initContracts(acc){
             currentAccount=acc;provider=new ethers.providers.Web3Provider(window.ethereum);signer=provider.getSigner();
             contract=new ethers.Contract(CONFIG.CONTRACT_ADDRESS,CONTRACT_ABI,signer);usdtContract=new ethers.Contract(CONFIG.USDT_ADDRESS,USDT_ABI,signer);
@@ -381,7 +397,7 @@
             const refUrl=`https://luckystamp.app/ref=${currentAccount}`;
             document.getElementById('refLink').textContent=refUrl;generateQRCode(refUrl);
             await bindReferrerIfNeeded();
-            await loadMyNFTs();loadTeamInfo();
+            await loadMyNFTs();loadTeamInfo();loadTotalReward();
             startCooldownRefresh();
         }
         async function autoConnect(){if(!window.ethereum)return;try{const a=await window.ethereum.request({method:'eth_accounts'});if(a&&a.length>0)await initContracts(a[0])}catch(e){}}
@@ -391,6 +407,7 @@
                 currentAccount=null;contract=null;usdtContract=null;
                 const btn=document.getElementById('walletBtn');btn.textContent='Connect';btn.classList.remove('connected');
                 document.getElementById('refLink').textContent='请先连接钱包';generateQRCode('请先连接钱包');
+                document.getElementById('totalReward').textContent='0.00 USDT';
                 myNFTs=[];renderFavoriteGrid();updateAssetStats();return
             }
             if(!window.ethereum){alert('请安装 MetaMask');return}
@@ -549,19 +566,21 @@
             }
             document.getElementById('cardModal').classList.add('open');
         }
-        async function exchangeNFT(i){const nft=myNFTs[i];try{if(contract)await(await contract.exchangeForUSDT(nft.tokenId)).wait();const earned=calcExchange(nft.faceValue);totalEarned+=earned;alert(`💱 兑换成功！获得 ${earned.toFixed(6)} USDT`);await loadMyNFTs()}catch(e){alert('❌ 兑换失败：'+(e.reason||e.message))}}
+        async function exchangeNFT(i){const nft=myNFTs[i];try{if(contract)await(await contract.exchangeForUSDT(nft.tokenId)).wait();const earned=calcExchange(nft.faceValue);totalEarned+=earned;alert(`💱 兑换成功！获得 ${earned.toFixed(6)} USDT`);await loadMyNFTs();await loadTotalReward()}catch(e){alert('❌ 兑换失败：'+(e.reason||e.message))}}
         function sellNFT(i){const price=prompt('请输入挂单价格 (USDT)：',myNFTs[i].faceValue.toFixed(4));if(!price)return;(async()=>{try{if(contract){const pw=ethers.utils.parseEther(price);await(await contract.listStampForSale(myNFTs[i].tokenId,pw)).wait()}alert(`✅ 已挂单：${myNFTs[i].name} | 价格：${price} USDT`);await loadMyNFTs()}catch(e){alert('❌ 挂单失败：'+(e.reason||e.message))}})()}
-        async function batchExchangeAll(){if(!currentAccount){alert('请先连接钱包');return}const tradable=myNFTs.filter(n=>n.canTrade);if(tradable.length===0){alert('没有可兑换的NFT');return}try{let total;if(contract){const ids=tradable.map(n=>n.tokenId);const result=await contract.getBatchExchangeAmount(ids);total=parseFloat(ethers.utils.formatEther(result.totalAmount));if(!confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(6)} USDT？`))return;await(await contract.batchExchangeForUSDT(ids)).wait()}else{total=tradable.reduce((s,n)=>s+calcExchange(n.faceValue),0);if(!confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(6)} USDT？`))return}totalEarned+=total;alert('✅ 批量兑换成功！');await loadMyNFTs()}catch(e){alert('❌ 批量兑换失败：'+(e.reason||e.message))}}
+        async function batchExchangeAll(){if(!currentAccount){alert('请先连接钱包');return}const tradable=myNFTs.filter(n=>n.canTrade);if(tradable.length===0){alert('没有可兑换的NFT');return}try{let total;if(contract){const ids=tradable.map(n=>n.tokenId);const result=await contract.getBatchExchangeAmount(ids);total=parseFloat(ethers.utils.formatEther(result.totalAmount));if(!confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(6)} USDT？`))return;await(await contract.batchExchangeForUSDT(ids)).wait()}else{total=tradable.reduce((s,n)=>s+calcExchange(n.faceValue),0);if(!confirm(`确认批量兑换 ${tradable.length} 枚NFT，获得约 ${total.toFixed(6)} USDT？`))return}totalEarned+=total;alert('✅ 批量兑换成功！');await loadMyNFTs();await loadTotalReward()}catch(e){alert('❌ 批量兑换失败：'+(e.reason||e.message))}}
 
         function renderMarketGrid(){const grid=document.getElementById('marketGrid');if(!grid)return;const all=marketListings.length>0?marketListings:cardData.slice(0,6);grid.innerHTML=all.map((c,i)=>`<div class="market-card" data-rarity="${c.rarity}" onclick="showMarketDetail(${i})"><div class="frame"><img src="${c.img}" alt="${c.name}"></div><div class="info"><p style="color:white;font-weight:600;">${c.name}</p><p class="usdt-value"><i class="fab fa-usdt"></i> ${c.askPrice?`售价 ${c.askPrice} USDT`:'价值 0.00 USDT'}</p><button class="btn-sm">${c.askPrice?'购 买':'查看详情'}</button></div></div>`).join('')}
         function showMarketDetail(i){const c=(marketListings.length>0?marketListings:cardData.slice(0,6))[i];document.getElementById('modalImg').src=c.img||'';document.getElementById('modalIdTop').textContent=c.id||`#${1000+i}`;document.getElementById('modalName').textContent=c.name;document.getElementById('modalYear').textContent=c.year;document.getElementById('modalEstimate').textContent=c.estimate;document.getElementById('modalRarity').textContent=c.rarity;document.getElementById('modalRarity').style.color=c.color;document.getElementById('modalSource').textContent=c.source;document.getElementById('modalPrice').textContent=c.askPrice?`${c.askPrice} USDT`:(c.price||'2.5 BNB');document.getElementById('modalExchange').textContent='';document.getElementById('modalCooldown').textContent='';document.getElementById('modalBtns').innerHTML=c.askPrice?`<button class="btn-cancel" onclick="closeModal()">取 消</button><button class="btn-confirm" onclick="buyNFT(${i})">购 买</button>`:`<button class="btn-close-full" onclick="closeModal()">关 闭</button>`;document.getElementById('cardModal').classList.add('open')}
         function buyNFT(i){if(!currentAccount){alert('请先连接钱包');return}const c=marketListings[i];document.getElementById('cardModal').classList.remove('open');alert(`🛒 购买成功！${c.name} | 支付 ${c.askPrice} USDT`);myNFTs.push({...c,tokenId:Date.now(),canTrade:true,faceValue:c.faceValue||0.005});marketListings.splice(i,1);renderFavoriteGrid();updateAssetStats();renderMarketGrid()}
         function filterMarket(rarity,btn){document.querySelectorAll('#page-market .filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('#marketGrid .market-card').forEach(c=>{c.style.display=(rarity==='all'||c.getAttribute('data-rarity')===rarity||(rarity==='selling'&&marketListings.length>0))?'':'none'})}
 
-        // ==================== 修复：getUserLevelInfo + 累计奖励显示 ====================
         async function loadTeamInfo(){
             if(!currentAccount||!contract){
-                document.getElementById('totalReward').textContent='0.00 USDT';
+                document.getElementById('myLevel').textContent='-';
+                document.getElementById('directRefs').textContent='0';
+                document.getElementById('teamSize').textContent='0';
+                document.getElementById('teamVolume').textContent='0.00';
                 return;
             }
             try{
@@ -570,11 +589,6 @@
                 document.getElementById('directRefs').textContent=info.refCount;
                 document.getElementById('teamSize').textContent=info.refCount;
                 document.getElementById('teamVolume').textContent=parseFloat(ethers.utils.formatEther(info.performance)).toFixed(2);
-                
-                // 修复：从合约获取累计奖励
-                totalRewardFromChain=parseFloat(ethers.utils.formatEther(info.earned));
-                document.getElementById('totalReward').textContent=totalRewardFromChain.toFixed(2)+' USDT';
-                
                 const refs=await contract.getUserReferrals(currentAccount);
                 document.getElementById('totalRefs').textContent=refs.length+' 人';
                 document.getElementById('refRecordList').innerHTML=refs.length>0?refs.map(r=>`<div class="record-item"><span>${r.substring(0,6)}...${r.substring(38)}</span><span class="record-value">直推</span></div>`).join(''):'<div class="record-item"><span style="color:var(--text-secondary)">暂无邀请记录</span></div>'
@@ -584,7 +598,6 @@
                 document.getElementById('directRefs').textContent='0';
                 document.getElementById('teamSize').textContent='0';
                 document.getElementById('teamVolume').textContent='0.00';
-                document.getElementById('totalReward').textContent='0.00 USDT';
             }
         }
 
@@ -598,7 +611,7 @@
             document.getElementById('logoIcon').textContent={nft:'🍀',lottery:'🎲',favorite:'💼',market:'🏪',messages:'👥'}[page]||'🍀';
             if(page==='market')renderMarketGrid();
             if(page==='favorite'){if(currentAccount)loadMyNFTs()}
-            if(page==='messages')loadTeamInfo();
+            if(page==='messages'){loadTeamInfo();loadTotalReward()}
             if(page==='lottery')updateLotteryDisplay();
         }
 
