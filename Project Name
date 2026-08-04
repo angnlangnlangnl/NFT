@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    /* 模拟深色背景 */
+    body {
+        background-color: #0c031a; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    /* --- 1. 外层包裹：负责形状和尖端圆润 --- */
+    .game-btn-wrapper {
+        position: relative;
+        display: inline-block;
+        /* 保留最纯正的两端尖三角主形状 */
+        clip-path: polygon(
+            10% 0, 90% 0, 
+            100% 50%, 
+            90% 100%, 10% 100%, 
+            0% 50%
+        );
+        padding: 2px; /* 这里的2px就是那圈外发光边框 */
+        background: linear-gradient(90deg, #9b6ed6, #fff6c2, #9b6ed6);
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        transition: transform 0.15s ease;
+        cursor: pointer;
+    }
+
+    .game-btn-wrapper:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+    }
+    .game-btn-wrapper:active {
+        transform: scale(0.95);
+    }
+
+    /* --- 2. 按钮实体：内部紫底 --- */
+    .game-btn {
+        display: block;
+        border: none;
+        outline: none;
+        padding: 12px 48px;
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 900;
+        letter-spacing: 2px;
+        text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+        white-space: nowrap;
+        background: linear-gradient(180deg, #8c3bd4 0%, #4e1085 100%);
+        
+        /* 形状裁剪（与外框完美重叠） */
+        clip-path: polygon(
+            10% 0, 90% 0, 
+            100% 50%, 
+            90% 100%, 10% 100%, 
+            0% 50%
+        );
+
+        /* ===== 核心技巧：利用内阴影修圆尖端 ===== */
+        /* 在内部加一个略微缩小的白色半透明内发光，它会像橡皮擦一样吃掉尖端的硬角 */
+        box-shadow: 
+            inset 0 0 0 2px rgba(255, 255, 255, 0.5), /* 极细白边，让尖端被磨圆 */
+            inset 0 6px 10px rgba(255, 255, 255, 0.3), /* 顶部高光 */
+            inset 0 -6px 10px rgba(0, 0, 0, 0.5);      /* 底部立体厚度 */
+    }
+</style>
+</head>
+<body>
+
+    <!-- 按钮实体 -->
+    <div class="game-btn-wrapper">
+        <button class="game-btn">立即解锁管家角色</button>
+    </div>
+
+</body>
+</html>
