@@ -112,7 +112,7 @@
 
 
         /* ============================================
-           购买记录区域 (水平渐变 + 内发光)
+           购买记录区域
            ============================================ */
         :root {
             --color-left-purple: #703cd8;
@@ -149,8 +149,7 @@
         }
 
         /* ============================================
-           统一记录卡片样式（所有记录统一使用此新样式）
-           1px明暗渐变金边框、左侧地址、右侧金额+时间
+           统一记录卡片样式（新边框渐变）
            ============================================ */
         .record-item-special {
             background: linear-gradient(90deg, var(--color-left-purple), var(--color-right-dark-purple));
@@ -167,14 +166,15 @@
             background-clip: padding-box;
         }
         
-        /* 1px 明暗渐变金边框核心实现 */
+        /* 【修改点】1px 优雅横向金色渐变边框 */
         .record-item-special::before {
             content: "";
             position: absolute;
             top: 0; right: 0; bottom: 0; left: 0;
             border-radius: 12px;
             border: 1px solid transparent;
-            background-image: linear-gradient(90deg, #ffd700, #f5b342, #d4af37, #f5b342); 
+            /* 从左到右的金色渐变，如同一条流光细线 */
+            background-image: linear-gradient(90deg, #fce38a, #fdc830, #fce38a); 
             background-origin: border-box;
             background-clip: padding-box, border-box;
             mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
@@ -243,7 +243,6 @@
     </div>
 
     <div class="record-list" id="recordList">
-        <!-- 统一采用新样式：左侧地址，右侧金额+时间 -->
         <div class="record-item-special">
             <div class="record-info">
                 <i class="fas fa-chevron-right"></i>
@@ -307,11 +306,9 @@
 
             const recordList = document.getElementById('recordList');
             
-            /* 新生成的记录沿用新版式：record-item-special */
             const newItem = document.createElement('div');
             newItem.className = 'record-item-special';
             
-            // 生成随机的假钱包地址后缀
             const randomSuffix = Math.random().toString(36).substring(2, 6).toUpperCase();
             
             newItem.innerHTML = `
