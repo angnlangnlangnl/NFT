@@ -103,42 +103,38 @@
         }
 
         /* ============================================
-           金钱树专属样式：背景图 contain（完整且不变形）
+           金钱树专属样式：仅保留图片的自带效果
            ============================================ */
         .card-money-tree {
             background: transparent; 
             border: none; 
-            padding: 20px 20px 20px 20px; /* 调整内边距保护文字 */
+            padding: 0; /* 移除内边距，让图片紧贴 */
             
-            /* 【核心1】设置最小高度，保证图片能完整放下 */
-            min-height: 220px; 
+            /* 移除人为添加的投影 */
+            box-shadow: none !important;
+            
+            /* 【关键】高度由图片原比例决定，确保完整显示 */
+            min-height: 180px; 
         }
         
-        /* 使用伪元素作为整张不透明的背景图 */
+        /* 伪元素作为整张不透明的背景图 */
         .card-money-tree::before {
             content: "";
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
             background-image: url('images/金钱树1.png');
             
-            /* 【核心2】contain 保持比例完全显示，不拉伸 */
+            /* 保持比例完整、居中且不拉伸 */
             background-size: contain; 
-            
-            /* 居中显示 */
             background-position: center;
             background-repeat: no-repeat;
-            border-radius: 16px;         
+            border-radius: 0; /* 取消圆角，让图片自身的边框完整 */
             z-index: 0;
         }
 
-        /* 文字遮罩 */
+        /* 【关键】移除文字遮罩层，让图片完全透明显现 */
         .card-money-tree::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.25); 
-            border-radius: 16px;
-            z-index: 1;
+            display: none; 
         }
 
         /* 提升文字层级 */
@@ -151,6 +147,8 @@
 
         .card-money-tree .product-icon {
             background: transparent !important;
+            /* 隐藏这个占位符，因为背景图已经在全屏铺开了 */
+            display: none; 
         }
 
         /* 文字居中 */
@@ -162,26 +160,30 @@
             align-items: center; 
             text-align: center;  
             gap: 2px;
-            padding: 0;
+            padding: 15px 10px; /* 让文字有点余地 */
+            
+            /* 移除可能存在的背景 */
+            background: transparent;
         }
         
         .card-money-tree .product-name {
             font-size: 19px;
             font-weight: 900;
             color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+            /* 文字阴影更柔和，避免影响图片 */
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8), 0 0 4px rgba(0,0,0,0.6);
             letter-spacing: 1px;
         }
         .card-money-tree .product-detail {
             font-size: 14px;
             line-height: 1.4;
             color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8), 0 0 4px rgba(0,0,0,0.6);
         }
         .card-money-tree .product-detail strong { 
             color: #ffd700;
             font-size: 15px; 
-            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8), 0 0 4px rgba(0,0,0,0.6);
         }
 
         .card-money-tree .product-action {
@@ -191,19 +193,21 @@
             justify-content: center;
             gap: 2px;
             min-width: 80px;
-            padding: 0;
+            padding: 5px 15px 15px 0;
+            
+            background: transparent;
         }
         .card-money-tree .price-label {
             font-size: 12px;
             color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
         }
         .card-money-tree .price-amount {
             font-size: 24px;
             font-weight: 900;
             color: #ffffff;
             margin-bottom: 4px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
         }
         .card-money-tree .price-amount span { font-size: 13px; font-weight: normal; color: #e0d4ff; }
 
@@ -363,8 +367,9 @@
     <!-- 商品主列表 -->
     <div class="product-container" id="productContainer">
         
-        <!-- 卡片 1: 金钱树 (背景图完全显示、不变形) -->
+        <!-- 卡片 1: 金钱树 (完全透明无遮挡，自带边框包裹) -->
         <div class="card card-money-tree">
+            <!-- 隐藏此图标，因为背景已经是完整的图了 -->
             <div class="product-icon"></div>
             <div class="product-info">
                 <div class="product-name">金钱树</div>
