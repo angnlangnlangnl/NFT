@@ -20,20 +20,23 @@
             position: relative;
             width: 100vw;
             height: 100vh;
-            /* 加载指定的背景图片路径 */
+            /* 初始背景图：金库.png */
             background-image: url('images/金库.png'); 
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             display: flex;
-            flex-direction: column; /* 改为垂直排列 */
+            flex-direction: column; /* 垂直排列 */
             justify-content: flex-end; /* 整体靠下对齐 */
             align-items: center;
             padding-bottom: 8%; /* 调整整体离底部的距离 */
+            
+            /* 增加背景图切换的淡入淡出过渡动画，体验更好 */
+            transition: background-image 0.5s ease-in-out;
         }
 
         /* ========================== */
-        /* 2. 原有的 紫色尖角按钮样式 */
+        /* 2. 顶部紫色尖角按钮 (颜色优化版) */
         /* ========================== */
         .game-btn-wrapper {
             position: relative;
@@ -45,17 +48,17 @@
                 0% 50%
             );
             padding: 2px;
-            background: linear-gradient(90deg, #9b6ed6, #fff6c2, #9b6ed6);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+            background: linear-gradient(90deg, #b184f0, #fff9cc, #b184f0);
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), 0 0 40px rgba(180, 100, 255, 0.3);
             transition: transform 0.15s ease, box-shadow 0.15s ease;
             cursor: pointer;
             z-index: 10;
-            margin-bottom: 15px; /* 给下方按钮2留出空隙 */
+            margin-bottom: 15px; 
         }
 
         .game-btn-wrapper:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.9), 0 0 60px rgba(180, 100, 255, 0.5);
         }
         .game-btn-wrapper:active {
             transform: scale(0.95);
@@ -70,9 +73,9 @@
             font-size: 20px;
             font-weight: 900;
             letter-spacing: 2px;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5), 0 2px 4px rgba(0,0,0,0.6);
             white-space: nowrap;
-            background: linear-gradient(180deg, #8c3bd4 0%, #4e1085 100%);
+            background: linear-gradient(135deg, #9535eb 0%, #b44df5 40%, #7321bc 80%, #4a107b 100%);
             
             clip-path: polygon(
                 10% 0, 90% 0, 
@@ -82,17 +85,20 @@
             );
 
             box-shadow: 
-                inset 0 0 0 2px rgba(255, 255, 255, 0.5), 
-                inset 0 6px 10px rgba(255, 255, 255, 0.3), 
+                inset 0 0 0 2px rgba(255, 255, 255, 0.7), 
+                inset 0 8px 12px rgba(255, 255, 255, 0.5), 
                 inset 0 -6px 10px rgba(0, 0, 0, 0.5);
+                
+            /* 鼠标样式改为手型 */
+            cursor: pointer;
         }
 
 
         /* ========================== */
-        /* 3. 新增的【按钮2】图片样式  */
+        /* 3. 下方图片按钮2  */
         /* ========================== */
         .btn2-wrapper {
-            position: relative; /* 改为相对定位，自然排在下方 */
+            position: relative; 
             display: inline-block; 
             cursor: pointer;
             transition: transform 0.15s ease, filter 0.15s ease;
@@ -111,8 +117,8 @@
         /* 按钮图片本身 */
         .btn2-img {
             display: block;
-            max-width: 80vw;    /* 最大宽度不超过屏幕的80% */
-            max-height: 70px;   /* 控制一下图片按钮的高度 */
+            max-width: 80vw;    
+            max-height: 70px;   
             height: auto;
             width: auto;
             object-fit: contain;
@@ -123,32 +129,54 @@
         @media (max-width: 600px) {
             .game-btn { font-size: 16px; padding: 10px 30px; }
             .hero-container { padding-bottom: 15%; }
-            .btn2-img { max-height: 50px; } /* 手机端限制高度 */
+            .btn2-img { max-height: 50px; } 
             .game-btn-wrapper { margin-bottom: 10px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="hero-container">
+    <div class="hero-container" id="mainContainer">
         
         <!-- ================== -->
-        <!-- 原有的：紫色按钮  -->
+        <!-- 紫色按钮 (点击触发换图) -->
         <!-- ================== -->
         <div class="game-btn-wrapper">
-            <button class="game-btn" onclick="alert('正在为您解锁皇家金库管家角色！')">
+            <!-- 添加 onclick 事件 -->
+            <button class="game-btn" onclick="changeBackground()">
                 立即解锁管家角色
             </button>
         </div>
 
         <!-- ================== -->
-        <!-- 新增的：图片按钮 2 -->
+        <!-- 图片按钮 2 -->
         <!-- ================== -->
         <div class="btn2-wrapper" onclick="alert('您点击了按钮2！')">
             <img src="images/按钮2.png" alt="按钮2" class="btn2-img">
         </div>
 
     </div>
+
+    <!-- JavaScript 交互脚本 -->
+    <script>
+        // 定义切换背景图的函数
+        function changeBackground() {
+            // 获取背景容器
+            const container = document.getElementById('mainContainer');
+            
+            // 判断当前背景图路径，进行切换
+            // 注意：图片路径必须是相对于 html 文件的绝对或相对路径
+            if (container.style.backgroundImage.includes('金库.png')) {
+                // 如果当前是金库，则切换为使者2
+                container.style.backgroundImage = "url('images/使者2.png')";
+                // 可选的：切换后弹出提示，表示解锁成功
+                // alert('解锁成功！背景已切换。');
+            } else {
+                // 如果当前不是金库（比如已经是使者2了），则切换回金库
+                container.style.backgroundImage = "url('images/金库.png')";
+            }
+        }
+    </script>
 
 </body>
 </html>
