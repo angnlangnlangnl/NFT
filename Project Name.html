@@ -20,7 +20,6 @@
             position: relative;
             width: 100vw;
             height: 100vh;
-            /* 初始背景图：金库.png */
             background-image: url('images/金库.png'); 
             background-size: cover;
             background-position: center;
@@ -29,10 +28,19 @@
             flex-direction: column; /* 垂直排列 */
             justify-content: flex-end; /* 整体靠下对齐 */
             align-items: center;
-            padding-bottom: 8%; /* 调整整体离底部的距离 */
-            
-            /* 增加背景图切换的淡入淡出过渡动画，体验更好 */
+            padding-bottom: 8%; 
             transition: background-image 0.5s ease-in-out;
+        }
+
+        /* 为了让顶部按钮不受底部按钮和 padding 影响，我们将其绝对定位 */
+        .top-btn-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            pointer-events: none; /* 让点击事件穿透，只触发内部按钮 */
         }
 
         /* ========================== */
@@ -53,15 +61,21 @@
             transition: transform 0.15s ease, box-shadow 0.15s ease;
             cursor: pointer;
             z-index: 10;
-            margin-bottom: 15px; 
+            
+            /* 重点：向下移动的距离将由 JS 动态设置，此处默认为 0 */
+            transform: translateY(0px);
+            
+            /* 保证即使不加载图片也有初始边距 */
+            margin-top: 20px; 
+            pointer-events: auto; /* 恢复按钮本身的点击 */
         }
 
         .game-btn-wrapper:hover {
-            transform: scale(1.05);
+            transform: scale(1.05) translateY(var(--move-distance, 0px)); /* 悬浮时保持移动距离 */
             box-shadow: 0 0 35px rgba(255, 215, 0, 0.9), 0 0 60px rgba(180, 100, 255, 0.5);
         }
         .game-btn-wrapper:active {
-            transform: scale(0.95);
+            transform: scale(0.95) translateY(var(--move-distance, 0px)); /* 点击时保持移动距离 */
         }
 
         .game-btn {
@@ -89,7 +103,6 @@
                 inset 0 8px 12px rgba(255, 255, 255, 0.5), 
                 inset 0 -6px 10px rgba(0, 0, 0, 0.5);
                 
-            /* 鼠标样式改为手型 */
             cursor: pointer;
         }
 
@@ -114,7 +127,6 @@
             transform: scale(0.95);
         }
 
-        /* 按钮图片本身 */
         .btn2-img {
             display: block;
             max-width: 80vw;    
@@ -130,7 +142,6 @@
             .game-btn { font-size: 16px; padding: 10px 30px; }
             .hero-container { padding-bottom: 15%; }
             .btn2-img { max-height: 50px; } 
-            .game-btn-wrapper { margin-bottom: 10px; }
         }
     </style>
 </head>
@@ -139,43 +150,71 @@
     <div class="hero-container" id="mainContainer">
         
         <!-- ================== -->
-        <!-- 紫色按钮 (点击触发换图) -->
+        <!-- 顶部按钮区域容器 -->
         <!-- ================== -->
-        <div class="game-btn-wrapper">
-            <!-- 添加 onclick 事件 -->
-            <button class="game-btn" onclick="changeBackground()">
-                立即解锁管家角色
-            </button>
+        <div class="top-btn-area" id="topBtnArea">
+            <div class="game-btn-wrapper" id="gameBtnWrapper">
+                <button class="game-btn" onclick="changeBackground()">
+                    立即解锁管家角色
+                </button>
+            </div>
         </div>
 
         <!-- ================== -->
-        <!-- 图片按钮 2 -->
+        <!-- 底部图片按钮 2 -->
         <!-- ================== -->
         <div class="btn2-wrapper" onclick="alert('您点击了按钮2！')">
-            <img src="images/按钮2.png" alt="按钮2" class="btn2-img">
+            <img src="images/按钮2.png" alt="按钮2" class="btn2-img" id="btn2Img">
         </div>
 
     </div>
 
-    <!-- JavaScript 交互脚本 -->
+    <!-- JavaScript 交互与动态定位脚本 -->
     <script>
-        // 定义切换背景图的函数
+        // 1. 定义切换背景图的函数
         function changeBackground() {
-            // 获取背景容器
             const container = document.getElementById('mainContainer');
-            
-            // 判断当前背景图路径，进行切换
-            // 注意：图片路径必须是相对于 html 文件的绝对或相对路径
             if (container.style.backgroundImage.includes('金库.png')) {
-                // 如果当前是金库，则切换为使者2
                 container.style.backgroundImage = "url('images/使者2.png')";
-                // 可选的：切换后弹出提示，表示解锁成功
-                // alert('解锁成功！背景已切换。');
             } else {
-                // 如果当前不是金库（比如已经是使者2了），则切换回金库
                 container.style.backgroundImage = "url('images/金库.png')";
             }
         }
+
+        // 2. 动态计算“向下移动一个按钮高度”
+        window.onload = function() {
+            // 获取图片按钮2的元素和顶部按钮的元素
+            const btn2Img = document.getElementById('btn2Img');
+            const gameBtnWrapper = document.getElementById('gameBtnWrapper');
+            
+            if (btn2Img && gameBtnWrapper) {
+                // 获取图片按钮的渲染高度 (px)
+                const btnHeight = btn2Img.offsetHeight;
+                
+                // 如果获取到了有效的数值
+                if (btnHeight > 0) {
+                    // 修改顶部按钮的 translateY 值，向下移动一个按钮高度
+                    // 增加 10px 的额外间距让视觉不那么局促（可选）
+                    gameBtnWrapper.style.transform = `translateY(${btnHeight + 10}px)`;
+                    
+                    // 将移动距离保存为 CSS 变量，以便 hover/active 状态时保持位置
+                    gameBtnWrapper.style.setProperty('--move-distance', `${btnHeight + 10}px`);
+                }
+            }
+        };
+
+        // 如果浏览器窗口大小改变，重新计算高度（适配旋转屏幕）
+        window.addEventListener('resize', function() {
+            const btn2Img = document.getElementById('btn2Img');
+            const gameBtnWrapper = document.getElementById('gameBtnWrapper');
+            if (btn2Img && gameBtnWrapper) {
+                const btnHeight = btn2Img.offsetHeight;
+                if (btnHeight > 0) {
+                    gameBtnWrapper.style.transform = `translateY(${btnHeight + 10}px)`;
+                    gameBtnWrapper.style.setProperty('--move-distance', `${btnHeight + 10}px`);
+                }
+            }
+        });
     </script>
 
 </body>
