@@ -37,7 +37,7 @@
         }
 
         /* ========================================== */
-        /* 【修改点：数据卡片样式】                     */
+        /* 数据卡片样式                                 */
         /* ========================================== */
         .data-card-bg {
             background-image: url('images/数据卡片1.png');
@@ -51,7 +51,6 @@
             align-items: center;
             justify-content: center;
             min-height: 70px;
-            /* 确保内容不会溢出卡片边缘 */
             overflow: hidden; 
             width: 100%;
         }
@@ -158,7 +157,7 @@
             <div class="absolute bottom-2 left-4 text-yellow-300 animate-ping">🌟</div>
         </div>
 
-        <!-- 三个核心数据卡片 (文字颜色修改为淡金，并添加黑底浮雕阴影) -->
+        <!-- 三个核心数据卡片 -->
         <div class="grid grid-cols-3 gap-2 w-full mb-4">
             <div class="data-card-bg">
                 <span class="data-title">今日收益</span>
@@ -168,9 +167,10 @@
                 <span class="data-title">累计金币</span>
                 <span class="data-value">8,920,500</span>
             </div>
+            <!-- 【修改点：已兑换卡片换行分离】 -->
             <div class="data-card-bg">
-                <span class="data-title">已兑换</span>
-                <span class="data-value">USDT 1,286</span>
+                <span class="data-title">已兑换 USDT</span>
+                <span class="data-value">1,286</span>
             </div>
         </div>
 
