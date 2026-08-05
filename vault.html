@@ -100,9 +100,7 @@
         <header class="w-full text-center mb-6 mt-4 relative">
             <h1 class="text-4xl font-extrabold tracking-wider text-glow" style="color: #fdf0d5;">金库管理</h1>
             <p class="text-gray-400 text-sm mt-1 tracking-widest">—— 宝箱每日赚取金币 ——</p>
-            <span class="absolute right-0 top-1/2 -translate-y-1/2 bg-purple-600/30 text-purple-200 text-[10px] px-3 py-1 rounded-full border border-purple-500/50">
-                ✦ 今日收益已刷新
-            </span>
+            <!-- 【修改点1：已移除 ✦ 今日收益已刷新 状态徽章】 -->
         </header>
 
         <div class="w-64 h-56 mb-6 relative flex justify-center items-center mx-auto">
@@ -137,17 +135,18 @@
             <img src="images/领币按钮1.png" alt="一键领取今日金币" class="w-full h-auto object-contain rounded-2xl shadow-[0_0_20px_rgba(219,169,88,0.2)]">
         </button>
 
-        <div class="glass-panel rounded-2xl p-4 w-full mb-6 border border-gray-700/50 shadow-2xl">
-            <div class="flex items-center justify-between">
-                <div>
+        <!-- 【修改点2：缩小内容字号并强制不换行】 -->
+        <div class="glass-panel rounded-2xl p-3 w-full mb-6 border border-gray-700/50 shadow-2xl">
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex-shrink-0">
                     <div class="flex items-center gap-2">
-                        <span class="text-lg font-bold text-gray-200">金币兑换 USDT</span>
+                        <span class="font-bold text-gray-200 text-[15px] whitespace-nowrap">金币兑换 USDT</span>
                     </div>
-                    <p class="text-xs text-gray-400 mt-1">10,000 金币 = 1 USDT</p>
+                    <p class="text-[10px] text-gray-400 mt-0.5 whitespace-nowrap">10,000 金币 = 1 USDT</p>
                 </div>
-                <div class="flex gap-2">
-                    <input type="number" placeholder="输入兑换金额" class="bg-gray-800/80 text-white text-sm rounded-lg px-3 py-2 w-28 outline-none focus:ring-1 focus:ring-purple-500 placeholder-gray-500">
-                    <button class="btn-purple text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg">立即兑换</button>
+                <div class="flex items-center gap-1.5 flex-shrink-0">
+                    <input type="number" placeholder="输入金额" class="bg-gray-800/80 text-white text-[11px] rounded-lg px-2 py-1.5 w-24 outline-none focus:ring-1 focus:ring-purple-500 placeholder-gray-500">
+                    <button class="btn-purple text-white px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-lg whitespace-nowrap">立即兑换</button>
                 </div>
             </div>
         </div>
@@ -170,7 +169,8 @@
                         <div class="flex flex-col">
                             <div class="flex items-center gap-2">
                                 <i class="fa-solid fa-circle-chevron-right text-gray-400 text-sm"></i>
-                                <span class="text-sm font-bold">兑换 100,000金币 → 10 USDT <span class="text-green-300 text-xs font-normal">已到账</span></span>
+                                <!-- 【修改点3：移除了后面的已到账文字】 -->
+                                <span class="text-sm font-bold">兑换 100,000金币 → 10 USDT</span>
                             </div>
                             <div class="text-[9px] text-gray-400 mt-0.5 flex gap-4">
                                 <span>03.2.365</span>
@@ -187,7 +187,7 @@
                         <div class="flex flex-col">
                             <div class="flex items-center gap-2">
                                 <i class="fa-solid fa-circle-chevron-right text-gray-400 text-sm"></i>
-                                <span class="text-sm font-bold">兑换 50,000金币 → 5 USDT <span class="text-yellow-300 text-xs font-normal">处理中</span></span>
+                                <span class="text-sm font-bold">兑换 50,000金币 → 5 USDT</span>
                             </div>
                             <div class="text-[9px] text-gray-400 mt-0.5 flex gap-4">
                                 <span>03.2.365</span>
@@ -204,7 +204,7 @@
                         <div class="flex flex-col">
                             <div class="flex items-center gap-2">
                                 <i class="fa-solid fa-circle-chevron-right text-gray-400 text-sm"></i>
-                                <span class="text-sm font-bold">兑换 200,000金币 → 20 USDT <span class="text-green-300 text-xs font-normal">已到账</span></span>
+                                <span class="text-sm font-bold">兑换 200,000金币 → 20 USDT</span>
                             </div>
                             <div class="text-[9px] text-gray-400 mt-0.5 flex gap-4">
                                 <span>03.2.365</span>
@@ -242,20 +242,11 @@
             const claimBtnImage = document.getElementById('claimBtnImage');
             if(claimBtnImage) {
                 claimBtnImage.addEventListener('click', function() {
-                    // 获取按钮内部的原图元素
-                    const imgElement = this.querySelector('img');
-                    const originalSrc = imgElement.src;
-
-                    // 模拟改变图片状态 (可选：如果你有"领取中"或"已领取"的图片，可以替换src)
-                    // 这里为了演示，我们模拟一个加载提示
                     this.style.pointerEvents = 'none';
                     this.style.opacity = '0.8';
                     
                     setTimeout(() => {
-                        // 模拟成功
                         alert('一键领取成功！(模拟交互)');
-                        
-                        // 恢复按钮状态
                         this.style.pointerEvents = 'auto';
                         this.style.opacity = '1';
                     }, 1000);
