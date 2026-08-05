@@ -124,40 +124,19 @@
         }
 
         /* ========================================== */
-        /* 【新增】金色闪烁线框动画                   */
+        /* 【修改】静态细淡黄色渐变边框             */
         /* ========================================== */
-        .golden-glow-wrapper {
+        .static-gold-wrapper {
             position: relative;
-            padding: 2px; /* 留出边框间隙 */
+            /* 边框极细，对应缩小三分之二 */
+            padding: 1px; 
             border-radius: 14px;
-            /* 细线线框外轮廓 */
-            border: 1px solid rgba(255, 215, 0, 0.15);
-            background: transparent;
-        }
-
-        .golden-glow-inner {
-            position: absolute;
-            top: -2px; left: -2px; right: -2px; bottom: -2px;
-            border-radius: 14px;
-            z-index: -1;
-            /* 创建带闪光的渐变金边 */
-            background: linear-gradient(
-                135deg,
-                rgba(255, 215, 0, 0.6) 0%,
-                rgba(255, 215, 0, 0) 30%,
-                rgba(255, 215, 0, 0.8) 50%,
-                rgba(255, 215, 0, 0) 70%,
-                rgba(255, 215, 0, 0.6) 100%
-            );
-            background-size: 300% 300%;
-            animation: shineBorder 3s ease-in-out infinite;
-        }
-
-        /* 动画定义：光带循环游走 */
-        @keyframes shineBorder {
-            0% { background-position: 0% 0%; }
-            50% { background-position: 100% 100%; }
-            100% { background-position: 0% 0%; }
+            background-clip: padding-box;
+            /* 静态淡黄色渐变边框 */
+            border: 1px solid transparent;
+            background-image: linear-gradient(#181428, #181428), linear-gradient(to right, #fdf0d5, #fef9c3, #fdf0d5);
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
         }
     </style>
 </head>
@@ -204,13 +183,11 @@
 
         <!-- ==================== 【修改部分：金币兑换卡片】 ==================== -->
         
-        <!-- 外层包裹：实现细线框与发光金框 -->
-        <div class="golden-glow-wrapper w-full mb-6">
-            <!-- 内层发光动画层 -->
-            <div class="golden-glow-inner"></div>
+        <!-- 使用静态细淡黄色渐变边框包装 -->
+        <div class="static-gold-wrapper w-full mb-6">
             
             <!-- 实际卡片内容 -->
-            <div class="glass-panel-purple p-3 w-full border-none" style="background: linear-gradient(135deg, rgba(60, 30, 110, 0.7), rgba(30, 15, 70, 0.8)); backdrop-filter: blur(10px); border-radius: 12px;">
+            <div class="glass-panel-purple p-3 w-full border-none" style="background: linear-gradient(135deg, rgba(60, 30, 110, 0.7), rgba(30, 15, 70, 0.8)); backdrop-filter: blur(10px); border-radius: 13px;">
                 <div class="flex items-center justify-between gap-2">
                     <div class="flex-shrink-0">
                         <div class="flex items-center gap-2">
