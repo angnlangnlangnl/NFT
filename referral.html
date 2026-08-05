@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 修改页面标题为“邀请” -->
+    <title>邀请</title>
+    <style>
+        /* 重置样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0b0b2a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* 模拟手机屏幕容器 */
+        .mobile-container {
+            width: 100%;
+            max-width: 420px;
+            background: linear-gradient(180deg, #140d3d 0%, #1f1660 50%, #261e6b 100%);
+            position: relative;
+            padding-bottom: 30px;
+            overflow: hidden;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* 顶部导航 */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 20px 10px;
+            font-size: 24px;
+        }
+        .header .back, .header .close {
+            cursor: pointer;
+            opacity: 0.8;
+        }
+
+        /* 标题区 */
+        .hero-title {
+            text-align: center;
+            margin-top: 10px;
+            margin-bottom: 30px;
+        }
+        .hero-title h1 {
+            font-size: 38px;
+            font-weight: bold;
+            background: linear-gradient(to bottom, #fff6b3, #eccf59);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(244, 188, 31, 0.2);
+            letter-spacing: 2px;
+        }
+        .hero-title p {
+            color: #dcc586;
+            font-size: 14px;
+            margin-top: -5px;
+            letter-spacing: 1px;
+        }
+
+        /* 顶部三个数据卡片 */
+        .top-stats {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 0 15px;
+            margin-bottom: 20px;
+        }
+        .stat-card-small {
+            background: rgba(50, 30, 100, 0.6);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 8px;
+            padding: 12px 5px;
+            text-align: center;
+            flex: 1;
+            box-shadow: 0 0 15px rgba(100, 50, 255, 0.3) inset;
+        }
+        .stat-card-small .label {
+            font-size: 12px;
+            color: #dcc586;
+            margin-bottom: 5px;
+        }
+        .stat-card-small .value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        /* 中部两个大卡片 */
+        .mid-stats {
+            display: flex;
+            gap: 12px;
+            padding: 0 15px;
+            margin-bottom: 25px;
+        }
+        .stat-card-large {
+            flex: 1;
+            background: linear-gradient(135deg, #3a2365, #281e5a);
+            border: 1px solid #fcd777;
+            border-radius: 12px;
+            padding: 12px 5px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 0 15px rgba(235, 180, 60, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 120px;
+        }
+        .stat-card-large .title {
+            color: #edd282;
+            font-size: 14px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .stat-card-large .big-value {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+        .stat-card-large .badge {
+            background: linear-gradient(to right, #ffe9a0, #f6d678);
+            color: #433b5a;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            margin: 2px 0;
+        }
+        .stat-card-large .sub-text {
+            font-size: 12px;
+            color: #b5a1d3;
+            margin-top: 2px;
+        }
+
+        /* 规则区 */
+        .rules-section {
+            padding: 0 15px;
+            margin-bottom: 20px;
+        }
+        .rules-box {
+            border: 1px solid #7958a6;
+            border-radius: 10px;
+            padding: 15px;
+            background: rgba(30, 15, 60, 0.4);
+            text-align: center;
+            position: relative;
+        }
+        .rules-box .title {
+            color: #ecd17d;
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+        }
+        .rules-box .title::before, .rules-box .title::after {
+            content: ">>>";
+            font-size: 10px;
+            color: #cba766;
+        }
+        .rules-box .title::after { content: "<<<"; }
+        .rules-box p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #f0e6ff;
+        }
+
+        /* 二维码扫码区 */
+        .qr-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+        .qr-box {
+            border: 1px solid #7958a6;
+            border-radius: 10px;
+            padding: 20px;
+            background: rgba(30, 15, 60, 0.4);
+            text-align: center;
+            position: relative;
+            width: 85%;
+        }
+        .qr-code-placeholder {
+            width: 120px;
+            height: 120px;
+            background: #fff;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: #000;
+            font-size: 12px;
+        }
+        .qr-box h2 {
+            color: #fff;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+        .qr-box p {
+            font-size: 11px;
+            color: #d1bceb;
+        }
+
+        /* 邀请记录 */
+        .record-section {
+            padding: 0 15px;
+            margin-bottom: 80px; /* 给底部按钮留空间 */
+        }
+        .record-title {
+            color: #ecd17d;
+            font-size: 15px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+        }
+        .record-title::before, .record-title::after {
+            content: ">>>";
+            font-size: 10px;
+            color: #cba766;
+        }
+        .record-title::after { content: "<<<"; }
+        
+        .record-item {
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .record-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .record-info .addr {
+            font-size: 14px;
+            color: #fff;
+        }
+        .record-info .addr span {
+            color: #a492c9;
+            font-family: monospace;
+        }
+        .record-info .time {
+            font-size: 10px;
+            color: #755f9a;
+            margin-top: 3px;
+        }
+        .record-status {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .record-status .role {
+            font-size: 12px;
+            color: #f0e6ff;
+            margin-bottom: 3px;
+        }
+        .record-status .badge-green {
+            background: linear-gradient(to right, #6dc9a3, #50a47b);
+            padding: 2px 8px;
+            border-radius: 15px;
+            font-size: 10px;
+            color: #fff;
+        }
+        .record-status .badge-grey {
+            background: #4c4c68;
+            padding: 2px 8px;
+            border-radius: 15px;
+            font-size: 10px;
+            color: #cfcfcf;
+        }
+
+        /* 底部悬浮按钮 */
+        .bottom-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 30px);
+            max-width: 390px;
+            padding: 15px 0;
+            background: linear-gradient(to right, #683beb, #a25bfb);
+            border: 1px solid #fce38a;
+            border-radius: 30px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+            box-shadow: 0 5px 20px rgba(80, 50, 200, 0.5);
+            cursor: pointer;
+            z-index: 10;
+        }
+        .bottom-btn:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        /* 水印 */
+        .watermark {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            font-size: 10px;
+            color: rgba(255,255,255,0.1);
+            z-index: 1;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="mobile-container">
+        <!-- 头部 -->
+        <div class="header">
+            <div class="back">❮</div>
+            <div></div> <!-- 占位撑开 -->
+            <div class="close">✕</div>
+        </div>
+
+        <!-- 标题 -->
+        <div class="hero-title">
+            <h1>推广有奖</h1>
+            <p>—— 邀请好友得金币奖励 ——</p>
+        </div>
+
+        <!-- 顶部三个数据 -->
+        <div class="top-stats">
+            <div class="stat-card-small">
+                <div class="label">总人数</div>
+                <div class="value">1,286</div>
+            </div>
+            <div class="stat-card-small">
+                <div class="label">邀请人数</div>
+                <div class="value">368</div>
+            </div>
+            <div class="stat-card-small">
+                <div class="label">直推人数</div>
+                <div class="value">126</div>
+            </div>
+        </div>
+
+        <!-- 中部两个大卡片 -->
+        <div class="mid-stats">
+            <div class="stat-card-large">
+                <div class="title">等级收益</div>
+                <div class="big-value" style="color: #e2c77c;">利率 18%</div>
+                <div class="badge">今日奖励</div>
+                <div class="big-value" style="font-size: 18px;">28,600金币</div>
+            </div>
+            <div class="stat-card-large">
+                <div class="title">直推业绩</div>
+                <div class="big-value" style="font-size: 20px;">8,920,500金币</div>
+                <div class="badge" style="font-size: 14px; background: none; color: #fff; border: 1px solid #fcd777;">团队活跃</div>
+                <div class="sub-text">96人</div>
+            </div>
+        </div>
+
+        <!-- 规则区 -->
+        <div class="rules-section">
+            <div class="rules-box">
+                <div class="title">邀请奖励规则</div>
+                <p>每邀请1人注册，立即获得18,800金币；<br>直推好友收益额外获得18%奖励。</p>
+            </div>
+        </div>
+
+        <!-- 二维码区 -->
+        <div class="qr-section">
+            <div class="qr-box">
+                <div class="qr-code-placeholder">
+                    [ 二维码占位图 ]
+                </div>
+                <h2>扫码邀请好友</h2>
+                <p>分享邀请链接，锁定团队收益</p>
+            </div>
+        </div>
+
+        <!-- 邀请记录 -->
+        <div class="record-section">
+            <div class="record-title">邀请记录</div>
+            
+            <div class="record-item">
+                <div class="record-info">
+                    <div class="addr">地址 <span>0x8866-3a1d</span></div>
+                    <div class="time">00:2:55 &nbsp; 2026-06-02 12:30</div>
+                </div>
+                <div class="record-status">
+                    <div class="role">财富使者</div>
+                    <div class="badge-green">金牌侯名</div>
+                </div>
+            </div>
+
+            <div class="record-item">
+                <div class="record-info">
+                    <div class="addr">地址 <span>0x7755-200c</span></div>
+                    <div class="time">00:2:33 &nbsp; 2026-06-08 12:15</div>
+                </div>
+                <div class="record-status">
+                    <div class="role">金库管家</div>
+                    <div class="badge-green">金牌侯名</div>
+                </div>
+            </div>
+
+            <div class="record-item">
+                <div class="record-info">
+                    <div class="addr">地址 <span>0x9944-100e</span></div>
+                    <div class="time">00:3:11 &nbsp; 2026-06-07 13:45</div>
+                </div>
+                <div class="record-status">
+                    <div class="role">幸运掌柜</div>
+                    <div class="badge-grey">1842</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部按钮 -->
+        <div class="bottom-btn">立即邀请好友</div>
+        
+        <div class="watermark">豆包AI生成</div>
+    </div>
+
+</body>
+</html>
