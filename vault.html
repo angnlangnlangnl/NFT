@@ -115,13 +115,15 @@
         }
 
         /* ==================== */
-        /* 修复宝箱图片兼容性   */
+        /* 透明占位宝箱（移除原有背景图） */
         /* ==================== */
         .chest-box-bg {
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="25" y="40" width="50" height="35" rx="5" fill="%23fbbf24"/><rect x="35" y="20" width="30" height="30" rx="5" fill="%23fbbf24"/><path d="M35 20 L50 50 L65 20" fill="%23d97706"/></svg>');
+            /* 背景图已清空，纯透明占位 */
+            background-image: none;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
+            /* 可选：如果想完全隐藏它，可以设置 opacity: 0; 但为了保留原布局占位，先不写 opacity */
         }
     </style>
 </head>
@@ -141,7 +143,7 @@
 
         <div class="w-64 h-52 mb-4 relative flex justify-center items-center mx-auto">
             <div class="absolute w-56 h-56 rounded-full bg-purple-500/20 blur-3xl"></div>
-            <!-- 【修复点：使用标准 CSS 类，彻底根除 ") ]"> 残留问题】 -->
+            <!-- 【修改点：宝箱图片已设置为透明占位，背景移除】 -->
             <div class="w-48 h-40 chest-box-bg"></div>
             <div class="absolute -top-2 right-4 text-yellow-300 animate-pulse">✨</div>
             <div class="absolute bottom-2 left-4 text-yellow-300 animate-ping">🌟</div>
