@@ -117,7 +117,6 @@
         :root {
             --color-left-purple: #703cd8;
             --color-right-dark-purple: #30166b;
-            --gold-border: #e2c36b;
             --gold-text: #fff8d9;
             --light-text: #c8b8f0;
         }
@@ -149,7 +148,7 @@
         }
 
         /* ============================================
-           统一记录卡片样式（新边框渐变）
+           统一记录卡片样式（参考新边框风格）
            ============================================ */
         .record-item-special {
             background: linear-gradient(90deg, var(--color-left-purple), var(--color-right-dark-purple));
@@ -161,30 +160,15 @@
             box-shadow: inset 0 0 18px rgba(210, 170, 255, 0.12);
             
             border-radius: 12px;
-            border: none;
-            position: relative;
-            background-clip: padding-box;
-        }
-        
-        /* 【修改点】1px 优雅横向金色渐变边框 */
-        .record-item-special::before {
-            content: "";
-            position: absolute;
-            top: 0; right: 0; bottom: 0; left: 0;
-            border-radius: 12px;
-            border: 1px solid transparent;
-            /* 从左到右的金色渐变，如同一条流光细线 */
-            background-image: linear-gradient(90deg, #fce38a, #fdc830, #fce38a); 
-            background-origin: border-box;
-            background-clip: padding-box, border-box;
-            mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
+            /* 【修改】参考财富使者卡片代码：使用 1px 半透明白色细边框 */
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
-        .record-item-special:hover { filter: brightness(1.1); }
+        .record-item-special:hover { 
+            filter: brightness(1.1);
+            /* 悬停时边框微微变亮 */
+            border-color: rgba(255, 255, 255, 0.3);
+        }
 
         /* --- 内部文字排版 --- */
         .record-info { display: flex; align-items: center; gap: 12px; }
