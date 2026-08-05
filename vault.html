@@ -14,21 +14,15 @@
     <style>
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            
-            /* ========================================== */
-            /* 页面整体背景图                              */
-            /* ========================================== */
             background-image: url('images/资产管理背景.png');
             background-size: cover;
             background-position: center top;
             background-repeat: no-repeat;
             background-attachment: fixed;
-            
             color: white;
             padding-bottom: 60px;
         }
 
-        /* 通用磨砂玻璃面板 (仅用于外部容器包裹) */
         .glass-panel {
             background: rgba(18, 22, 60, 0.3);
             backdrop-filter: blur(10px);
@@ -36,9 +30,6 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* ========================================== */
-        /* 数据卡片样式                                 */
-        /* ========================================== */
         .data-card-bg {
             background-image: url('images/数据卡片1.png');
             background-size: 100% 100%;
@@ -56,32 +47,23 @@
         }
 
         .data-title {
-            color: #fff7d6; /* 柔和淡金黄色 */
+            color: #fff7d6;
             font-size: 10px;
             font-weight: 600;
-            /* 黑底浮雕阴影效果 */
-            text-shadow: 
-                0px 1px 2px rgba(0,0,0,0.9),
-                0px 2px 4px rgba(0,0,0,0.7),
-                0px 0px 2px rgba(0,0,0,1);
+            text-shadow: 0px 1px 2px rgba(0,0,0,0.9), 0px 2px 4px rgba(0,0,0,0.7), 0px 0px 2px rgba(0,0,0,1);
         }
         
         .data-value {
-            color: #fff7d6; /* 柔和淡金黄色 */
+            color: #fff7d6;
             font-size: 14px;
             font-weight: 800;
             margin-top: 4px;
-            /* 黑底浮雕阴影效果 */
-            text-shadow: 
-                0px 1px 2px rgba(0,0,0,0.9),
-                0px 2px 4px rgba(0,0,0,0.7),
-                0px 0px 2px rgba(0,0,0,1);
+            text-shadow: 0px 1px 2px rgba(0,0,0,0.9), 0px 2px 4px rgba(0,0,0,0.7), 0px 0px 2px rgba(0,0,0,1);
             white-space: nowrap; 
             width: 100%;
             text-align: center;
         }
 
-        /* 金色边框 */
         .gold-border {
             border: 2px solid transparent;
             background-image: linear-gradient(rgba(18, 22, 60, 0.3), rgba(18, 22, 60, 0.3)), linear-gradient(to right, #fce38a, #f38181, #fce38a);
@@ -95,19 +77,14 @@
             font-weight: 700;
             box-shadow: 0 4px 15px rgba(201, 155, 59, 0.4);
         }
-        .btn-gold:active {
-            transform: scale(0.95);
-        }
+        .btn-gold:active { transform: scale(0.95); }
         .btn-purple {
             background: linear-gradient(90deg, #5b3fbf, #8a5cf5);
             border: 1px solid #a785ff;
             box-shadow: 0 4px 15px rgba(90, 60, 190, 0.4);
         }
-        .text-glow {
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
-        }
+        .text-glow { text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
 
-        /* 提币记录卡片 */
         .record-card {
             background: linear-gradient(90deg, #703cd8, #30166b);
             box-shadow: inset 0 0 18px rgba(210, 170, 255, 0.12);
@@ -137,6 +114,15 @@
             font-weight: bold;
         }
 
+        /* ==================== */
+        /* 修复宝箱图片兼容性   */
+        /* ==================== */
+        .chest-box-bg {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="25" y="40" width="50" height="35" rx="5" fill="%23fbbf24"/><rect x="35" y="20" width="30" height="30" rx="5" fill="%23fbbf24"/><path d="M35 20 L50 50 L65 20" fill="%23d97706"/></svg>');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
     </style>
 </head>
 <body class="flex justify-center">
@@ -144,7 +130,6 @@
 
         <!-- ==================== 第一部分：金库管理 ==================== -->
         
-        <!-- 顶部标题区 -->
         <header class="w-full text-center mb-4 mt-4 relative">
             <h1 class="text-4xl font-extrabold tracking-wider text-glow" style="color: #fdf0d5;">金库管理</h1>
             <p class="text-gray-400 text-sm mt-1 tracking-widest flex items-center justify-center gap-3">
@@ -156,13 +141,12 @@
 
         <div class="w-64 h-52 mb-4 relative flex justify-center items-center mx-auto">
             <div class="absolute w-56 h-56 rounded-full bg-purple-500/20 blur-3xl"></div>
-            <!-- 【修改点：已完全移除末尾残留的 ">】 -->
-            <div class="w-48 h-40 bg-[url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="25" y="40" width="50" height="35" rx="5" fill="%23fbbf24"/><rect x="35" y="20" width="30" height="30" rx="5" fill="%23fbbf24"/><path d="M35 20 L50 50 L65 20" fill="%23d97706"/></svg>"></div>
+            <!-- 【修复点：使用标准 CSS 类，彻底根除 ") ]"> 残留问题】 -->
+            <div class="w-48 h-40 chest-box-bg"></div>
             <div class="absolute -top-2 right-4 text-yellow-300 animate-pulse">✨</div>
             <div class="absolute bottom-2 left-4 text-yellow-300 animate-ping">🌟</div>
         </div>
 
-        <!-- 三个核心数据卡片 -->
         <div class="grid grid-cols-3 gap-2 w-full mb-4">
             <div class="data-card-bg">
                 <span class="data-title">今日收益</span>
@@ -180,12 +164,10 @@
 
         <!-- ==================== 第二部分：金库管理 (操作区) ==================== -->
         
-        <!-- 一键领取图片按钮 -->
         <button id="claimBtnImage" class="w-full mb-4 relative block outline-none focus:outline-none active:scale-[0.98] transition-transform duration-100">
             <img src="images/领币按钮1.png" alt="一键领取今日金币" class="w-full h-auto object-contain rounded-2xl">
         </button>
 
-        <!-- 兑换卡片 (无边框) -->
         <div class="glass-panel-purple p-3 w-full mb-4 border-none" style="background: linear-gradient(135deg, rgba(60, 30, 110, 0.7), rgba(30, 15, 70, 0.8)); backdrop-filter: blur(10px); border-radius: 12px;">
             <div class="flex items-center justify-between gap-2">
                 <div class="flex-shrink-0">
@@ -201,8 +183,6 @@
             </div>
         </div>
 
-        <!-- ==================== 第三部分：提币记录 ==================== -->
-        
         <div class="w-full">
             <div class="flex items-center justify-center gap-4 mb-3">
                 <div class="h-px bg-gradient-to-l from-purple-500/30 to-transparent flex-1"></div>
@@ -210,10 +190,7 @@
                 <div class="h-px bg-gradient-to-r from-purple-500/30 to-transparent flex-1"></div>
             </div>
 
-            <!-- 记录列表 -->
             <div class="flex flex-col gap-3 mb-8">
-                
-                <!-- 记录 1：已到账 -->
                 <div class="record-card">
                     <div class="flex items-center justify-between">
                         <div class="flex flex-col">
@@ -232,7 +209,6 @@
                     </div>
                 </div>
 
-                <!-- 记录 2：打包中 -->
                 <div class="record-card">
                     <div class="flex items-center justify-between">
                         <div class="flex flex-col">
@@ -251,7 +227,6 @@
                     </div>
                 </div>
 
-                <!-- 记录 3：已到账 -->
                 <div class="record-card">
                     <div class="flex items-center justify-between">
                         <div class="flex flex-col">
@@ -269,13 +244,10 @@
                         <span class="status-badge-success">已到账</span>
                     </div>
                 </div>
-
             </div>
         </div>
-
     </div>
 
-    <!-- 交互脚本 -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const exchangeBtn = document.querySelector('.btn-purple');
@@ -293,7 +265,6 @@
                 });
             }
 
-            // 针对图片按钮的交互逻辑
             const claimBtnImage = document.getElementById('claimBtnImage');
             if(claimBtnImage) {
                 claimBtnImage.addEventListener('click', function() {
