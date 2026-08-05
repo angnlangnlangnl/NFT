@@ -147,17 +147,15 @@
         <!-- 顶部标题区 -->
         <header class="w-full text-center mb-4 mt-4 relative">
             <h1 class="text-4xl font-extrabold tracking-wider text-glow" style="color: #fdf0d5;">金库管理</h1>
-            <!-- 【修改1：左右各一个渐变线段】 -->
             <p class="text-gray-400 text-sm mt-1 tracking-widest flex items-center justify-center gap-3">
                 <span class="w-6 h-px bg-gradient-to-l from-purple-400/50 to-transparent"></span>
-                宝箱每日赚取金币
+                天天取金币·兑换秒到账
                 <span class="w-6 h-px bg-gradient-to-r from-purple-400/50 to-transparent"></span>
             </p>
         </header>
 
         <div class="w-64 h-52 mb-4 relative flex justify-center items-center mx-auto">
             <div class="absolute w-56 h-56 rounded-full bg-purple-500/20 blur-3xl"></div>
-            <!-- 【修改3：移除了末尾的 "> 符号】 -->
             <div class="w-48 h-40 bg-[url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="25" y="40" width="50" height="35" rx="5" fill="%23fbbf24"/><rect x="35" y="20" width="30" height="30" rx="5" fill="%23fbbf24"/><path d="M35 20 L50 50 L65 20" fill="%23d97706"/></svg>"></div>
             <div class="absolute -top-2 right-4 text-yellow-300 animate-pulse">✨</div>
             <div class="absolute bottom-2 left-4 text-yellow-300 animate-ping">🌟</div>
@@ -181,7 +179,6 @@
 
         <!-- ==================== 第二部分：金库管理 (操作区) ==================== -->
         
-        <!-- 【修改2：领币按钮外围背景完全透明】 -->
         <!-- 一键领取图片按钮 -->
         <button id="claimBtnImage" class="w-full mb-4 relative block outline-none focus:outline-none active:scale-[0.98] transition-transform duration-100">
             <img src="images/领币按钮1.png" alt="一键领取今日金币" class="w-full h-auto object-contain rounded-2xl">
@@ -234,7 +231,7 @@
                     </div>
                 </div>
 
-                <!-- 记录 2：处理中 -->
+                <!-- 记录 2：打包中 -->
                 <div class="record-card">
                     <div class="flex items-center justify-between">
                         <div class="flex flex-col">
@@ -249,7 +246,7 @@
                                 </div>
                             </div>
                         </div>
-                        <span class="status-badge-pending">处理中</span>
+                        <span class="status-badge-pending">打包中</span>
                     </div>
                 </div>
 
