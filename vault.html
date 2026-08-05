@@ -68,7 +68,7 @@
         
         .data-value {
             color: #fff7d6; /* 柔和淡金黄色 */
-            font-size: 14px; /* 稍微缩小防止溢出 */
+            font-size: 14px;
             font-weight: 800;
             margin-top: 4px;
             /* 黑底浮雕阴影效果 */
@@ -147,11 +147,17 @@
         <!-- 顶部标题区 -->
         <header class="w-full text-center mb-4 mt-4 relative">
             <h1 class="text-4xl font-extrabold tracking-wider text-glow" style="color: #fdf0d5;">金库管理</h1>
-            <p class="text-gray-400 text-sm mt-1 tracking-widest">—— 宝箱每日赚取金币 ——</p>
+            <!-- 【修改1：左右各一个渐变线段】 -->
+            <p class="text-gray-400 text-sm mt-1 tracking-widest flex items-center justify-center gap-3">
+                <span class="w-6 h-px bg-gradient-to-l from-purple-400/50 to-transparent"></span>
+                宝箱每日赚取金币
+                <span class="w-6 h-px bg-gradient-to-r from-purple-400/50 to-transparent"></span>
+            </p>
         </header>
 
         <div class="w-64 h-52 mb-4 relative flex justify-center items-center mx-auto">
             <div class="absolute w-56 h-56 rounded-full bg-purple-500/20 blur-3xl"></div>
+            <!-- 【修改3：移除了末尾的 "> 符号】 -->
             <div class="w-48 h-40 bg-[url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="25" y="40" width="50" height="35" rx="5" fill="%23fbbf24"/><rect x="35" y="20" width="30" height="30" rx="5" fill="%23fbbf24"/><path d="M35 20 L50 50 L65 20" fill="%23d97706"/></svg>"></div>
             <div class="absolute -top-2 right-4 text-yellow-300 animate-pulse">✨</div>
             <div class="absolute bottom-2 left-4 text-yellow-300 animate-ping">🌟</div>
@@ -167,7 +173,6 @@
                 <span class="data-title">累计金币</span>
                 <span class="data-value">8,920,500</span>
             </div>
-            <!-- 【修改点：已兑换卡片换行分离】 -->
             <div class="data-card-bg">
                 <span class="data-title">已兑换 USDT</span>
                 <span class="data-value">1,286</span>
@@ -176,9 +181,10 @@
 
         <!-- ==================== 第二部分：金库管理 (操作区) ==================== -->
         
+        <!-- 【修改2：领币按钮外围背景完全透明】 -->
         <!-- 一键领取图片按钮 -->
         <button id="claimBtnImage" class="w-full mb-4 relative block outline-none focus:outline-none active:scale-[0.98] transition-transform duration-100">
-            <img src="images/领币按钮1.png" alt="一键领取今日金币" class="w-full h-auto object-contain rounded-2xl shadow-[0_0_20px_rgba(219,169,88,0.2)]">
+            <img src="images/领币按钮1.png" alt="一键领取今日金币" class="w-full h-auto object-contain rounded-2xl">
         </button>
 
         <!-- 兑换卡片 (无边框) -->
