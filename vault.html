@@ -28,7 +28,7 @@
             padding-bottom: 60px;
         }
 
-        /* 通用磨砂玻璃面板 (保留，用在数据卡片上) */
+        /* 通用磨砂玻璃面板 (仅用于外部容器包裹) */
         .glass-panel {
             background: rgba(18, 22, 60, 0.3);
             backdrop-filter: blur(10px);
@@ -36,22 +36,45 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* 【修改点：新增柔和的深紫色渐变卡片，用于金币兑换卡片】 */
-        .glass-panel-purple {
-            /* 渐变柔和的深紫色，带有半透明背景保持磨砂质感 */
-            background: linear-gradient(135deg, rgba(60, 30, 110, 0.7), rgba(30, 15, 70, 0.8));
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(160, 120, 255, 0.2);
-            border-radius: 12px; /* 根据UI风格保持原有圆角 */
+        /* 数据卡片样式，引用本地图片 */
+        .data-card-bg {
+            background-image: url('images/数据卡片1.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            border-radius: 12px;
+            padding: 8px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 70px;
         }
 
+        .data-title {
+            color: #fef9c3;
+            font-size: 10px;
+            font-weight: bold;
+            text-shadow: 0 2px 8px rgba(255, 255, 150, 0.4);
+        }
+        
+        .data-value {
+            color: #fef9c3;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 4px;
+            text-shadow: 0 2px 8px rgba(255, 255, 150, 0.4);
+            white-space: nowrap; 
+        }
+
+        /* 金色边框 */
         .gold-border {
             border: 2px solid transparent;
             background-image: linear-gradient(rgba(18, 22, 60, 0.3), rgba(18, 22, 60, 0.3)), linear-gradient(to right, #fce38a, #f38181, #fce38a);
             background-origin: border-box;
             background-clip: padding-box, border-box;
         }
+        
         .btn-gold {
             background: linear-gradient(90deg, #c99b3b, #f8e088, #c99b3b);
             color: #1a1e3d;
@@ -70,9 +93,7 @@
             text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
         }
 
-        /* ========================================== */
-        /* 提币记录卡片的新配色                        */
-        /* ========================================== */
+        /* 提币记录卡片 */
         .record-card {
             background: linear-gradient(90deg, #703cd8, #30166b);
             box-shadow: inset 0 0 18px rgba(210, 170, 255, 0.12);
@@ -101,6 +122,43 @@
             font-size: 10px;
             font-weight: bold;
         }
+
+        /* ========================================== */
+        /* 【新增】金色闪烁线框动画                   */
+        /* ========================================== */
+        .golden-glow-wrapper {
+            position: relative;
+            padding: 2px; /* 留出边框间隙 */
+            border-radius: 14px;
+            /* 细线线框外轮廓 */
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            background: transparent;
+        }
+
+        .golden-glow-inner {
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            border-radius: 14px;
+            z-index: -1;
+            /* 创建带闪光的渐变金边 */
+            background: linear-gradient(
+                135deg,
+                rgba(255, 215, 0, 0.6) 0%,
+                rgba(255, 215, 0, 0) 30%,
+                rgba(255, 215, 0, 0.8) 50%,
+                rgba(255, 215, 0, 0) 70%,
+                rgba(255, 215, 0, 0.6) 100%
+            );
+            background-size: 300% 300%;
+            animation: shineBorder 3s ease-in-out infinite;
+        }
+
+        /* 动画定义：光带循环游走 */
+        @keyframes shineBorder {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
     </style>
 </head>
 <body class="flex justify-center">
@@ -121,21 +179,19 @@
             <div class="absolute bottom-2 left-4 text-yellow-300 animate-ping">🌟</div>
         </div>
 
+        <!-- 三个核心数据卡片 -->
         <div class="grid grid-cols-3 gap-2 w-full mb-6">
-            <div class="glass-panel gold-border rounded-xl p-2 flex flex-col items-center text-center">
-                <span class="text-[10px] text-gray-300 font-bold">今日宝箱收益</span>
-                <span class="text-lg font-bold text-yellow-300 mt-1">128,600</span>
-                <div class="text-[9px] text-gray-400 mt-1 bg-black/30 px-2 py-0.5 rounded">日宝箱收益<br>128,600</div>
+            <div class="data-card-bg">
+                <span class="data-title">今日收益</span>
+                <span class="data-value">128,600</span>
             </div>
-            <div class="glass-panel gold-border rounded-xl p-2 flex flex-col items-center text-center">
-                <span class="text-[10px] text-gray-300 font-bold">累计金币</span>
-                <span class="text-lg font-bold text-white mt-1">8,920,500</span>
-                <div class="text-[9px] text-gray-400 mt-1 bg-black/30 px-2 py-0.5 rounded">累计金币<br>8,920,500</div>
+            <div class="data-card-bg">
+                <span class="data-title">累计金币</span>
+                <span class="data-value">8,920,500</span>
             </div>
-            <div class="glass-panel gold-border rounded-xl p-2 flex flex-col items-center text-center border-purple-300">
-                <span class="text-[10px] text-gray-300 font-bold">可兑换</span>
-                <span class="text-lg font-bold text-yellow-300 mt-1">USDT 1,286</span>
-                <div class="text-[9px] text-gray-400 mt-1 bg-black/30 px-2 py-0.5 rounded">USDT<br>1,286</div>
+            <div class="data-card-bg">
+                <span class="data-title">已兑换</span>
+                <span class="data-value">USDT 1,286</span>
             </div>
         </div>
 
@@ -146,18 +202,26 @@
             <img src="images/领币按钮1.png" alt="一键领取今日金币" class="w-full h-auto object-contain rounded-2xl shadow-[0_0_20px_rgba(219,169,88,0.2)]">
         </button>
 
-        <!-- 兑换卡片 (修改为使用新定义的 glass-panel-purple 背景) -->
-        <div class="glass-panel-purple p-3 w-full mb-6 border border-gray-700/50 shadow-2xl">
-            <div class="flex items-center justify-between gap-2">
-                <div class="flex-shrink-0">
-                    <div class="flex items-center gap-2">
-                        <span class="font-bold text-gray-200 text-[15px] whitespace-nowrap">金币兑换 USDT</span>
+        <!-- ==================== 【修改部分：金币兑换卡片】 ==================== -->
+        
+        <!-- 外层包裹：实现细线框与发光金框 -->
+        <div class="golden-glow-wrapper w-full mb-6">
+            <!-- 内层发光动画层 -->
+            <div class="golden-glow-inner"></div>
+            
+            <!-- 实际卡片内容 -->
+            <div class="glass-panel-purple p-3 w-full border-none" style="background: linear-gradient(135deg, rgba(60, 30, 110, 0.7), rgba(30, 15, 70, 0.8)); backdrop-filter: blur(10px); border-radius: 12px;">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center gap-2">
+                            <span class="font-bold text-gray-200 text-[15px] whitespace-nowrap">金币兑换 USDT</span>
+                        </div>
+                        <p class="text-[10px] text-gray-400 mt-0.5 whitespace-nowrap">10,000 金币 = 1 USDT</p>
                     </div>
-                    <p class="text-[10px] text-gray-400 mt-0.5 whitespace-nowrap">10,000 金币 = 1 USDT</p>
-                </div>
-                <div class="flex-1 flex justify-center items-center gap-1.5">
-                    <input type="number" placeholder="输入金额" class="bg-gray-800/80 text-white text-[11px] rounded-lg px-2 py-1.5 w-24 outline-none focus:ring-1 focus:ring-purple-500 placeholder-gray-500 text-center">
-                    <button class="btn-purple text-white px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-lg whitespace-nowrap">立即兑换</button>
+                    <div class="flex-1 flex justify-center items-center gap-1.5">
+                        <input type="number" placeholder="输入金额" class="bg-gray-800/80 text-white text-[11px] rounded-lg px-2 py-1.5 w-24 outline-none focus:ring-1 focus:ring-purple-500 placeholder-gray-500 text-center">
+                        <button class="btn-purple text-white px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-lg whitespace-nowrap">立即兑换</button>
+                    </div>
                 </div>
             </div>
         </div>
