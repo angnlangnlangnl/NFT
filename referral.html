@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- 修改页面标题为“邀请” -->
     <title>邀请</title>
     <style>
         /* 重置样式 */
@@ -15,7 +14,8 @@
         }
 
         body {
-            background-color: #0b0b2a;
+            /* 页面底色，防止图片加载慢时出现刺眼的白底 */
+            background-color: #0b0b2a; 
             display: flex;
             justify-content: center;
             align-items: center;
@@ -26,7 +26,12 @@
         .mobile-container {
             width: 100%;
             max-width: 420px;
-            background: linear-gradient(180deg, #140d3d 0%, #1f1660 50%, #261e6b 100%);
+            /* 修改为引用外部背景图片 */
+            background-image: url('images/邀请背景.png');
+            background-repeat: no-repeat;
+            background-position: center top;
+            background-size: cover; /* 确保背景图覆盖整个屏幕 */
+            
             position: relative;
             padding-bottom: 30px;
             overflow: hidden;
@@ -51,7 +56,7 @@
         .hero-title {
             text-align: center;
             margin-top: 10px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
         .hero-title h1 {
             font-size: 38px;
@@ -69,7 +74,46 @@
             letter-spacing: 1px;
         }
 
-        /* 顶部三个数据卡片 */
+        /* 二维码扫码区 */
+        .qr-section {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+        .qr-box {
+            border: 1px solid #7958a6;
+            border-radius: 10px;
+            padding: 15px 20px;
+            background: rgba(30, 15, 60, 0.4);
+            text-align: center;
+            position: relative;
+            width: 75%;
+        }
+        .qr-code-placeholder {
+            width: 100px;
+            height: 100px;
+            background: #fff;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            color: #000;
+            font-size: 12px;
+        }
+        .qr-box h2 {
+            color: #fff;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 3px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+        .qr-box p {
+            font-size: 11px;
+            color: #d1bceb;
+        }
+
+        /* 顶部三个数据卡片 (已修改名称) */
         .top-stats {
             display: flex;
             justify-content: center;
@@ -97,54 +141,9 @@
             color: #fff;
         }
 
-        /* 中部两个大卡片 */
-        .mid-stats {
-            display: flex;
-            gap: 12px;
-            padding: 0 15px;
-            margin-bottom: 25px;
-        }
-        .stat-card-large {
-            flex: 1;
-            background: linear-gradient(135deg, #3a2365, #281e5a);
-            border: 1px solid #fcd777;
-            border-radius: 12px;
-            padding: 12px 5px;
-            text-align: center;
-            position: relative;
-            box-shadow: 0 0 15px rgba(235, 180, 60, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 120px;
-        }
-        .stat-card-large .title {
-            color: #edd282;
-            font-size: 14px;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .stat-card-large .big-value {
-            font-size: 22px;
-            font-weight: bold;
-            color: #fff;
-            margin-bottom: 5px;
-        }
-        .stat-card-large .badge {
-            background: linear-gradient(to right, #ffe9a0, #f6d678);
-            color: #433b5a;
-            padding: 3px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: bold;
-            display: inline-block;
-            margin: 2px 0;
-        }
-        .stat-card-large .sub-text {
-            font-size: 12px;
-            color: #b5a1d3;
-            margin-top: 2px;
+        /* 移除中间两张卡片后的空白间距 */
+        .spacer {
+            height: 20px;
         }
 
         /* 规则区 */
@@ -182,49 +181,10 @@
             color: #f0e6ff;
         }
 
-        /* 二维码扫码区 */
-        .qr-section {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-        .qr-box {
-            border: 1px solid #7958a6;
-            border-radius: 10px;
-            padding: 20px;
-            background: rgba(30, 15, 60, 0.4);
-            text-align: center;
-            position: relative;
-            width: 85%;
-        }
-        .qr-code-placeholder {
-            width: 120px;
-            height: 120px;
-            background: #fff;
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 8px;
-            color: #000;
-            font-size: 12px;
-        }
-        .qr-box h2 {
-            color: #fff;
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 5px;
-            text-shadow: 0 0 10px rgba(255,255,255,0.3);
-        }
-        .qr-box p {
-            font-size: 11px;
-            color: #d1bceb;
-        }
-
         /* 邀请记录 */
         .record-section {
             padding: 0 15px;
-            margin-bottom: 80px; /* 给底部按钮留空间 */
+            margin-bottom: 80px;
         }
         .record-title {
             color: #ecd17d;
@@ -261,9 +221,6 @@
         .record-info .addr {
             font-size: 14px;
             color: #fff;
-        }
-        .record-info .addr span {
-            color: #a492c9;
             font-family: monospace;
         }
         .record-info .time {
@@ -280,13 +237,6 @@
             font-size: 12px;
             color: #f0e6ff;
             margin-bottom: 3px;
-        }
-        .record-status .badge-green {
-            background: linear-gradient(to right, #6dc9a3, #50a47b);
-            padding: 2px 8px;
-            border-radius: 15px;
-            font-size: 10px;
-            color: #fff;
         }
         .record-status .badge-grey {
             background: #4c4c68;
@@ -338,7 +288,7 @@
         <!-- 头部 -->
         <div class="header">
             <div class="back">❮</div>
-            <div></div> <!-- 占位撑开 -->
+            <div></div>
             <div class="close">✕</div>
         </div>
 
@@ -348,47 +298,7 @@
             <p>—— 邀请好友得金币奖励 ——</p>
         </div>
 
-        <!-- 顶部三个数据 -->
-        <div class="top-stats">
-            <div class="stat-card-small">
-                <div class="label">总人数</div>
-                <div class="value">1,286</div>
-            </div>
-            <div class="stat-card-small">
-                <div class="label">邀请人数</div>
-                <div class="value">368</div>
-            </div>
-            <div class="stat-card-small">
-                <div class="label">直推人数</div>
-                <div class="value">126</div>
-            </div>
-        </div>
-
-        <!-- 中部两个大卡片 -->
-        <div class="mid-stats">
-            <div class="stat-card-large">
-                <div class="title">等级收益</div>
-                <div class="big-value" style="color: #e2c77c;">利率 18%</div>
-                <div class="badge">今日奖励</div>
-                <div class="big-value" style="font-size: 18px;">28,600金币</div>
-            </div>
-            <div class="stat-card-large">
-                <div class="title">直推业绩</div>
-                <div class="big-value" style="font-size: 20px;">8,920,500金币</div>
-                <div class="badge" style="font-size: 14px; background: none; color: #fff; border: 1px solid #fcd777;">团队活跃</div>
-                <div class="sub-text">96人</div>
-            </div>
-        </div>
-
-        <!-- 规则区 -->
-        <div class="rules-section">
-            <div class="rules-box">
-                <div class="title">邀请奖励规则</div>
-                <p>每邀请1人注册，立即获得18,800金币；<br>直推好友收益额外获得18%奖励。</p>
-            </div>
-        </div>
-
-        <!-- 二维码区 -->
+        <!-- 二维码扫码区 -->
         <div class="qr-section">
             <div class="qr-box">
                 <div class="qr-code-placeholder">
@@ -399,35 +309,62 @@
             </div>
         </div>
 
+        <!-- 顶部三个数据 -->
+        <div class="top-stats">
+            <div class="stat-card-small">
+                <div class="label">总奖励</div>
+                <div class="value">1,286</div>
+            </div>
+            <div class="stat-card-small">
+                <div class="label">直推业绩</div>
+                <div class="value">368</div>
+            </div>
+            <div class="stat-card-small">
+                <div class="label">直推人数</div>
+                <div class="value">126</div>
+            </div>
+        </div>
+
+        <!-- 间距占位（原卡片移除后的空白处） -->
+        <div class="spacer"></div>
+
+        <!-- 规则区 -->
+        <div class="rules-section">
+            <div class="rules-box">
+                <div class="title">邀请奖励规则</div>
+                <p>每邀请1人注册，立即获得18,800金币；<br>直推好友收益额外获得18%奖励。</p>
+            </div>
+        </div>
+
         <!-- 邀请记录 -->
         <div class="record-section">
             <div class="record-title">邀请记录</div>
             
             <div class="record-item">
                 <div class="record-info">
-                    <div class="addr">地址 <span>0x8866-3a1d</span></div>
+                    <div class="addr">0x8866-3a1d</div>
                     <div class="time">00:2:55 &nbsp; 2026-06-02 12:30</div>
                 </div>
                 <div class="record-status">
                     <div class="role">财富使者</div>
-                    <div class="badge-green">金牌侯名</div>
+                    <div class="badge-grey">金牌侯名</div>
                 </div>
             </div>
 
             <div class="record-item">
                 <div class="record-info">
-                    <div class="addr">地址 <span>0x7755-200c</span></div>
+                    <div class="addr">0x7755-200c</div>
                     <div class="time">00:2:33 &nbsp; 2026-06-08 12:15</div>
                 </div>
                 <div class="record-status">
                     <div class="role">金库管家</div>
-                    <div class="badge-green">金牌侯名</div>
+                    <div class="badge-grey">金牌侯名</div>
                 </div>
             </div>
 
             <div class="record-item">
                 <div class="record-info">
-                    <div class="addr">地址 <span>0x9944-100e</span></div>
+                    <div class="addr">0x9944-100e</div>
                     <div class="time">00:3:11 &nbsp; 2026-06-07 13:45</div>
                 </div>
                 <div class="record-status">
