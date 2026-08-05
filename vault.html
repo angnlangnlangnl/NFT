@@ -115,15 +115,13 @@
         }
 
         /* ==================== */
-        /* 透明占位宝箱（移除原有背景图） */
+        /* 透明占位宝箱 */
         /* ==================== */
         .chest-box-bg {
-            /* 背景图已清空，纯透明占位 */
             background-image: none;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            /* 可选：如果想完全隐藏它，可以设置 opacity: 0; 但为了保留原布局占位，先不写 opacity */
         }
     </style>
 </head>
@@ -143,7 +141,6 @@
 
         <div class="w-64 h-52 mb-4 relative flex justify-center items-center mx-auto">
             <div class="absolute w-56 h-56 rounded-full bg-purple-500/20 blur-3xl"></div>
-            <!-- 【修改点：宝箱图片已设置为透明占位，背景移除】 -->
             <div class="w-48 h-40 chest-box-bg"></div>
             <div class="absolute -top-2 right-4 text-yellow-300 animate-pulse">✨</div>
             <div class="absolute bottom-2 left-4 text-yellow-300 animate-ping">🌟</div>
@@ -179,7 +176,8 @@
                     <p class="text-[10px] text-gray-400 mt-0.5 whitespace-nowrap">10,000 金币 = 1 USDT</p>
                 </div>
                 <div class="flex-1 flex justify-center items-center gap-1.5">
-                    <input type="number" placeholder="输入金额" class="bg-gray-800/80 text-white text-[11px] rounded-lg px-2 py-1.5 w-24 outline-none focus:ring-1 focus:ring-purple-500 placeholder-gray-500 text-center">
+                    <!-- 【修改点：占位符文字修改为 输入USDT】 -->
+                    <input type="number" placeholder="输入USDT" class="bg-gray-800/80 text-white text-[11px] rounded-lg px-2 py-1.5 w-24 outline-none focus:ring-1 focus:ring-purple-500 placeholder-gray-500 text-center">
                     <button class="btn-purple text-white px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-lg whitespace-nowrap">立即兑换</button>
                 </div>
             </div>
