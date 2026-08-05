@@ -36,7 +36,9 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* 数据卡片样式，引用本地图片 */
+        /* ========================================== */
+        /* 【修改点：数据卡片样式】                     */
+        /* ========================================== */
         .data-card-bg {
             background-image: url('images/数据卡片1.png');
             background-size: 100% 100%;
@@ -49,22 +51,35 @@
             align-items: center;
             justify-content: center;
             min-height: 70px;
+            /* 确保内容不会溢出卡片边缘 */
+            overflow: hidden; 
+            width: 100%;
         }
 
         .data-title {
-            color: #fef9c3;
+            color: #fff7d6; /* 柔和淡金黄色 */
             font-size: 10px;
-            font-weight: bold;
-            text-shadow: 0 2px 8px rgba(255, 255, 150, 0.4);
+            font-weight: 600;
+            /* 黑底浮雕阴影效果 */
+            text-shadow: 
+                0px 1px 2px rgba(0,0,0,0.9),
+                0px 2px 4px rgba(0,0,0,0.7),
+                0px 0px 2px rgba(0,0,0,1);
         }
         
         .data-value {
-            color: #fef9c3;
-            font-size: 18px;
-            font-weight: bold;
+            color: #fff7d6; /* 柔和淡金黄色 */
+            font-size: 14px; /* 稍微缩小防止溢出 */
+            font-weight: 800;
             margin-top: 4px;
-            text-shadow: 0 2px 8px rgba(255, 255, 150, 0.4);
+            /* 黑底浮雕阴影效果 */
+            text-shadow: 
+                0px 1px 2px rgba(0,0,0,0.9),
+                0px 2px 4px rgba(0,0,0,0.7),
+                0px 0px 2px rgba(0,0,0,1);
             white-space: nowrap; 
+            width: 100%;
+            text-align: center;
         }
 
         /* 金色边框 */
@@ -123,21 +138,6 @@
             font-weight: bold;
         }
 
-        /* ========================================== */
-        /* 【修改】静态细淡黄色渐变边框             */
-        /* ========================================== */
-        .static-gold-wrapper {
-            position: relative;
-            /* 边框极细，对应缩小三分之二 */
-            padding: 1px; 
-            border-radius: 14px;
-            background-clip: padding-box;
-            /* 静态淡黄色渐变边框 */
-            border: 1px solid transparent;
-            background-image: linear-gradient(#181428, #181428), linear-gradient(to right, #fdf0d5, #fef9c3, #fdf0d5);
-            background-origin: border-box;
-            background-clip: padding-box, border-box;
-        }
     </style>
 </head>
 <body class="flex justify-center">
@@ -146,20 +146,20 @@
         <!-- ==================== 第一部分：金库管理 ==================== -->
         
         <!-- 顶部标题区 -->
-        <header class="w-full text-center mb-6 mt-4 relative">
+        <header class="w-full text-center mb-4 mt-4 relative">
             <h1 class="text-4xl font-extrabold tracking-wider text-glow" style="color: #fdf0d5;">金库管理</h1>
             <p class="text-gray-400 text-sm mt-1 tracking-widest">—— 宝箱每日赚取金币 ——</p>
         </header>
 
-        <div class="w-64 h-56 mb-6 relative flex justify-center items-center mx-auto">
+        <div class="w-64 h-52 mb-4 relative flex justify-center items-center mx-auto">
             <div class="absolute w-56 h-56 rounded-full bg-purple-500/20 blur-3xl"></div>
-            <div class="w-48 h-40 bg-[url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="25" y="40" width="50" height="35" rx="5" fill="%23fbbf24"/><rect x="35" y="20" width="30" height="30" rx="5" fill="%23fbbf24"/><path d="M35 20 L50 50 L65 20" fill="%23d97706"/></svg>')] bg-contain bg-no-repeat bg-center"></div>
+            <div class="w-48 h-40 bg-[url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect x="25" y="40" width="50" height="35" rx="5" fill="%23fbbf24"/><rect x="35" y="20" width="30" height="30" rx="5" fill="%23fbbf24"/><path d="M35 20 L50 50 L65 20" fill="%23d97706"/></svg>"></div>
             <div class="absolute -top-2 right-4 text-yellow-300 animate-pulse">✨</div>
             <div class="absolute bottom-2 left-4 text-yellow-300 animate-ping">🌟</div>
         </div>
 
-        <!-- 三个核心数据卡片 -->
-        <div class="grid grid-cols-3 gap-2 w-full mb-6">
+        <!-- 三个核心数据卡片 (文字颜色修改为淡金，并添加黑底浮雕阴影) -->
+        <div class="grid grid-cols-3 gap-2 w-full mb-4">
             <div class="data-card-bg">
                 <span class="data-title">今日收益</span>
                 <span class="data-value">128,600</span>
@@ -181,24 +181,18 @@
             <img src="images/领币按钮1.png" alt="一键领取今日金币" class="w-full h-auto object-contain rounded-2xl shadow-[0_0_20px_rgba(219,169,88,0.2)]">
         </button>
 
-        <!-- ==================== 【修改部分：金币兑换卡片】 ==================== -->
-        
-        <!-- 使用静态细淡黄色渐变边框包装 -->
-        <div class="static-gold-wrapper w-full mb-6">
-            
-            <!-- 实际卡片内容 -->
-            <div class="glass-panel-purple p-3 w-full border-none" style="background: linear-gradient(135deg, rgba(60, 30, 110, 0.7), rgba(30, 15, 70, 0.8)); backdrop-filter: blur(10px); border-radius: 13px;">
-                <div class="flex items-center justify-between gap-2">
-                    <div class="flex-shrink-0">
-                        <div class="flex items-center gap-2">
-                            <span class="font-bold text-gray-200 text-[15px] whitespace-nowrap">金币兑换 USDT</span>
-                        </div>
-                        <p class="text-[10px] text-gray-400 mt-0.5 whitespace-nowrap">10,000 金币 = 1 USDT</p>
+        <!-- 兑换卡片 (无边框) -->
+        <div class="glass-panel-purple p-3 w-full mb-4 border-none" style="background: linear-gradient(135deg, rgba(60, 30, 110, 0.7), rgba(30, 15, 70, 0.8)); backdrop-filter: blur(10px); border-radius: 12px;">
+            <div class="flex items-center justify-between gap-2">
+                <div class="flex-shrink-0">
+                    <div class="flex items-center gap-2">
+                        <span class="font-bold text-gray-200 text-[15px] whitespace-nowrap">金币兑换 USDT</span>
                     </div>
-                    <div class="flex-1 flex justify-center items-center gap-1.5">
-                        <input type="number" placeholder="输入金额" class="bg-gray-800/80 text-white text-[11px] rounded-lg px-2 py-1.5 w-24 outline-none focus:ring-1 focus:ring-purple-500 placeholder-gray-500 text-center">
-                        <button class="btn-purple text-white px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-lg whitespace-nowrap">立即兑换</button>
-                    </div>
+                    <p class="text-[10px] text-gray-400 mt-0.5 whitespace-nowrap">10,000 金币 = 1 USDT</p>
+                </div>
+                <div class="flex-1 flex justify-center items-center gap-1.5">
+                    <input type="number" placeholder="输入金额" class="bg-gray-800/80 text-white text-[11px] rounded-lg px-2 py-1.5 w-24 outline-none focus:ring-1 focus:ring-purple-500 placeholder-gray-500 text-center">
+                    <button class="btn-purple text-white px-3 py-1.5 rounded-lg text-[11px] font-bold shadow-lg whitespace-nowrap">立即兑换</button>
                 </div>
             </div>
         </div>
@@ -206,14 +200,14 @@
         <!-- ==================== 第三部分：提币记录 ==================== -->
         
         <div class="w-full">
-            <div class="flex items-center justify-center gap-4 mb-4">
+            <div class="flex items-center justify-center gap-4 mb-3">
                 <div class="h-px bg-gradient-to-l from-purple-500/30 to-transparent flex-1"></div>
                 <h2 class="text-white font-bold tracking-widest text-sm">提币记录</h2>
                 <div class="h-px bg-gradient-to-r from-purple-500/30 to-transparent flex-1"></div>
             </div>
 
             <!-- 记录列表 -->
-            <div class="flex flex-col gap-3 mb-10">
+            <div class="flex flex-col gap-3 mb-8">
                 
                 <!-- 记录 1：已到账 -->
                 <div class="record-card">
