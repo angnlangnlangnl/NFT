@@ -14,29 +14,32 @@
         }
 
         body {
-            /* 页面底色，防止图片加载慢时出现刺眼的白底 */
-            background-color: #0b0b2a; 
+            /* 背景图设置在 body 上，实现全局固定 */
+            background-image: url('images/邀请背景.png');
+            background-repeat: no-repeat;
+            background-position: center top;
+            background-size: cover;
+            background-attachment: fixed; /* 关键：背景图固定不随页面滚动 */
+            background-color: #0b0b2a; /* 兜底颜色 */
+            
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* 改为顶部对齐，方便长页面滑动体验 */
             min-height: 100vh;
+            padding-top: 20px; /* 顶部留点空隙 */
         }
 
         /* 模拟手机屏幕容器 */
         .mobile-container {
             width: 100%;
             max-width: 420px;
-            /* 修改为引用外部背景图片 */
-            background-image: url('images/邀请背景.png');
-            background-repeat: no-repeat;
-            background-position: center top;
-            background-size: cover; /* 确保背景图覆盖整个屏幕 */
+            background: transparent; /* 背景设为透明，露出底部的 body 背景 */
             
             position: relative;
-            padding-bottom: 30px;
-            overflow: hidden;
+            padding-bottom: 90px; /* 给底部按钮留出更多空间，避免遮挡内容 */
+            overflow-x: hidden; /* 隐藏水平滚动条 */
             color: #fff;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            margin: 0 15px; /* 左右留边距 */
         }
 
         /* 顶部导航 */
