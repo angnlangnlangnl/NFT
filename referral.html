@@ -43,40 +43,53 @@
             margin: 0 15px; /* 左右留边距 */
         }
 
-        /* 顶部导航 */
+        /* ========== 修改点：邀请页顶部导航栏 ========== */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 20px 10px;
-            font-size: 24px;
+            max-width: 500px;
+            margin: 0 auto 15px;
+            padding: 0 5px;
         }
-        .header .back, .header .close {
-            cursor: pointer;
-            opacity: 0.8;
+        .header i { 
+            font-size: 24px; 
+            color: #e0d4ff; /* 参考产品页的淡紫色图标颜色 */
+            cursor: pointer; 
+            transition: 0.3s; 
         }
-
-        /* 标题区 */
-        .hero-title {
-            text-align: center;
-            margin-top: 10px;
-            margin-bottom: 25px;
-        }
-        .hero-title h1 {
-            font-size: 38px;
-            font-weight: bold;
-            background: linear-gradient(to bottom, #fff6b3, #eccf59);
+        .header i:hover { color: #fff; }
+        .header h1 {
+            font-size: 32px;
+            font-weight: 900;
+            background: linear-gradient(180deg, #ffeeba 0%, #ffd700 50%, #e6b800 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 10px rgba(244, 188, 31, 0.2);
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            letter-spacing: 4px;
+        }
+
+        /* ========== 修改点：副标题参考产品页样式 ========== */
+        .hero-title {
+            text-align: center;
+            font-size: 13px; 
+            color: #c8b6ff; /* 参考颜色 */
+            margin-bottom: 25px;
             letter-spacing: 2px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
         }
-        .hero-title p {
-            color: #dcc586;
-            font-size: 14px;
-            margin-top: -5px;
-            letter-spacing: 1px;
+        .hero-title::before, .hero-title::after {
+            content: "";
+            display: inline-block;
+            width: 30px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #c8b6ff);
         }
+        .hero-title::after { background: linear-gradient(270deg, transparent, #c8b6ff); }
+        /* ============================================ */
 
         /* 二维码扫码区 */
         .qr-section {
@@ -244,7 +257,7 @@
             color: #fff;
         }
 
-        /* ==================== 下方新增：固定导航栏样式 ==================== */
+        /* ==================== 固定导航栏样式 ==================== */
         .nav-container {
             position: fixed;
             bottom: 0;
@@ -264,6 +277,10 @@
             box-shadow: none;
             
             z-index: 100; /* 确保浮在最上层 */
+            pointer-events: none;
+        }
+        .nav-container .nav-item {
+            pointer-events: auto;
         }
 
         .nav-item {
@@ -342,7 +359,6 @@
             .nav-item .label { font-size: 11px; }
             .nav-container { gap: 8px; padding: 10px 5px 15px 5px; }
         }
-        /* ==================== 导航栏样式结束 ==================== */
 
         /* 水印 */
         .watermark {
@@ -359,17 +375,17 @@
 <body>
 
     <div class="mobile-container">
-        <!-- 头部 -->
-        <div class="header">
-            <div class="back">❮</div>
-            <div></div>
-            <div class="close">✕</div>
-        </div>
-
-        <!-- 标题 -->
-        <div class="hero-title">
+        
+        <!-- ========== 修改后的顶部导航 ========== -->
+        <header class="header">
+            <i class="fas fa-chevron-left"></i>
             <h1>推广有奖</h1>
-            <p>—— 邀请好友得金币奖励 ——</p>
+            <i class="fas fa-times"></i>
+        </header>
+
+        <!-- ========== 修改后的副标题装饰线 ========== -->
+        <div class="hero-title">
+            <span>邀请好友得金币奖励</span>
         </div>
 
         <!-- 二维码扫码区 -->
@@ -449,7 +465,6 @@
     </div>
 
     <!-- ==================== 独立在容器外的固定底部导航栏 ==================== -->
-    <!-- 【修改处】：为每个按钮添加了 onclick 跳转事件 -->
     <div class="nav-container">
         <div class="nav-item" onclick="window.location.href='https://angnlangnlangnl.github.io/NFT/Project%20Name.html?utm_source=tokenpocket'">
             <div class="icon-wrap">
@@ -474,7 +489,6 @@
             <div class="label">产品</div>
         </div>
 
-        <!-- 抽奖未提供链接，暂时留空 -->
         <div class="nav-item center" onclick="javascript:void(0)">
             <div class="icon-wrap">
                 <svg viewBox="0 0 24 24">
