@@ -207,15 +207,17 @@
         }
         .record-title::after { content: "<<<"; }
         
+        /* 记录卡片使用参考按钮的渐变和边框颜色 */
         .record-item {
-            background: rgba(255,255,255,0.05);
+            background: linear-gradient(to right, #683beb, #a25bfb);
+            border: 1px solid #fce38a;
             border-radius: 8px;
             padding: 12px;
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 5px 15px rgba(80, 50, 200, 0.3); /* 添加轻微发光 */
         }
         .record-info {
             display: flex;
@@ -228,7 +230,7 @@
         }
         .record-info .time {
             font-size: 10px;
-            color: #755f9a;
+            color: #d1bceb; /* 时间颜色稍微调亮一点以便在深色渐变上阅读 */
             margin-top: 3px;
         }
         .record-status {
@@ -238,16 +240,9 @@
         }
         .record-status .role {
             font-size: 12px;
-            color: #f0e6ff;
-            margin-bottom: 3px;
+            color: #fff; /* 角色名改为纯白，更清晰 */
         }
-        .record-status .badge-grey {
-            background: #4c4c68;
-            padding: 2px 8px;
-            border-radius: 15px;
-            font-size: 10px;
-            color: #cfcfcf;
-        }
+        /* 移除了 .badge-grey 样式类 */
 
         /* 底部悬浮按钮 */
         .bottom-btn {
@@ -339,7 +334,7 @@
             </div>
         </div>
 
-        <!-- 邀请记录 -->
+        <!-- 邀请记录 (已移除金牌侯名徽章) -->
         <div class="record-section">
             <div class="record-title">邀请记录</div>
             
@@ -350,7 +345,6 @@
                 </div>
                 <div class="record-status">
                     <div class="role">财富使者</div>
-                    <div class="badge-grey">金牌侯名</div>
                 </div>
             </div>
 
@@ -361,7 +355,6 @@
                 </div>
                 <div class="record-status">
                     <div class="role">金库管家</div>
-                    <div class="badge-grey">金牌侯名</div>
                 </div>
             </div>
 
@@ -372,7 +365,6 @@
                 </div>
                 <div class="record-status">
                     <div class="role">幸运掌柜</div>
-                    <div class="badge-grey">1842</div>
                 </div>
             </div>
         </div>
