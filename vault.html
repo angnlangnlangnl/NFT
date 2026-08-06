@@ -20,7 +20,7 @@
             background-repeat: no-repeat;
             background-attachment: fixed;
             color: white;
-            padding-bottom: 60px;
+            padding-bottom: 120px; /* 增加底部边距给导航栏留出空间 */
         }
 
         .glass-panel {
@@ -113,7 +113,6 @@
             font-size: 10px;
             font-weight: bold;
         }
-        /* 【新增：领币记录的徽章风格（淡蓝色）】 */
         .status-badge-claimed {
             background: rgba(96, 165, 250, 0.15);
             color: #93c5fd;
@@ -124,15 +123,113 @@
             font-weight: bold;
         }
 
-        /* ==================== */
-        /* 透明占位宝箱 */
-        /* ==================== */
         .chest-box-bg {
             background-image: none;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
         }
+
+        /* ==================== 统一底部透明导航栏样式 ==================== */
+        .nav-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 110px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 10px 20px 10px; 
+            background: transparent;
+            backdrop-filter: none;
+            -webkit-backdrop-filter: none;
+            box-shadow: none;
+            z-index: 999; 
+            pointer-events: none; /* 防止透明层挡住下层的点击 */
+        }
+        .nav-container .nav-item {
+            pointer-events: auto; /* 恢复导航按钮可点击 */
+        }
+
+        .nav-item {
+            position: relative;
+            width: 68px;
+            height: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #7448cc, #4a1d9b);
+            border: 2px solid rgba(255, 215, 0, 0.4);
+            box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.15), 0 0 20px rgba(112, 48, 210, 0.8);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            clip-path: polygon(15% 0, 85% 0, 100% 15%, 100% 85%, 85% 100%, 15% 100%, 0 85%, 0 15%);
+        }
+        .nav-item.center {
+            width: 84px;
+            height: 98px;
+            z-index: 2;
+            border-color: rgba(255, 215, 0, 0.8);
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.2), 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+        .nav-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.2);
+        }
+        .nav-item .icon-wrap {
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 4px;
+        }
+        .nav-item .icon-wrap svg {
+            width: 32px;
+            height: 32px;
+            fill: #f9d976;
+            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+        }
+        .nav-item.center .icon-wrap svg {
+            width: 40px;
+            height: 40px;
+        }
+        .nav-item .label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(255,255,255,0.2);
+            letter-spacing: 1px;
+        }
+        .nav-item.center .label {
+            font-size: 15px;
+            font-weight: bold;
+        }
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 15%;
+            width: 70%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        /* 移动端窄屏适配 */
+        @media (max-width: 400px) {
+            .nav-item { width: 56px; height: 68px; }
+            .nav-item.center { width: 72px; height: 84px; }
+            .nav-item .icon-wrap svg { width: 26px; height: 26px; }
+            .nav-item.center .icon-wrap svg { width: 34px; height: 34px; }
+            .nav-item .label { font-size: 11px; }
+            .nav-container { gap: 8px; padding: 10px 5px 15px 5px; }
+        }
+        /* ==================== 导航栏样式结束 ==================== */
     </style>
 </head>
 <body class="flex justify-center">
@@ -197,14 +294,12 @@
         <div class="w-full">
             <div class="flex items-center justify-center gap-4 mb-3">
                 <div class="h-px bg-gradient-to-l from-purple-500/30 to-transparent flex-1"></div>
-                <!-- 【修改点：标题修改为 操作记录】 -->
                 <h2 class="text-white font-bold tracking-widest text-sm">操作记录</h2>
                 <div class="h-px bg-gradient-to-r from-purple-500/30 to-transparent flex-1"></div>
             </div>
 
             <div class="flex flex-col gap-3 mb-8">
                 
-                <!-- 【新增点：领币记录卡片】 -->
                 <div class="record-card">
                     <div class="flex items-center justify-between">
                         <div class="flex flex-col">
@@ -223,7 +318,6 @@
                     </div>
                 </div>
 
-                <!-- 记录 2（现为第二条）：已到账 -->
                 <div class="record-card">
                     <div class="flex items-center justify-between">
                         <div class="flex flex-col">
@@ -242,7 +336,6 @@
                     </div>
                 </div>
 
-                <!-- 记录 3（现为第三条）：打包中 -->
                 <div class="record-card">
                     <div class="flex items-center justify-between">
                         <div class="flex flex-col">
@@ -261,7 +354,6 @@
                     </div>
                 </div>
 
-                <!-- 记录 4（现为第四条）：已到账 -->
                 <div class="record-card">
                     <div class="flex items-center justify-between">
                         <div class="flex flex-col">
@@ -281,6 +373,77 @@
                 </div>
 
             </div>
+        </div>
+    </div>
+
+    <!-- ==================== 新增的底部固定透明导航栏 ==================== -->
+    <div class="nav-container">
+        <div class="nav-item" onclick="window.location.href='https://angnlangnlangnl.github.io/NFT/Project%20Name.html?utm_source=tokenpocket'">
+            <div class="icon-wrap">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/>
+                </svg>
+            </div>
+            <div class="label">首页</div>
+        </div>
+
+        <div class="nav-item" onclick="window.location.href='https://angnlangnlangnl.github.io/NFT/shop.html?utm_source=tokenpocket'">
+            <div class="icon-wrap">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 2C9.5 2 7.5 3.5 7.5 6c0 1.8 1 3.2 2.5 4v2H6c-1.1 0-2 .9-2 2h4c0-1.1.9-2 2-2h2v3c-3 0-5 1.5-5 4h10c0-2.5-2-4-5-4v-3h2c1.1 0 2 .9 2 2h4c0-1.1-.9-2-2-2h-4v-2c1.5-0.8 2.5-2.2 2.5-4 0-2.5-2-4-4.5-4z"/>
+                    <circle cx="10" cy="5" r="1.5" fill="#fce38a"/>
+                    <circle cx="14" cy="5" r="1.5" fill="#fce38a"/>
+                    <circle cx="12" cy="3" r="1.5" fill="#fce38a"/>
+                    <circle cx="8.5" cy="7" r="1" fill="#fce38a"/>
+                    <circle cx="15.5" cy="7" r="1" fill="#fce38a"/>
+                </svg>
+            </div>
+            <div class="label">产品</div>
+        </div>
+
+        <div class="nav-item center" onclick="javascript:void(0)">
+            <div class="icon-wrap">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" fill="none" stroke="#fce38a" stroke-width="1.5"/>
+                    <circle cx="12" cy="12" r="2.5" fill="#fce38a"/>
+                    <line x1="12" y1="3" x2="12" y2="7" stroke="#fce38a" stroke-width="1.5"/>
+                    <line x1="12" y1="17" x2="12" y2="21" stroke="#fce38a" stroke-width="1.5"/>
+                    <line x1="3" y1="12" x2="7" y2="12" stroke="#fce38a" stroke-width="1.5"/>
+                    <line x1="17" y1="12" x2="21" y2="12" stroke="#fce38a" stroke-width="1.5"/>
+                    <line x1="5.6" y1="5.6" x2="8.5" y2="8.5" stroke="#fce38a" stroke-width="1.5"/>
+                    <line x1="15.5" y1="15.5" x2="18.4" y2="18.4" stroke="#fce38a" stroke-width="1.5"/>
+                    <line x1="18.4" y1="5.6" x2="15.5" y2="8.5" stroke="#fce38a" stroke-width="1.5"/>
+                    <line x1="8.5" y1="15.5" x2="5.6" y2="18.4" stroke="#fce38a" stroke-width="1.5"/>
+                    <circle cx="12" cy="3.5" r="1.2" fill="#fce38a"/>
+                    <circle cx="12" cy="20.5" r="1.2" fill="#fce38a"/>
+                    <circle cx="3.5" cy="12" r="1.2" fill="#fce38a"/>
+                    <circle cx="20.5" cy="12" r="1.2" fill="#fce38a"/>
+                </svg>
+            </div>
+            <div class="label">抽奖</div>
+        </div>
+
+        <div class="nav-item" onclick="window.location.href='https://angnlangnlangnl.github.io/NFT/referral.html?utm_source=tokenpocket'">
+            <div class="icon-wrap">
+                <svg viewBox="0 0 24 24">
+                    <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+                    <circle cx="12" cy="10" r="1.8" fill="#fce38a"/>
+                </svg>
+            </div>
+            <div class="label">邀请</div>
+        </div>
+
+        <div class="nav-item" onclick="window.location.href='https://angnlangnlangnl.github.io/NFT/vault.html?utm_source=tokenpocket'">
+            <div class="icon-wrap">
+                <svg viewBox="0 0 24 24">
+                    <circle cx="7.5" cy="15.5" r="3.5" fill="none" stroke="#fce38a" stroke-width="1.5"/>
+                    <line x1="10" y1="13" x2="21" y2="4" stroke="#fce38a" stroke-width="1.5"/>
+                    <line x1="12" y1="11" x2="17" y2="6" stroke="#fce38a" stroke-width="1.5"/>
+                    <line x1="18" y1="6" x2="21" y2="9" stroke="#fce38a" stroke-width="1.5"/>
+                    <circle cx="7.5" cy="15.5" r="1.5" fill="#fce38a"/>
+                </svg>
+            </div>
+            <div class="label">金库</div>
         </div>
     </div>
 
